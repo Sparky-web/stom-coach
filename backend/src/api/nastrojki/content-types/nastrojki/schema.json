@@ -1,0 +1,39 @@
+{
+  "kind": "singleType",
+  "collectionName": "nastrojkis",
+  "info": {
+    "singularName": "nastrojki",
+    "pluralName": "nastrojkis",
+    "displayName": "Настройки",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "navbar": {
+      "displayName": "link",
+      "type": "component",
+      "repeatable": true,
+      "component": "components.link"
+    }
+  }
+}

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2024-04-22T13:03:23+03:00">
+	<shop>
+		<name>MEGADENTA учебный центр</name>
+		<company>asdf</company>
+		<url>https://megadenta-education.ru</url>
+		<platform>Tilda Publishing</platform>
+		<version>1.0</version>
+		<currencies>
+			<currency id="RUR" rate="1"/>
+		</currencies>
+		<categories>
+			<category id="448725052481">Актуальные</category>
+		</categories>
+		<offers>
+		<offer id="169777468471">
+			<name>ITOP</name>
+			<description>
+<![CDATA[
+Апрель 2024 г. (Дата уточняется)<br />г. Екатеринбург<br />Спикер: Наталья Прокофьева<br /><br /><ul><li style="text-align: left;">Гигиенист стоматологический. Стаж 24 года.</li><li style="text-align: left;">Преподаватель высшей педагогической категории в Спб ГБПОУ МК3</li><li style="text-align: left;">Лектор международной академии ITop</li><li style="text-align: left;">Лектор компании Hu friedy Russia</li><li style="text-align: left;">Руководитель секции гигиенистов стоматологических в Независимой ассоциации пародонтологов</li></ul><br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor3033-3238-4365-b737-316531363937/58594573.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-169777468471-itop</url>
+			<count>14</count>
+			<price>8000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Наталья Прокофьева</param>
+		</offer>
+		<offer id="265296482001">
+			<name>Все аспекты боковой реставрации зубов</name>
+			<description>
+<![CDATA[
+22 марта 2024 г.<br />г. Пермь<br />Спикер: Азизов Азиз<br /><br />Врач-стоматолог ортопед, терапевт. Кандидат медицинских наук. Основатель и главный врач Azizov Dental Clinic.<br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor6664-3937-4262-b864-326565353965/94081336.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-265296482001-vse-aspekti-bokovoi-restavratsii-zubov</url>
+			<count>19</count>
+			<price>8000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Пермь</param>
+			<param name="Лекторы">Азизов Азиз</param>
+		</offer>
+		<offer id="718249849671">
+			<name>Думай как доктор, работай как ассистент</name>
+			<description>
+<![CDATA[
+29 марта 2024 г.<br />г. Челябинск<br />Спикер: Пушкарева Валерия<br /><br />Ассистент Логвиненко Марии (стоматолог- терапевт, лектор) клиника Дентал Фэнтези г.Москва. Участница курса Тали Голдберг. «Ассистент стоматолога. Работа в 4 руки»<br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor3830-6439-4431-b966-656631313136/29469460.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-718249849671-dumai-kak-doktor-rabotai-kak-assistent</url>
+			<count>20</count>
+			<price>8000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Челябинск</param>
+			<param name="Лекторы">Пушкарева Валерия</param>
+		</offer>
+		<offer id="485525798031">
+			<name>Финансы в стоматологии</name>
+			<description>
+<![CDATA[
+13 апреля 2024 г.<br />г. Екатеринбург<br />Спикер: Ростов Антон <br /><br />Исполнительный икоммерческий директор сети клиник Артдент и Центра лазерной стоматологии. г. Нижний Новгород<br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor6437-3832-4437-b930-323934663863/43891570.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-485525798031-finansi-v-stomatologii</url>
+			<count>10</count>
+			<price>25000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Ростов Антон</param>
+		</offer>
+		<offer id="398540001881">
+			<name>Недетские реставрации version 2.0 - г. Тюмень</name>
+			<description>
+<![CDATA[
+19 - 20 апреля 2024 г.<br />г. Тюмень<br />Спикер: Фейдман Яна<br />Обновленный курс с полноценным днем теории и одним днем практики.<br /><br />врач-стоматолог общей практики, врач-стоматолог детский, победитель всероссийского реставрационного конгресса RESTOFEST 2022, автор курсов по высокохудожественным и функциональным реставрациям в боковом отделе, спикер стоматологических конгрессов, клиника «Империя улыбок» г. Калининград.<br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor3262-3030-4666-b664-363364323266/45464975.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-398540001881-nedetskie-restavratsii-version-20-g-tyum</url>
+			<count>18</count>
+			<price>35000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Тюмень</param>
+			<param name="Лекторы">Фейдман Яна</param>
+		</offer>
+		<offer id="987069435591">
+			<name>Протоколы сложного удаления третьих моляров и установки ортодонтических винтов, методики аутотрансплантации и реплантации. Анализ ошибок и осложнений. Способы их решений</name>
+			<description>
+<![CDATA[
+19 апреля 2024 г.<br />г. Екатеринбург<br />Спикер: Гаспарян Карен<br /><br />Врач стоматолог-хирург, врач стоматолог-ортопед, челюстно-лицевой хирург, врач высшей категории<br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor6335-6461-4961-a333-303638383563/97231086.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-987069435591-protokoli-slozhnogo-udaleniya-tretih-mol</url>
+			<count>20</count>
+			<price>12000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Гаспарян Карен</param>
+		</offer>
+		<offer id="878020737171">
+			<name>Прямая реставрация в боковом сегменте - Новосибирск</name>
+			<description>
+<![CDATA[
+13- 14 апреля 2024 г.<br />г. Новосибирск<br />Спикер: Беретарь Руслан<br /><br />Скидка до 1 апреля.<br /><br />Основатель стоматологической клиники "RBClinic". Специализация: Эстетическая и функциональная реабилитация прямыми и непрямыми реставрациями.<br /><br /><br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor6462-6332-4864-b962-373839613239/99887413.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-878020737171-pryamaya-restavratsiya-v-bokovom-segment</url>
+			<count>20</count>
+			<price>35000.00</price>
+			<oldprice>38500.00</oldprice>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Новосибирск</param>
+			<param name="Лекторы">Беретарь Руслан</param>
+		</offer>
+		<offer id="159425016341">
+			<name>Секреты успешных перелечиваний. Повторная эндодонтия V2.0</name>
+			<description>
+<![CDATA[
+24 мая 2024 г.<br />г. Челябинск<br />Спикер: Завьялова Ирина<br /><br />Северо-Западный Государственный Медицинский Университет<br />имени И.И. Мечникова - врач-стоматолог общей практики. <br /><br />Центральная Государственная Медицинская Академия Управления делами президента РФ, ординатура, врач-стоматолог. <br /><br />Член Стоматологической Ассоциации России (СтАР).<br /><br /><ul><li>Врач-стоматолог эндодонтист-микроскопист.</li><li>Соискатель на ученую степень (к.м.н.)</li><li>Медицинский директор EUROFILE</li></ul><br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor3533-6130-4233-a139-343263383531/82692373.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-159425016341-sekreti-uspeshnih-perelechivanii-povtorn</url>
+			<count>20</count>
+			<price>10000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Челябинск</param>
+			<param name="Лекторы">Завьялова Ирина</param>
+		</offer>
+		<offer id="229240511131">
+			<name>Костные пластики, осложнения. Сочетанное протезирование на своих зубах и имплантатах, осложнения</name>
+			<description>
+<![CDATA[
+г. Екатеринбург<br />Спикер: Копылов Максим Валерьевич и Игумнов Александр Игоревич<br /><br /><br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor3630-6664-4736-b631-626632303530/36881140.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-229240511131-kostnie-plastiki-oslozhneniya-sochetanno</url>
+			<count>50</count>
+			<price>25000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Копылов Максим Валерьевич и Игумнов Александр Игоревич</param>
+		</offer>
+		<offer id="846511607071">
+			<name>Особенности интеграции фрагментарных реставраций. Фронтальные реставрации</name>
+			<description>
+<![CDATA[
+30 - 31 мая 2024 г.<br />г. Екатеринбург<br />Спикер: Логвиненко Мария<br /><br />Тема:#nbsp;Особенности интеграции фрагментарных реставраций фронтальной группы зубов<br /><br />Врач-стоматолог общей практики, специалист в области высоко-эстетичных и функциональных прямых реставрации фронтальной и боковой группы зубов, автор курсов и портала клинических видео, спикер стоматологических конгрессов, клиника «Дентал Фэнтези», г. Москва<br /><br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor6630-3139-4163-b361-313763393438/11653544.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-846511607071-osobennosti-integratsii-fragmentarnih-re</url>
+			<count>18</count>
+			<price>28500.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Логвиненко Мария</param>
+		</offer>
+		<offer id="676992776951v1" group_id="676992776951">
+			<name>Методика безопасного извлечения фрагментов сломанных эндодонтических инструментов из корневых каналов (двухдневный курс). - Лекционный день</name>
+			<description>
+<![CDATA[
+12 - 13 июня 2024 г.<br />г. Екатеринбург<br />Спикер: Землякова Ольга <br /><br />Врач-стоматолог, эндодонтист. Главный врач Стоматологической клиники Тихоокеанского Государственного Медицинского Университета. <br /><ul><li>В 2008 г. закончила Владивостокский государственный медицинский университет (ВГМУ). Сертификат по специальности «Стоматология терапевтическая», «Стоматология хирургическая». </li><li>Лечение зубов под микроскопом с 2012 года. </li><li>Стаж работы 14 лет. </li><li>Сложное эндодонтическое перелечивание, реферативная практика и апикальная хирургия. </li><li> Автор лекционно-практического курса «Сложное перелечивание. Извлечение сломанных инструментов из корневых каналов зубов», а также "Лечение апикального периодонтита". </li><li>Лектор Международных Конгрессов по Эндодонтии (IFEA 2022 – Чили, СOSAE 2023 – Аргентина, TEI 2022 – Египет, SSG III 2023 – Испания) • Проведение семинаров и мастер-классов для практикующих врачей, обучение работе на дентальном микроскопе. Провела практические мастер-классы для практикующих стоматологов в России, Беларуси, Армении, Казахстане, Киргизии, Израиле, Мексике, Нидерландах, Египте, ОАЭ, Чили, Испании, Аргентине. </li><li> Key opinion leader Acteon.</li></ul><br /><br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor3936-3330-4865-b031-376261323539/27129817.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-676992776951-metodika-bezopasnogo-izvlecheniya-fragme</url>
+			<count>33</count>
+			<price>18500.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Землякова Ольга</param>
+			<param name="Тип">Лекционный день</param>
+		</offer>
+		<offer id="676992776951v2" group_id="676992776951">
+			<name>Методика безопасного извлечения фрагментов сломанных эндодонтических инструментов из корневых каналов (двухдневный курс). - 2 дня (лекционный и практический)</name>
+			<description>
+<![CDATA[
+12 - 13 июня 2024 г.<br />г. Екатеринбург<br />Спикер: Землякова Ольга <br /><br />Врач-стоматолог, эндодонтист. Главный врач Стоматологической клиники Тихоокеанского Государственного Медицинского Университета. <br /><ul><li>В 2008 г. закончила Владивостокский государственный медицинский университет (ВГМУ). Сертификат по специальности «Стоматология терапевтическая», «Стоматология хирургическая». </li><li>Лечение зубов под микроскопом с 2012 года. </li><li>Стаж работы 14 лет. </li><li>Сложное эндодонтическое перелечивание, реферативная практика и апикальная хирургия. </li><li> Автор лекционно-практического курса «Сложное перелечивание. Извлечение сломанных инструментов из корневых каналов зубов», а также "Лечение апикального периодонтита". </li><li>Лектор Международных Конгрессов по Эндодонтии (IFEA 2022 – Чили, СOSAE 2023 – Аргентина, TEI 2022 – Египет, SSG III 2023 – Испания) • Проведение семинаров и мастер-классов для практикующих врачей, обучение работе на дентальном микроскопе. Провела практические мастер-классы для практикующих стоматологов в России, Беларуси, Армении, Казахстане, Киргизии, Израиле, Мексике, Нидерландах, Египте, ОАЭ, Чили, Испании, Аргентине. </li><li> Key opinion leader Acteon.</li></ul><br /><br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor3936-3330-4865-b031-376261323539/27129817.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-676992776951-metodika-bezopasnogo-izvlecheniya-fragme</url>
+			<count>33</count>
+			<price>35000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Землякова Ольга</param>
+			<param name="Тип">2 дня (лекционный и практический)</param>
+		</offer>
+		<offer id="512286896531">
+			<name>Цифровая и аналоговая гнатология. Авторский курс. Современные протоколы окклюзионной реабилитации.</name>
+			<description>
+<![CDATA[
+14 - 16 июня 2024 г.<br />г. Екатеринбург<br />Спикер: Мехтиев Багир<br /><br />Врач-стоматолог, специалист в области эстетической и функциональной стоматологии. Директор и главный врач авторской клиники «Центр эстетической и функциональной стоматологии Доктора Мехтиева»<br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor6633-6166-4931-a562-623730303063/49855482.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-512286896531-tsifrovaya-i-analogovaya-gnatologiya-avt</url>
+			<count>20</count>
+			<price>50000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Мехтиев Багир</param>
+		</offer>
+		<offer id="594833037121">
+			<name>ENDO</name>
+			<description>
+<![CDATA[
+18 - 19 октября 2024 г.<br />г. Екатеринбург<br />Спикер: Юрий Кочаров<br /><br />Врач-стоматолог. <br />Сфера интересов: эндодонтия с микроскопом, микропротезирование. <br />Частная практика, г. Москва<br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor6431-6164-4364-a232-316130326162/53559144.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-594833037121-endo</url>
+			<count>20</count>
+			<price>28500.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Юрий Кочаров</param>
+		</offer>
+		<offer id="166304265501">
+			<name>Прямая реставрация в боковом сегменте - Челябинск</name>
+			<description>
+<![CDATA[
+8 - 9 июня 2024 г.<br />г. Челябинск<br />Спикер: Беретарь Руслан<br /><br />Основатель стоматологической клиники "RBClinic". Специализация: Эстетическая и функциональная реабилитация прямыми и непрямыми реставрациями.<br /><br /><br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor6462-6332-4864-b962-373839613239/99887413.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-166304265501-pryamaya-restavratsiya-v-bokovom-segment</url>
+			<count>20</count>
+			<price>35000.00</price>
+			<oldprice>38500.00</oldprice>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Челябинск</param>
+			<param name="Лекторы">Беретарь Руслан</param>
+		</offer>
+		<offer id="970678182421">
+			<name>Недетские реставрации version 2.0 - г. Екатеринбург</name>
+			<description>
+<![CDATA[
+13 сентября 2024 г.<br />г. Екатеринбург<br />Спикер: Фейдман Яна<br />Обновленный курс с полноценным днем теории и одним днем практики.<br /><br />врач-стоматолог общей практики, врач-стоматолог детский, победитель всероссийского реставрационного конгресса RESTOFEST 2022, автор курсов по высокохудожественным и функциональным реставрациям в боковом отделе, спикер стоматологических конгрессов, клиника «Империя улыбок» г. Калининград.<br />Регистрация для физ.лица#nbsp; Регистрация для юр.лица
+]]>
+			</description>
+			<picture>https://static.tildacdn.com/stor3262-3030-4666-b664-363364323266/45464975.jpg</picture>
+			<url>https://megadenta-education.ru/tproduct/645873076-970678182421-nedetskie-restavratsii-version-20-g-ekat</url>
+			<count>20</count>
+			<price>35000.00</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>448725052481</categoryId>
+			<param name="Город">Екатеринбург</param>
+			<param name="Лекторы">Фейдман Яна</param>
+		</offer>
+		</offers>
+	</shop>
+</yml_catalog>

@@ -12,10 +12,36 @@ export interface ComponentsLink extends Schema.Component {
   };
 }
 
+export interface ComponentsTags extends Schema.Component {
+  collectionName: 'components_components_tags';
+  info: {
+    displayName: 'tags';
+    description: '';
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+  };
+}
+
+export interface ComponentsVariants extends Schema.Component {
+  collectionName: 'components_components_variants';
+  info: {
+    displayName: 'variants';
+    description: '';
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    price: Attribute.Integer & Attribute.Required;
+    ticketsAmount: Attribute.Integer & Attribute.Required;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
       'components.link': ComponentsLink;
+      'components.tags': ComponentsTags;
+      'components.variants': ComponentsVariants;
     }
   }
 }

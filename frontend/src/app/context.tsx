@@ -1,7 +1,8 @@
 "use client";
 
-import { ReactNode, createContext } from "react";
-import { Settings } from "~/server/api/routers/strapi";
+import { ReactNode, createContext, useEffect, useState } from "react";
+import { Settings } from "~/types/entities";
+
 
 type Data = {
   settings: Settings;
@@ -12,7 +13,15 @@ export const DataContext = createContext<Data>({
 });
 
 export default function DataProvider(props: { data: Data, children: ReactNode }) {
-  return <DataContext.Provider value={props.data}>
+  // const [data, setData] = useState(null)
+
+  // useEffect(() => {
+  //   getCity().then(setData)
+  // }, [])
+
+  return <DataContext.Provider value={{
+    ...props.data
+  }}>
     {props.children}
   </DataContext.Provider>;
 }

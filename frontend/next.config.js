@@ -6,16 +6,25 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-    images: {
-        loader: "custom",
-        loaderFile: "./src/functions/loader.js"
+  images: {
+    loader: "custom",
+    loaderFile: "./src/functions/loader.js"
+  },
+  typescript: {
+    ignoreBuildErrors: true
+  },
+  eslint: {
+    ignoreDuringBuilds: true
+  },
+  experimental: {
+    serverActions: {
+      // allowedForwardedHosts: ['localhost', 'symmetrical-xylophone-45vw4477g3j4xx-3000.app.github.dev'],
+      // allowedOrigins: ['*.app.github.dev']
     },
-    typescript: {
-        ignoreBuildErrors: true
-    },
-    eslint: {
-        ignoreDuringBuilds: true
-    }
+  },
+  // basePath: "https://symmetrical-xylophone-45vw4477g3j4xx-3000.app.github.dev"
+
+
 };
 
 export default config;

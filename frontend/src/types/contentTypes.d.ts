@@ -795,10 +795,21 @@ export interface ApiEventEvent extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    title: Attribute.String;
+    options: Attribute.Component<'components.variants', true>;
     description: Attribute.Text;
-    price: Attribute.Integer;
-    ticketsAmount: Attribute.Integer;
+    price: Attribute.Integer & Attribute.Required;
+    ticketsAmount: Attribute.Integer & Attribute.Required;
+    ticketsLeft: Attribute.Integer;
+    date: Attribute.DateTime & Attribute.Required;
+    city: Attribute.String & Attribute.Required;
+    tags: Attribute.Component<'components.tags', true>;
+    name: Attribute.String & Attribute.Required;
+    speakers: Attribute.Relation<
+      'api::event.event',
+      'oneToMany',
+      'api::speaker.speaker'
+    >;
+    image: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -859,10 +870,11 @@ export interface ApiNastrojkiNastrojki extends Schema.SingleType {
     draftAndPublish: false;
   };
   attributes: {
-    title: Attribute.String;
-    description: Attribute.Blocks;
-    logo: Attribute.Media;
-    navbar: Attribute.Component<'components.link', true>;
+    title: Attribute.String & Attribute.Required;
+    description: Attribute.Blocks & Attribute.Required;
+    logo: Attribute.Media & Attribute.Required;
+    navbar: Attribute.Component<'components.link', true> & Attribute.Required;
+    eventPlaceholderImage: Attribute.Media & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -873,6 +885,39 @@ export interface ApiNastrojkiNastrojki extends Schema.SingleType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::nastrojki.nastrojki',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSpeakerSpeaker extends Schema.CollectionType {
+  collectionName: 'speakers';
+  info: {
+    singularName: 'speaker';
+    pluralName: 'speakers';
+    displayName: 'Speakers';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    workplace: Attribute.String & Attribute.Required;
+    bio: Attribute.Text;
+    avatar: Attribute.Media;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::speaker.speaker',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::speaker.speaker',
       'oneToOne',
       'admin::user'
     > &
@@ -901,6 +946,7 @@ declare module '@strapi/types' {
       'api::event.event': ApiEventEvent;
       'api::glavnaya.glavnaya': ApiGlavnayaGlavnaya;
       'api::nastrojki.nastrojki': ApiNastrojkiNastrojki;
+      'api::speaker.speaker': ApiSpeakerSpeaker;
     }
   }
 }

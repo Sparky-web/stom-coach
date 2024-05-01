@@ -7,10 +7,16 @@ import Navbar from "~/app/_components/navbar";
 import { api } from "~/trpc/server";
 import DataProvider from "./context";
 import { Open_Sans } from "next/font/google";
+import { getConfig } from "~/lib/getConfig";
+
+import { headers } from "next/headers";
+import Footer from "./_components/footer";
+import getCity from "~/functions/getCity";
 
 // const inter = Inter({
 //   subsets: ["latin"],
 // });
+
 
 const OpenSans = Open_Sans({
   subsets: ["latin"],
@@ -27,25 +33,30 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-  const settings = await api.strapi.getSettings.query();
+  const settings = await getConfig()
 
   return (
     <html lang="ru">
       <head>
 
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+        {/* <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" /> */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com"
+          // @ts-ignore
+          crossOrigin
+        />
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
       </head>
-      <body>
+      <body className="min-h-[100dvh] flex flex-col">
         <TRPCReactProvider>
           <DataProvider
             data={{ settings }}
           >
             <Navbar />
             {children}
+            <div className="mt-auto">
+              <Footer />
+            </div>
           </DataProvider>
         </TRPCReactProvider>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>

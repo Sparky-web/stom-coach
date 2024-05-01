@@ -12,17 +12,64 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
-      "type": "string"
+    "options": {
+      "displayName": "variants",
+      "type": "component",
+      "repeatable": true,
+      "component": "components.variants"
     },
     "description": {
       "type": "text"
     },
     "price": {
-      "type": "integer"
+      "type": "integer",
+      "required": true
     },
     "ticketsAmount": {
+      "type": "integer",
+      "required": true
+    },
+    "ticketsLeft": {
       "type": "integer"
+    },
+    "date": {
+      "type": "datetime",
+      "required": true
+    },
+    "tags": {
+      "displayName": "tags",
+      "type": "component",
+      "repeatable": true,
+      "component": "components.tags"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "speakers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::speaker.speaker"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "location": {
+      "type": "string"
+    },
+    "city": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::city.city",
+      "inversedBy": "events"
     }
   }
 }

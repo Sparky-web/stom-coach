@@ -1,4 +1,3 @@
-
 import { api } from "~/trpc/server";
 
 import Hero from "./hero";
@@ -17,13 +16,13 @@ export default async function Home() {
   })
 
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col gap-[36px]">
       <div className="flex flex-col gap-[36px]">
         <Hero data={settings} />
         <Menu />
       </div>
       <Events events={events} />
-      <Contacts settings={settings} />
+      {/* <Contacts settings={settings} /> */}
     </main>
   );
 }

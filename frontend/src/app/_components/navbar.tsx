@@ -25,10 +25,12 @@ const Navbar = async () => {
           <span className="self-center text-2xl font-semibold whitespace-nowrap uppercase ">{data.title}</span>
         </Link>
         <div className="flex md:order-2 gap-4 rtl:space-x-reverse justify-end">
-          <Button variant={"ghost"} size={'icon'} className="hover:bg-transparent hover:text-white/85">
-            <User className="w-6 h-6" />
-          </Button>
-          <Button variant={"ghost"} size={'icon'} className="hover:bg-transparent hover:text-white/85" >
+          <Link href={"/login"}>
+            <Button variant={"ghost"} size={'icon'} className="hover:bg-transparent hover:text-black/65">
+              <User className="w-6 h-6" />
+            </Button>
+          </Link>
+          <Button variant={"ghost"} size={'icon'} className="hover:bg-transparent hover:text-black/65" >
             <ShoppingCart className="w-6 h-6" />
           </Button>
 

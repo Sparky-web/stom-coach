@@ -23,12 +23,12 @@ export default function EventCard(props: { event: Event }) {
 
   let _thumbnail = props.event.attributes.image?.data?.attributes?.formats?.thumbnail?.url || props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes?.formats?.thumbnail?.url
   const thumbnail = _thumbnail ? env.NEXT_PUBLIC_STRAPI_URL + _thumbnail : null
+  
 
   return (
     <Link href={`/events/${props.event.id}`}>
       <div className="rounded-[18px] h-[530px] bg-slate-50 grid grid-rows-[250px,1fr]">
         <Image
-
           src={props.event.attributes.image?.data?.attributes.url ||
             props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes.url ||
             settings.eventPlaceholderImage?.data.attributes.url ||
@@ -44,7 +44,7 @@ export default function EventCard(props: { event: Event }) {
           <div>
             <span className="flex gap-2 content-center items-center text-sm text-muted-foreground">
               <MapPin className="w-4 h-4" />
-              <span>г. {props.event.attributes.city}</span>
+              <span>г. {props.event.attributes.city.data.attributes.name}</span>
             </span>
             <h3 className="text-[18px] font-bold line-clamp-3 my-0 py-0 mt-2" >{props.event.attributes.name}</h3>
             {!!props.event.attributes.tags?.length && <div className="flex flex-wrap gap-3 mt-3 mb-3">

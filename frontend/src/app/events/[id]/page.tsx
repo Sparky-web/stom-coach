@@ -51,7 +51,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
               {event.attributes.name}
             </h1>
             <div className="text-white/70 font-semibold text-sm items-center mt-3 whitespace-pre">
-              {["г. " + event.attributes.city, ...(event.attributes.speakers?.data || []).map(e => e.attributes.name)].join("  •  ")}
+              {["г. " + event.attributes.city.data.attributes.name, ...(event.attributes.speakers?.data || []).map(e => e.attributes.name)].join("  •  ")}
             </div>
             <Button variant={'outline'} className="mt-5 uppercase">Записаться</Button>
           </div>
@@ -124,7 +124,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
           <div className="flex-col gap-3 flex ">
             <div className="gap-3 inline-flex items-center ">
               <MapPin className="w-4 h-4" />
-              <div className="text-black text-base font-normal">{event.attributes.location || event.attributes.city}</div>
+              <div className="text-black text-base font-normal">{event.attributes.location || event.attributes.city.data.attributes.name}</div>
             </div>
             {event.attributes.location && <div className="h-56 bg-zinc-300 rounded-2xl relative overflow-hidden">
               <MapComponent address="Денисова уральского 5А" coordinates={coordinates} />

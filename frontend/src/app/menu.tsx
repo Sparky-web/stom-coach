@@ -1,7 +1,6 @@
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
-
 const links = [
     'Личный кабинет',
     'Мероприятия',

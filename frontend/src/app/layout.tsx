@@ -12,6 +12,9 @@ import { getConfig } from "~/lib/getConfig";
 import { headers } from "next/headers";
 import Footer from "./_components/footer";
 import getCity from "~/functions/getCity";
+import { Toaster } from "~/components/ui/sonner";
+import AuthProvider from "./auth-context";
+
 
 // const inter = Inter({
 //   subsets: ["latin"],
@@ -49,15 +52,18 @@ export default async function RootLayout({
       </head>
       <body className="min-h-[100dvh] flex flex-col">
         <TRPCReactProvider>
-          <DataProvider
-            data={{ settings }}
-          >
-            <Navbar />
-            {children}
-            <div className="mt-auto">
-              <Footer />
-            </div>
-          </DataProvider>
+          <AuthProvider>
+            <DataProvider
+              data={{ settings }}
+            >
+              <Navbar />
+              {children}
+              <div className="mt-auto">
+                <Footer />
+              </div>
+              <Toaster />
+            </DataProvider>
+          </AuthProvider>
         </TRPCReactProvider>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
       </body>

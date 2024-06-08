@@ -27,7 +27,7 @@ export default function EventCard(props: { event: Event }) {
 
   return (
     <Link href={`/events/${props.event.id}`}>
-      <div className="rounded-[18px] h-[530px] bg-slate-50 grid grid-rows-[250px,1fr]">
+      <div className="rounded-[18px] h-[530px] bg-white grid grid-rows-[250px,1fr]">
         <Image
           src={props.event.attributes.image?.data?.attributes.url ||
             props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes.url ||

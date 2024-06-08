@@ -8,7 +8,7 @@ import { NavButton } from "~/components/ui/nav-button";
 import { cn } from "~/lib/utils";
 import { usePathname } from "next/navigation";
 
-const Navbar = async () => {
+const Navbar = () => {
   const { settings: data } = useContext(DataContext)
 
   const pathname = usePathname()

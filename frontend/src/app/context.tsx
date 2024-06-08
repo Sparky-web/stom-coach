@@ -1,6 +1,8 @@
 "use client";
 
 import { ReactNode, createContext, useEffect, useState } from "react";
+import { CookiesProvider, useCookies } from "react-cookie";
+import { api } from "~/trpc/react";
 import { Settings } from "~/types/entities";
 
 
@@ -13,15 +15,15 @@ export const DataContext = createContext<Data>({
 });
 
 export default function DataProvider(props: { data: Data, children: ReactNode }) {
-  // const [data, setData] = useState(null)
-
   // useEffect(() => {
   //   getCity().then(setData)
   // }, [])
 
   return <DataContext.Provider value={{
-    ...props.data
+    ...props.data,
   }}>
-    {props.children}
+    <CookiesProvider>
+      {props.children}
+    </CookiesProvider>
   </DataContext.Provider>;
 }

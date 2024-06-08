@@ -33,6 +33,8 @@ export const env = createEnv({
     STRAPI_TOKEN: z.string(),
     STRAPI_URL: z.string().url(),
     YMAPS_API_KEY: z.string(),
+    EXOLVE_API_KEY: z.string(),
+    JWT_SECRET: z.string(),
   },
 
   /**
@@ -60,6 +62,8 @@ export const env = createEnv({
     STRAPI_TOKEN: process.env.STRAPI_TOKEN,
     STRAPI_URL: process.env.STRAPI_URL,
     YMAPS_API_KEY: process.env.YMAPS_API_KEY,
+    EXOLVE_API_KEY: process.env.EXOLVE_API_KEY,
+    JWT_SECRET: process.env.JWT_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

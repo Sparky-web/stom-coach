@@ -72,6 +72,58 @@ export const strapiRouter = createTRPCRouter({
   getCities: publicProcedure.query(async ({ ctx }) => {
     const data = await strapi.get("cities", { populate: "" });
     return data.data as APIResponseCollection<"api::city.city">["data"];
+  }),
+  getSpecsAndPositions: publicProcedure.query(async ({ ctx }) => {
+    const { data: specs } = await strapi.get("specialities", { populate: "" });
+    const { data: positions } = await strapi.get("positions", { populate: "" });
+    return {
+      specs: specs as {
+        id: number;
+        attributes: {
+          name: string;
+        };
+      }[],
+      positions: positions as {
+        id: number;
+        attributes: {
+          name: string;
+          enableSpeciality: boolean;
+        };
+      }[]
+    }
+  }),
+  add: publicProcedure.query(async ({ ctx }) => {
+    const positions = [
+      { name: "Врач-стоматолог" },
+      { name: "Главный врач" },
+      { name: "Заведующий отделением" },
+      { name: "Старшая медсестра/медбрат" },
+      { name: "Ординатор" },
+      { name: "Студент", enableSpeciality: false },
+      { name: "Зубной техник", enableSpeciality: false },
+      { name: "Ассистент", enableSpeciality: false },
+      { name: "Администратор", enableSpeciality: false },
+      { name: "Другое" },
+    ]
+    const specs = [
+      { name: "Стоматолог-терапевт" },
+      { name: "Стоматолог-ортопед" },
+      { name: "Стоматолог-хирург" },
+      { name: "Имплантолог" },
+      { name: "Детский стоматолог" },
+      { name: "Пародонтолог" },
+      { name: "Ассистент" },
+      { name: "Медсестра/медбрат" },
+      { name: "Зубной техник" },
+      { name: "Другое" },
+    ]
 
+    for (let pos of positions) {
+      const { data } = await strapi.insert("positions", pos)
+    }
+
+    for (let spec of specs) {
+      const { data } = await strapi.insert("specialities", spec)
+    }
   })
 });

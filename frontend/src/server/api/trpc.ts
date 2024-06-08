@@ -13,6 +13,16 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
+import type {FetchCreateContextFnOptions} from "@trpc/server/adapters/fetch"
+import jwt from "jsonwebtoken";
+
+import {
+  createTRPCStoreLimiter,
+  defaultFingerPrint,
+} from '@trpc-limiter/memory'
+import { env } from "~/env";
+import { cookies } from "next/headers";
+import strapi from "../strapi";
 
 /**
  * 1. CONTEXT
@@ -26,12 +36,11 @@ import { db } from "~/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await getServerAuthSession();
 
+// t
+export const createTRPCContext = async (opts: {headers: Headers}) => { 
   return {
     db,
-    session,
     ...opts,
   };
 };
@@ -80,6 +89,21 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
+export const rateLimiter = createTRPCStoreLimiter<typeof t>({
+  fingerprint: (ctx) => defaultFingerPrint(ctx),
+  message: (hitInfo) => `Слишкм много запросов, попробуйте позже ${hitInfo}`,
+  max: 2,
+  windowMs: 60000,
+})
+
+
+const validateToken = (token: string) => new Promise((resolve, reject) => {
+  jwt.verify(token, env.JWT_SECRET, (err, decoded) => {
+    if (err) return resolve(false)
+    else return resolve(decoded)
+  })
+})
+
 /**
  * Protected (authenticated) procedure
  *
@@ -88,14 +112,26 @@ export const publicProcedure = t.procedure;
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
+  const token = cookies().get('token')?.value
+
+  if (!token) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
+  const decoded = (await validateToken(token)) as any | false
+  if (!decoded) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const {data: [user]} = await strapi.get('clients', {
+    phone: decoded.phone
+  })
+
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { user },
     },
   });
 });

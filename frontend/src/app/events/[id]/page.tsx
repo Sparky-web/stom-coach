@@ -11,7 +11,7 @@ import { api } from "~/trpc/server";
 import MapComponent from "./map";
 import cn from "~/functions/cn";
 import { APIResponseData } from "~/types/types";
-import ErrorPage from "./404.tsx";
+import ErrorPage from "./404";
 import Contacts from "~/app/_components/contacts";
 
 Settings.defaultLocale = 'ru';

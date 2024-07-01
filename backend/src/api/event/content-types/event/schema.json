@@ -18,9 +18,6 @@
       "repeatable": true,
       "component": "components.variants"
     },
-    "description": {
-      "type": "text"
-    },
     "price": {
       "type": "integer",
       "required": true
@@ -70,6 +67,9 @@
       "relation": "manyToOne",
       "target": "api::city.city",
       "inversedBy": "events"
+    },
+    "description": {
+      "type": "richtext"
     }
   }
 }

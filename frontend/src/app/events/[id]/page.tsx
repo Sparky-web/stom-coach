@@ -1,37 +1,38 @@
-
 import { MapPin, User } from "lucide-react";
 import { DateTime, Settings } from "luxon";
-import { redirect } from 'next/navigation'
 import Image from "next/image";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
+
 import { api } from "~/trpc/server";
 
 import MapComponent from "./map";
 import cn from "~/functions/cn";
-import { APIResponseData } from "~/types/types";
 import ErrorPage from "./404";
-import Contacts from "~/app/_components/contacts";
+import SignUpDialog from "./sign-up-dialog";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/components/ui/accordion";
+import { BlocksRenderer } from "@strapi/blocks-react-renderer";
+import { Event } from "~/types/entities";
+import { formatDate } from "~/lib/utils";
 
-Settings.defaultLocale = 'ru';
 
 export default async function EventPage({ params }: { params: { id: string } }) {
 
-  let event: APIResponseData<"api::event.event"> | null;
+  let event: Event | null;
   try {
     event = await api.strapi.getEvent.query(+params.id);
   } catch (e) {
     return <ErrorPage />
   }
+  console.log(event)
 
-  const coordinates = event.attributes.location ? await api.map.getCoordinates.query(event.attributes.location) : [0, 0];
+  const coordinates: [number, number] = event.attributes.location ? await api.map.getCoordinates.query(event.attributes.location) : [0, 0];
 
-  const eventDate = DateTime.fromISO(event.attributes.date.toString());
-  let formattedDate = eventDate.toFormat("dd MMMM, EEEE, HH:mm");
-  formattedDate = formattedDate.slice(-5) === "00:00" ? formattedDate.slice(0, -7) : formattedDate;
+  const formattedDate = formatDate(event.attributes.date.toString());
 
-  const priceFormattedLocalized = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(event.attributes.price);
+  const localizer = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
+
+  const priceFormattedLocalized = localizer.format(event.attributes.price);
 
   return (
     <div>
@@ -50,37 +51,51 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             <h1 className="font-bold text-[42px] leading-snug">
               {event.attributes.name}
             </h1>
-            <div className="text-white/70 font-semibold text-sm items-center mt-3 whitespace-pre">
-              {["г. " + event.attributes.city.data.attributes.name, ...(event.attributes.speakers?.data || []).map(e => e.attributes.name)].join("  •  ")}
-            </div>
-            <Button variant={'outline'} className="mt-5 uppercase">Записаться</Button>
+            {event.attributes.city.data && <div className="text-white/70 font-semibold text-sm items-center mt-3 whitespace-pre">
+              {["г. " + event.attributes.city.data?.attributes.name, ...(event.attributes.speakers?.data || []).map(e => e.attributes.name)].join("  •  ")}
+            </div>}
+            <Button variant={'outline'} className="mt-5 uppercase max-w-fit color-white text-white border-white hover:bg-white hover:text-primary">Записаться</Button>
           </div>
         </div>
       </div>
 
-      <div className="container py-[48px] grid md:grid-cols-[1fr,1fr] gap-[36px]">
-        <div className="grid gap-8 content-start">
-          <h2 className="text-xl font-semibold">{formattedDate}</h2>
-          <p className="text-black/70">
-            Практический курс:
-            <br />Особенности восстановления контактных пунктов.
-            <br />1. Планирование. Фотопротокол
-            <br />2. Как получить эстетичный и функциональный краевой валик?
-            <br />3. Планирование. Фотопротокол
-            <br />4. Планирование. Фотопротокол
-            <br />5. Как получить эстетичный и функциональный краевой валик?
-            <br />6. Как получить эстетичный и функциональный краевой валик?
-          </p>
+      <div className="container py-[48px] grid lg:grid-cols-[1fr,1fr] gap-[36px]">
+        <div className="grid gap-8 content-between">
+          <div className="grid gap-6">
+            <h2 className="text-xl font-semibold">{formattedDate}</h2>
+            <div className="text-black/70 prose" dangerouslySetInnerHTML={{ __html: event.attributes.description }}>
+            </div>
+          </div>
           <div className="flex flex-col gap-4">
             <h2 className="text-xl font-semibold">Оплата: </h2>
-            <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>осталось мест: {event.attributes.ticketsLeft || event.attributes.ticketsAmount}/{event.attributes.ticketsAmount}</Badge>
+            {!event.attributes.options?.length && <div className="grid gap-4">
+              {event.attributes?.ticketsLeft < 10 && <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>осталось мест: {event.attributes.ticketsLeft}</Badge>}
 
-            {!event.attributes.options?.length && <div className="flex justify-between gap-4">
-              <span className="text-3xl font-bold">{priceFormattedLocalized}</span>
-              <div className="flex gap-3">
-                <Button variant={'default'} className="uppercase">Записаться</Button>
-                <Button variant={'outline'} className="uppercase">Для юр. лиц</Button>
+              <div className="flex justify-between gap-4">
+                <span className="text-3xl font-bold">{priceFormattedLocalized}</span>
+                <div className="flex gap-3">
+                  <SignUpDialog event={event} selectedOption={null} />
+                  <Button variant={'outline'} className="uppercase">Для юр. лиц</Button>
+                </div>
               </div>
+            </div>}
+
+            {!!event.attributes.options?.length && <div className="grid gap-4">
+              {event.attributes.options.map(e => {
+                return (
+                  <div className="grid gap-2 rounded-xl bg-neutral-100 p-4 text-sm font-semibold">
+                    <h4>{e.name}</h4>
+                    <div className="flex justify-between gap-4">
+                      <span className="text-3xl font-bold">{localizer.format(e.price)}</span>
+                      <div className="flex gap-3">
+                        <SignUpDialog event={event} selectedOption={e} />
+                        <Button variant={'outline'} className="uppercase">Для юр. лиц</Button>
+                      </div>
+                    </div>
+                    {e.ticketsAmount < 10 && <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>осталось мест: {e.ticketsAmount}</Badge>}
+                  </div>
+                )
+              })}
             </div>}
           </div>
 
@@ -91,49 +106,48 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             <div className=" text-xl font-semibold ">Спикеры:</div>
 
             {event.attributes.speakers?.data.map(e => (
-              <Collapsible>
-                <div className=" px-5 py-3 rounded-2xl bg-neutral-100 grid gap-3">
-                  <div className="flex justify-between items-center ">
-                    <div className="justify-start items-center gap-4 flex">
-                      {
-                        e.attributes.avatar?.data?.attributes.url ?
-                          <Image src={e.attributes.avatar?.data?.attributes.url || ""} alt={e.attributes.name} width={70} height={70} className="w-16 h-16 rounded-3xl border-3 border-blue-800" />
-                          : <div className="w-16 h-16 rounded-3xl bg-blue-800 flex items-center justify-center">
-                            <User className="w-10 h-8 text-white" />
-                          </div>
-                      }
+              <Accordion type="single" collapsible>
+                <AccordionItem value={e.id} asChild>
+                  <div className=" px-5 py-3 rounded-2xl bg-neutral-100 grid gap-3">
+                    <div className="flex justify-between items-center ">
+                      <div className="justify-start items-center gap-4 flex">
+                        {
+                          e.attributes.avatar?.data?.attributes.url ?
+                            <Image src={e.attributes.avatar?.data?.attributes.url || ""} alt={e.attributes.name} width={70} height={70} className="w-16 h-16 rounded-3xl border-3 border-blue-800" />
+                            : <div className="w-16 h-16 rounded-3xl bg-blue-800 flex items-center justify-center">
+                              <User className="w-10 h-8 text-white" />
+                            </div>
+                        }
 
-                      <div className="flex-col gap-1 ">
-                        <div className="text-black text-base font-bold">{e.attributes.name}</div>
-                        <div className="text-black text-opacity-60 text-sm font-normal">{e.attributes.workplace || ""}</div>
+                        <div className="flex-col gap-1 ">
+                          <div className="text-black text-base font-bold">{e.attributes.name}</div>
+                          <div className="text-black text-opacity-60 text-sm font-normal">{e.attributes.workplace || ""}</div>
+                        </div>
                       </div>
+
+                      <AccordionTrigger className="hover:no-underline">
+                        <Button variant={'outline'} className="uppercase mr-3" style={{ textDecoration: 'none !important' }} size={'sm'}>Биография</Button>
+                      </AccordionTrigger>
                     </div>
-                    <CollapsibleTrigger asChild>
-                      <Button variant={'outline'} className="uppercase" size={'sm'}>Биография</Button>
-                    </CollapsibleTrigger>
+                    <AccordionContent>
+                      {e.attributes.bio ? <BlocksRenderer content={e.attributes.bio} /> : 'Нет описания'}
+                    </AccordionContent>
                   </div>
-                  <CollapsibleContent>
-                    {e.attributes.bio}
-                  </CollapsibleContent>
-                </div>
-              </Collapsible>
-
-
+                </AccordionItem>
+              </Accordion>
             ))}
+
           </div>
           <div className="flex-col gap-3 flex ">
             <div className="gap-3 inline-flex items-center ">
               <MapPin className="w-4 h-4" />
-              <div className="text-black text-base font-normal">{event.attributes.location || event.attributes.city.data.attributes.name}</div>
+              <div className="text-black text-base font-normal">{event.attributes.location || event.attributes.city.data?.attributes.name}</div>
             </div>
             {event.attributes.location && <div className="h-56 bg-zinc-300 rounded-2xl relative overflow-hidden">
-              <MapComponent address="Денисова уральского 5А" coordinates={coordinates} />
+              <MapComponent coordinates={coordinates} />
             </div>}
           </div>
-
         </div>
-
       </div>
-      <Contacts />
     </div>)
 }

@@ -18,9 +18,9 @@ import jwt from "jsonwebtoken";
 
 const secret = env.JWT_SECRET;
 
-
 export type User = {
   id: string;
+  isCompleted: boolean;
   attributes: {
     phone: string;
     first_name: string | null;
@@ -29,13 +29,23 @@ export type User = {
     email: string | null;
     workplace: string | null;
     speciality: {
-      id: number;
-      name: string;
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+        }
+      }
     };
     position: {
-      id: number;
-      name: string;
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+        }
+      }
     };
+    customSpeciality: string | null;
+    customPosition: string | null;
   };
 }
 
@@ -71,7 +81,7 @@ export const authRouter = createTRPCRouter({
     //     'Authorization': `Bearer ${env.EXOLVE_API_KEY}`,
     //   }
     // });
-    let message_id = '1234'
+    // let message_id = '1234'
 
     if (!foundCode) {
       await strapi.insert('sms-codes', {
@@ -81,7 +91,7 @@ export const authRouter = createTRPCRouter({
       })
     }
 
-    return { message_id }
+    return {}
   }),
   validateCode: publicProcedure.input(
     z.object({
@@ -126,6 +136,13 @@ export const authRouter = createTRPCRouter({
     }
   }),
   me: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.session.user
-  })
-});
+    if (!ctx.session.user) throw new Error('нет авторизации')
+
+    const isUserCompleted = ctx.session.user.attributes.first_name && ctx.session.user.attributes.last_name && ctx.session.user.attributes.phone
+      && ctx.session.user.attributes.email && ctx.session.user.attributes.workplace
+      && ctx.session.user.attributes.position?.data?.id
+
+    return { ...ctx.session.user, isCompleted: isUserCompleted }
+  }),
+})
+

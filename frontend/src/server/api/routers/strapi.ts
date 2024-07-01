@@ -28,12 +28,13 @@ export const strapiRouter = createTRPCRouter({
           populate: "*"
         },
         image: "*",
-        city: "*"
+        city: "*",
+        options: "*"
       }, sort: "date:asc",
       filters: input?.filters,
       ...input?.options
     });
-    return data.data as APIResponseCollection<"api::event.event">["data"];
+    return data.data as Event[];
   }),
   getEvent: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
     try {
@@ -44,7 +45,8 @@ export const strapiRouter = createTRPCRouter({
             populate: "*"
           },
           image: "*",
-          city: "*"
+          city: "*",
+          options: "*"
         }
       });
 
@@ -92,38 +94,75 @@ export const strapiRouter = createTRPCRouter({
       }[]
     }
   }),
-  add: publicProcedure.query(async ({ ctx }) => {
-    const positions = [
-      { name: "Врач-стоматолог" },
-      { name: "Главный врач" },
-      { name: "Заведующий отделением" },
-      { name: "Старшая медсестра/медбрат" },
-      { name: "Ординатор" },
-      { name: "Студент", enableSpeciality: false },
-      { name: "Зубной техник", enableSpeciality: false },
-      { name: "Ассистент", enableSpeciality: false },
-      { name: "Администратор", enableSpeciality: false },
-      { name: "Другое" },
-    ]
-    const specs = [
-      { name: "Стоматолог-терапевт" },
-      { name: "Стоматолог-ортопед" },
-      { name: "Стоматолог-хирург" },
-      { name: "Имплантолог" },
-      { name: "Детский стоматолог" },
-      { name: "Пародонтолог" },
-      { name: "Ассистент" },
-      { name: "Медсестра/медбрат" },
-      { name: "Зубной техник" },
-      { name: "Другое" },
-    ]
+  updateUser: protectedProcedure.input(z.object({
+    first_name: z.string().min(2).max(50),
+    last_name: z.string().min(2).max(50),
+    second_name: z.string().min(2).max(50),
+    phone: z.string().min(10).max(20),
+    email: z.string().email(),
+    workplace: z.string().min(2).max(255),
+    position: z.number().nullable(),
+    speciality: z.number().nullable(),
+    customPosition: z.string().min(0).max(255).optional().nullable(),
+    customSpeciality: z.string().min(0).max(255).optional().nullable(),
+  })).mutation(async ({ ctx, input }) => {
+    const { data } = await strapi.update("clients", ctx.session.user.id, input)
 
-    for (let pos of positions) {
-      const { data } = await strapi.insert("positions", pos)
-    }
+    return true
+  }),
+  getMainEvent: publicProcedure.query(async ({ ctx }) => {
+    const { data } = await strapi.get("glavnaya", { populate: "*" });
+    const eventId = data?.attributes.main_event?.data?.id
 
-    for (let spec of specs) {
-      const { data } = await strapi.insert("specialities", spec)
-    }
+    if (!eventId) return null
+
+    const event = await strapi.get(`events/${eventId}`, {
+      populate: {
+        tags: "*",
+        speakers: {
+          populate: "*"
+        },
+        image: "*",
+        city: "*",
+        options: "*"
+      }
+    })
+
+    return event.data as Event;
   })
+
+  // add: publicProcedure.query(async ({ ctx }) => {
+  //   const positions = [
+  //     { name: "Врач-стоматолог" },
+  //     { name: "Главный врач" },
+  //     { name: "Заведующий отделением" },
+  //     { name: "Старшая медсестра/медбрат" },
+  //     { name: "Ординатор" },
+  //     { name: "Студент", enableSpeciality: false },
+  //     { name: "Зубной техник", enableSpeciality: false },
+  //     { name: "Ассистент", enableSpeciality: false },
+  //     { name: "Администратор", enableSpeciality: false },
+  //     { name: "Другое" },
+  //   ]
+  //   const specs = [
+  //     { name: "Стоматолог-терапевт" },
+  //     { name: "Стоматолог-ортопед" },
+  //     { name: "Стоматолог-хирург" },
+  //     { name: "Имплантолог" },
+  //     { name: "Детский стоматолог" },
+  //     { name: "Пародонтолог" },
+  //     { name: "Ассистент" },
+  //     { name: "Медсестра/медбрат" },
+  //     { name: "Зубной техник" },
+  //     { name: "Другое" },
+  //   ]
+
+  //   for (let pos of positions) {
+  //     const { data } = await strapi.insert("positions", pos)
+  //   }
+
+  //   for (let spec of specs) {
+  //     const { data } = await strapi.insert("specialities", spec)
+  //   }
+  // })
 });

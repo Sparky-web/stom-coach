@@ -10,7 +10,7 @@ import { cn } from "~/lib/utils";
 const menu = [
   { link: "/lk/settings", name: "Личные данные", icon: UserIcon },
   { link: "/lk/courses", name: "Мои курсы", icon: GraduationCap },
-  { link: "/lk/bonuses", name: "Программа лояльности", icon: Heart },
+  { link: "/lk/bonuses", name: "Программа лояльности", icon: Heart, disabled: true }
 ]
 
 export default function Menu() {
@@ -21,7 +21,9 @@ export default function Menu() {
   return (
     <div className="grid gap-2 p-4 border-r content-start">
       {menu.map((item) => (
-          <Button className={cn(
+          <Button 
+            disabled={!user?.isCompleted && !(item.name === "Личные данные") || item.disabled}
+          className={cn(
             'w-full text-base font-medium flex gap-2 max-w-full justify-start h-12 rounded-lg hover:text-black hover:bg-muted',
             pathname.includes(item.link) ? "bg-muted text-primary hover:text-primary hover:bg-muted" : "" 
           )} variant={"ghost"} onClick={e => router.push(item.link)} key={item.link}>

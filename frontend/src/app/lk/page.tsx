@@ -7,8 +7,6 @@ import { useAuth } from "../auth-context";
 
 export default function Lk() {
   const {user} = useAuth()
-
   if (!user) return redirect('/login')
-
   return redirect('/lk/settings')
 }

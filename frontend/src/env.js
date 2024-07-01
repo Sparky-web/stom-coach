@@ -35,6 +35,8 @@ export const env = createEnv({
     YMAPS_API_KEY: z.string(),
     EXOLVE_API_KEY: z.string(),
     JWT_SECRET: z.string(),
+    SBER_LOGIN: z.string(),
+    SBER_PASSWORD: z.string(),
   },
 
   /**
@@ -64,6 +66,8 @@ export const env = createEnv({
     YMAPS_API_KEY: process.env.YMAPS_API_KEY,
     EXOLVE_API_KEY: process.env.EXOLVE_API_KEY,
     JWT_SECRET: process.env.JWT_SECRET,
+    SBER_LOGIN: process.env.SBER_LOGIN,
+    SBER_PASSWORD: process.env.SBER_PASSWORD,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

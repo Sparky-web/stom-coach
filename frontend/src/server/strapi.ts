@@ -4,7 +4,7 @@ import { env } from "~/env";
 import { APIResponse } from "~/types/types";
 
 axios.defaults.headers.common = {
-"Authorization": `Bearer ${env.STRAPI_TOKEN}`
+  "Authorization": `Bearer ${env.STRAPI_TOKEN}`
 }
 
 axios.interceptors.response.use(
@@ -19,21 +19,28 @@ axios.interceptors.response.use(
 
 
 const strapi = {
-    get: async (url: string, filters?: object, options?: AxiosRequestConfig) => {
-        const {data} = await axios.get(`${env.STRAPI_URL}/api/${url}`, {
-            params: filters,
-            ...options
-        })
+  get: async (url: string, filters?: object, options?: AxiosRequestConfig) => {
+    const { data } = await axios.get(`${env.STRAPI_URL}/api/${url}`, {
+      params: filters,
+      ...options
+    })
 
-        return data
-    },
-    insert: async (url: string, data: object, options?: AxiosRequestConfig) => {
-        const {data: response} = await axios.post(`${env.STRAPI_URL}/api/${url}`, {data}, {
-            ...options
-        })
+    return data
+  },
+  insert: async (url: string, data: object, options?: AxiosRequestConfig) => {
+    const { data: response } = await axios.post(`${env.STRAPI_URL}/api/${url}`, { data }, {
+      ...options
+    })
 
-        return response?.data.id
-    },
+    return response?.data.id
+  },
+  update: async (url: string, id: number, data: object, options?: AxiosRequestConfig) => {
+    const { data: response } = await axios.put(`${env.STRAPI_URL}/api/${url}/${id}`, { data }, {
+      ...options
+    })
+
+    return response?.data
+  }
 }
 
 export default strapi;

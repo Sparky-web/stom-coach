@@ -13,7 +13,7 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
-import type {FetchCreateContextFnOptions} from "@trpc/server/adapters/fetch"
+import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch"
 import jwt from "jsonwebtoken";
 
 import {
@@ -38,7 +38,7 @@ import strapi from "../strapi";
  */
 
 // t
-export const createTRPCContext = async (opts: {headers: Headers}) => { 
+export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
     db,
     ...opts,
@@ -124,8 +124,11 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  const {data: [user]} = await strapi.get('clients', {
-    phone: decoded.phone
+  const { data: [user] } = await strapi.get('clients', {
+    filters: {
+      phone: decoded.phone
+    },
+    populate: '*'
   })
 
   return next({

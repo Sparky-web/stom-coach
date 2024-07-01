@@ -14,6 +14,7 @@ import Footer from "./_components/footer";
 import getCity from "~/functions/getCity";
 import { Toaster } from "~/components/ui/sonner";
 import AuthProvider from "./auth-context";
+import Contacts from "./_components/contacts";
 
 
 // const inter = Inter({
@@ -36,12 +37,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const settings = await getConfig()
+  const settings = await getConfig();
 
   return (
     <html lang="ru">
       <head>
-
         {/* <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" /> */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com"
@@ -58,6 +58,7 @@ export default async function RootLayout({
             >
               <Navbar />
               {children}
+              <Contacts settings={settings} />
               <div className="mt-auto">
                 <Footer />
               </div>

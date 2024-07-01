@@ -49,15 +49,17 @@
     "phone": {
       "type": "string"
     },
-    "address": {
-      "type": "string"
-    },
-    "contacts": {
-      "type": "richtext",
-      "required": true
-    },
     "email": {
       "type": "email"
+    },
+    "contactsText": {
+      "type": "blocks"
+    },
+    "addressCoordinates": {
+      "type": "string"
+    },
+    "whatsapp_link": {
+      "type": "string"
     }
   }
 }

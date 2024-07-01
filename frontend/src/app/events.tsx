@@ -14,7 +14,6 @@ import EventComponent from "./_components/event-card"
 import { Event } from "~/types/entities";
 
 
-
 export default function Events(props: { events: Event[] }) {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)

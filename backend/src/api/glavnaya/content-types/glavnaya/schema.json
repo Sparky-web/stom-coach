@@ -4,10 +4,11 @@
   "info": {
     "singularName": "glavnaya",
     "pluralName": "glavnayas",
-    "displayName": "Главная"
+    "displayName": "Главная",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {

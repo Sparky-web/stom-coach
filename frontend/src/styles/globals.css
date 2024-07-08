@@ -89,3 +89,7 @@ body {
 /* .ymaps-2-1-79-ground-pane canvas {
   filter: grayscale(100)
 } */
+
+a {
+  @apply text-primary underline underline-offset-2;
+}

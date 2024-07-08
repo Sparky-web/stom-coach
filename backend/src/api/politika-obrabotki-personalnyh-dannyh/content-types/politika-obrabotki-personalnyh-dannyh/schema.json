@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "politika_obrabotki_personalnyh_dannyhs",
+  "info": {
+    "singularName": "politika-obrabotki-personalnyh-dannyh",
+    "pluralName": "politika-obrabotki-personalnyh-dannyhs",
+    "displayName": "Политика обработки персональных данных"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "text": {
+      "type": "blocks"
+    }
+  }
+}

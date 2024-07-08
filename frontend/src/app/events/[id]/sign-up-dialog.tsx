@@ -15,14 +15,19 @@ import Card from "~/app/_components/card";
 import LabelGroup from "~/app/_components/label-group";
 import { formatDate } from "~/lib/utils";
 import LoginCard from "~/app/login/login-card";
+import PersonalInfoCheckbox from "~/app/_components/personal-info-checkbox";
 
 export default function SignUp({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
   const { user } = useAuth()
 
   const { data: _data } = api.strapi.getSpecsAndPositions.useQuery()
 
+  const { mutateAsync } = api.payments.getPaymentLink.useMutation()
+
   const specs = _data?.specs || []
   const positions = _data?.positions || []
+
+  const [checked, setChecked] = useState(false)
 
   const [defaultValues, setDefaultValues] = useState<ClientFormValuesInput | null>(user ? convertUserToClientFormValues(user) : null)
 
@@ -66,7 +71,7 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
                   <DialogHeader>
                     <DialogTitle>Войти</DialogTitle>
                   </DialogHeader>
-                  <LoginCard onAuthenticated={() => {}} />
+                  <LoginCard onAuthenticated={() => { }} />
                 </DialogContent>
               </Dialog>
             </Card>}
@@ -110,11 +115,11 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
                     <LabelGroup label="Специальность">
                       {specs.find(e => e.id === data.speciality)?.attributes.name || "-"}
                     </LabelGroup>
-                    {data.customSpeciality && <LabelGroup label="Название специальности">
-                      {data.customSpeciality}
+                    {data.custom_speciality && <LabelGroup label="Название специальности">
+                      {data.custom_speciality}
                     </LabelGroup>}
-                    {data.customPosition && <LabelGroup label="Название должности">
-                      {data.customPosition}
+                    {data.custom_position && <LabelGroup label="Название должности">
+                      {data.custom_position}
                     </LabelGroup>}
                   </div>
                 </div>
@@ -122,7 +127,7 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
             </>}
 
             {!data && <>
-              <Alert className="text-lg">
+              <Alert className="text-lg max-h-fit h-fit">
                 <GraduationCap />
                 <AlertDescription>
                   Заполните все поля корректно, после завершения курса данные заполняются в сертификат.
@@ -143,9 +148,9 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
               <LabelGroup label="Дата проведения">
                 {formatDate(event.attributes.date)}
               </LabelGroup>
-              <LabelGroup label="Спикеры">
+              {/* <LabelGroup label="Спикеры">
                 {event.attributes.speakers?.data.map(e => e.attributes.name).join(", ")}
-              </LabelGroup>
+              </LabelGroup> */}
               <LabelGroup label="Место проведения">
                 {event.attributes.location || event.attributes.city.data?.attributes.name}
               </LabelGroup>
@@ -162,12 +167,21 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
               <span className="text-2xl font-semibold">{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(event.attributes.price)}</span>
             </LabelGroup>}
 
-            <div className="flex gap-2">
-
-            </div>
+            <PersonalInfoCheckbox value={checked} onChange={setChecked} />
 
             <Button variant={'default'}
-              disabled={!data}
+              onClick={async () => {
+                if(!data) return
+
+                const res = await mutateAsync({
+                  eventId: event.id,
+                  optionId: selectedOption?.id,
+                  ...data
+                })
+
+                console.log(res)
+              }}
+              disabled={!data || !checked}
               size="lg" className="mt-auto bg-[linear-gradient(135deg,#A5C83B,#2AC5A7,#189BDA)] hover:opacity-90 transition">
               <Wallet className="h-6 w-6" />
               Оплатить

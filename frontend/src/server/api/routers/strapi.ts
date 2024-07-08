@@ -1,3 +1,4 @@
+import { BlocksContent } from "@strapi/blocks-react-renderer";
 import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import { z } from "zod";
@@ -94,6 +95,10 @@ export const strapiRouter = createTRPCRouter({
       }[]
     }
   }),
+  getPrivacyPolicy: publicProcedure.query(async ({ ctx }) => {
+    const data = await strapi.get("politika-obrabotki-personalnyh-dannyh", { populate: "*" });
+    return data.data as {id: number, attributes: {text: BlocksContent}}
+  }),
   updateUser: protectedProcedure.input(z.object({
     first_name: z.string().min(2).max(50),
     last_name: z.string().min(2).max(50),
@@ -103,8 +108,8 @@ export const strapiRouter = createTRPCRouter({
     workplace: z.string().min(2).max(255),
     position: z.number().nullable(),
     speciality: z.number().nullable(),
-    customPosition: z.string().min(0).max(255).optional().nullable(),
-    customSpeciality: z.string().min(0).max(255).optional().nullable(),
+    custom_position: z.string().min(0).max(255).optional().nullable(),
+    custom_speciality: z.string().min(0).max(255).optional().nullable(),
   })).mutation(async ({ ctx, input }) => {
     const { data } = await strapi.update("clients", ctx.session.user.id, input)
 

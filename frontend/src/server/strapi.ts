@@ -19,9 +19,9 @@ axios.interceptors.response.use(
 
 
 const strapi = {
-  get: async (url: string, filters?: object, options?: AxiosRequestConfig) => {
+  get: async (url: string, params?: object, options?: AxiosRequestConfig) => {
     const { data } = await axios.get(`${env.STRAPI_URL}/api/${url}`, {
-      params: filters,
+      params,
       ...options
     })
 

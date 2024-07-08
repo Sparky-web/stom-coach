@@ -14,8 +14,8 @@ export type ClientFormValuesInput = {
   workplace: string;
   position: string;
   speciality?: string;
-  customSpeciality?: string;
-  customPosition?: string;
+  custom_speciality?: string;
+  custom_position?: string;
 }
 
 export type ClientFormValuesOutput = {
@@ -27,8 +27,8 @@ export type ClientFormValuesOutput = {
   workplace: string;
   position: number;
   speciality?: number;
-  customSpeciality?: string;
-  customPosition?: string;
+  custom_speciality?: string;
+  custom_position?: string;
 }
 
 i18next.init({

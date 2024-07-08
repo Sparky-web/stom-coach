@@ -23,8 +23,8 @@ export const convertUserToClientFormValues = (user: User): ClientFormValuesInput
     workplace: user.attributes.workplace || '',
     position: user.attributes.position?.data?.id.toString() || '',
     speciality: user.attributes.speciality?.data?.id.toString() || '',
-    customSpeciality: user.attributes.customSpeciality || null,
-    customPosition: user.attributes.customPosition || null,
+    custom_speciality: user.attributes.custom_speciality || null,
+    custom_position: user.attributes.custom_position || null,
   }
 }
 
@@ -38,8 +38,8 @@ export const convertUserToClientFormValuesOutput = (user: User): ClientFormValue
     workplace: user.attributes.workplace || '',
     position: user.attributes.position?.data?.id || '',
     speciality: user.attributes.speciality?.data?.id || '',
-    customSpeciality: user.attributes.customSpeciality || null,
-    customPosition: user.attributes.customPosition || null,
+    custom_speciality: user.attributes.custom_speciality || null,
+    custom_position: user.attributes.custom_position || null,
   }
 }
 
@@ -62,8 +62,8 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
       workplace: '',
       position: '',
       speciality: '',
-      customPosition: '',
-      customSpeciality: '',
+      custom_position: '',
+      custom_speciality: '',
     },
     validatorAdapter: zodValidator,
   })
@@ -147,11 +147,11 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
                   <Select value={field.state.value} onValueChange={val => {
                     if (data.positions.find(e => e.id === +val)?.attributes.enableSpeciality === false) {
                       field.form.setFieldValue('speciality', '')
-                      field.form.setFieldValue('customSpeciality', '')
+                      field.form.setFieldValue('custom_speciality', '')
                     }
 
                     if (!(data.positions.find(e => e.id === +field.state.value)?.attributes.name === 'Другое')) {
-                      field.form.setFieldValue('customPosition', '')
+                      field.form.setFieldValue('custom_position', '')
                     }
                     field.handleChange(val)
                   }}>
@@ -169,7 +169,7 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
                 </div>
 
                 {
-                  data.positions.find(e => e.id === +field.state.value)?.attributes.name === 'Другое' && <form.Field name="customPosition">
+                  data.positions.find(e => e.id === +field.state.value)?.attributes.name === 'Другое' && <form.Field name="custom_position">
                     {(field) => (
                       <div className="grid gap-1">
                         <label className="text-sm font-semibold">Название должности</label>
@@ -198,7 +198,7 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
                           <Select value={field.state.value} onValueChange={e => {
 
                             if (data.specs.find(e => e.id === +field.state.value)?.attributes.name !== 'Другое') {
-                              field.form.setFieldValue('customSpeciality', '')
+                              field.form.setFieldValue('custom_speciality', '')
                             }
 
                             field.handleChange(e)
@@ -221,7 +221,7 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
                         </div>
 
                         {
-                          data.specs.find(e => e.id === +field.state.value)?.attributes.name === 'Другое' && <form.Field name="customSpeciality">
+                          data.specs.find(e => e.id === +field.state.value)?.attributes.name === 'Другое' && <form.Field name="custom_speciality">
                             {(field) => (
                               <div className="grid gap-1">
                                 <label className="text-sm font-semibold">Название специальности</label>

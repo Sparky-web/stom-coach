@@ -44,8 +44,8 @@ export type User = {
         }
       }
     };
-    customSpeciality: string | null;
-    customPosition: string | null;
+    custom_speciality: string | null;
+    custom_position: string | null;
   };
 }
 

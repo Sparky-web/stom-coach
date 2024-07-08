@@ -64,13 +64,19 @@ const Navbar = () => {
           }>
             <ul className={cn("z-10 max-md:rounded-b max-md:container flex flex-col flex-wrap justify-center justify-items-center max-md:gap-2 p-4 md:p-0 mt-4 md:space-x-4  rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ", "max-md:bg-slate-100")}>
               <li>
+                <Link href="/">
                 <NavButton className={isEventPage ? "hover:bg-[#6998F4]/25 hover:text-[#CADCFF]" : ""}>Главная</NavButton>
+</Link>
               </li>
               <li >
-                <NavButton className={isEventPage ? "hover:bg-[#6998F4]/25 hover:text-[#CADCFF]" : ""}>О нас</NavButton>
+                <Link href="/events">
+                  <NavButton className={isEventPage ? "hover:bg-[#6998F4]/25 hover:text-[#CADCFF]" : ""}>Все мероприятия</NavButton>
+                </Link>
               </li>
               <li>
-                <NavButton className={isEventPage ? "hover:bg-[#6998F4]/25 hover:text-[#CADCFF]" : ""}>Контакты</NavButton>
+                <Link href="/#contacts">
+                  <NavButton className={isEventPage ? "hover:bg-[#6998F4]/25 hover:text-[#CADCFF]" : ""}>Контакты</NavButton>
+                </Link>
               </li>
               {!user && <li className="flex flex-wrap gap-2 md:hidden justify-center mt-3">
                 <Link href={"/login"} >

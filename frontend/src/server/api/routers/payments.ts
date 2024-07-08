@@ -9,12 +9,17 @@ import strapi from "~/server/strapi";
 import { Settings, Event } from "~/types/entities";
 import { APIResponseCollection } from "~/types/types";
 
+// import emailTemplate from "~/email-template.html";
+import nodemailer from "nodemailer";
+
 import axios from "axios";
 
 import { env } from "~/env";
 import https from "https"
 import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
+import fs from "fs/promises";
+import { DateTime } from "luxon";
 
 export const paymentRouder = createTRPCRouter({
   getPaymentLink: publicProcedure.input(z.object({
@@ -212,25 +217,56 @@ async function startCheckingPayment(orderId: string, count: number = 0) {
   const maxCountCheck = (1000 * 60 * 20 / 30000) // 20 минут
 
   if (count > maxCountCheck) {
-    const [order] = await strapi.get('orders', {filters: {sberbank_order_id: orderId}});
+    const [order] = await strapi.get('orders', { filters: { sberbank_order_id: orderId } });
     await strapi.update('orders', order.id, {
       expired: true
     })
- 
+
     return
-  } 
+  }
 
   try {
     console.log(`Проверка статуса заказа ${orderId}, попытка ${count}`)
     const status = await getOrderStatus(orderId)
 
-    if(status === 2) {
-      const [strapiOrder] = await strapi.get('orders', {filters: {sberbank_order_id: orderId}});
-      
+    if (status === 2) {
+      console.log(`Заказ ${orderId} не оплачен`)
+      const orders = await strapi.get('orders', { filters: { sberbank_order_id: orderId }, populate: "*" });
+      console.log('Заказы:', orders)
+      const strapiOrder = orders.data[0]
+
+      // console.log(`Заказ ${strapiOrder.id} `)
+
       await strapi.update('orders', strapiOrder.id, {
         is_paid: true
       })
+
+      console.log(`Оплачен заказ ${strapiOrder.id}`)
+
+      const { data: event } = await strapi.get('events/' + strapiOrder.attributes.event.data.id, { populate: "*" });
+
+      console.log(`Уменьшаем количество билетов на ${event.id}`)
+
+      const update = strapiOrder.attributes.option_id ? {
+        options: [
+          ...event.attributes.options.filter(e => e.id !== strapiOrder.attributes.option_id),
+          {
+            ...event.attributes.options.find(e => e.id === strapiOrder.attributes.option_id),
+            id: strapiOrder.attributes.option_id,
+            ticketsLeft: event.attributes.options.find(e => e.id === strapiOrder.attributes.option_id).ticketsLeft - 1,
+          }
+        ]
+      } : {
+        ticketsLeft: event.attributes.ticketsLeft - 1
+      }
+
+      console.log('Обновляем состояние мероприятия:', update)
+
+      await strapi.update('events', event.id, update)
+
       console.log(`Заказ ${orderId} оплачен`)
+
+      await onPaymentSuccess(orderId)
 
       return
     }
@@ -252,6 +288,8 @@ async function getOrderStatus(orderId: string) {
   }
 
   const response = await axios.post(url, null, { params: data, httpsAgent: new https.Agent({ rejectUnauthorized: false }) });
+  console.log('Ответ от API Сбербанка:', response.data)
+
   if (response.data.errorCode === '0') {
     return response.data.orderStatus;
   } else {
@@ -259,10 +297,42 @@ async function getOrderStatus(orderId: string) {
   }
 }
 
-`
-Подтверждение регистрации на мероприятие учебного центра STOMCOACH
-`
-
 const onPaymentSuccess = async (orderId: string) => {
+  const { data: [order] } = await strapi.get('orders', { filters: { sberbank_order_id: orderId }, populate: "*" });
 
+  let emailTemplate = await fs.readFile('./src/email-template.html', 'utf8');
+
+  emailTemplate = emailTemplate.replace(/{{order_number}}/g, order.attributes.order_number)
+    .replace(/{{event_name}}/g, order.attributes.event.data.attributes.name + (order.attributes.option_name ? " — " + order.attributes.option_name : ""))
+    .replace(/{{event_url}}/g, env.BASE_URL + '/events/' + order.attributes.event.data.id)
+    .replace(/{{client_name}}/g, order.attributes.first_name + " " + order.attributes.second_name)
+    .replace(/{{event_date}}/g, DateTime.fromISO(order.attributes.event.data.attributes.date).toLocaleString(DateTime.DATE_FULL))
+    .replace(/{{location}}/g, order.attributes.event.data.attributes.location)
+
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.example.com', // SMTP-сервер
+    port: 587, // Порт
+    secure: false, // true для 465, false для других портов
+    auth: {
+      user: 'your_email@example.com', // Ваш email
+      pass: 'your_email_password' // Ваш пароль от email
+    }
+  });
+
+  // Определяем параметры письма
+  let mailOptions = {
+    from: '"Учебный центр STOMCOACH" <education@stom-coach.ru>', // Адрес отправителя
+    to: order.attributes.email, // Адрес получателя
+    subject: 'Вы записаны на мероприятие', // Тема письма
+    // text: 'This is a test email sent from Node.js using SMTP!', // Текст письма
+    html: emailTemplate // HTML-версия письма
+  };
+
+  try {
+    let info = await transporter.sendMail(mailOptions);
+    console.log('Письмо отправлено: %s', info.messageId);
+    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  } catch (error) {
+    console.error('Ошибка при отправке письма:', error);
+  }
 }

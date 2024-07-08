@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@auth/prisma-adapter':
         specifier: ^1.4.0
-        version: 1.6.0(@prisma/client@5.15.0(prisma@5.15.0))
+        version: 1.6.0(@prisma/client@5.15.0(prisma@5.15.0))(nodemailer@6.9.14)
       '@emotion/styled':
         specifier: ^11.11.0
         version: 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.2.0))(@types/react@18.3.3)(react@18.2.0)
@@ -50,9 +50,6 @@ importers:
       '@react-input/mask':
         specifier: ^1.2.3
         version: 1.2.5(@types/react@18.3.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@strapi/blocks-react-renderer':
-        specifier: ^1.0.1
-        version: 1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.9.2
         version: 0.9.2(typescript@5.4.5)(zod@3.23.8)
@@ -127,10 +124,13 @@ importers:
         version: 14.2.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-auth:
         specifier: ^4.24.6
-        version: 4.24.7(next@14.2.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.24.7(next@14.2.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      nodemailer:
+        specifier: ^6.9.14
+        version: 6.9.14
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1878,12 +1878,6 @@ packages:
       react-dom: ^17.0.0 || ^18.0.0
       react-router-dom: ^5.2.0
       styled-components: ^5.2.1
-
-  '@strapi/blocks-react-renderer@1.0.1':
-    resolution: {integrity: sha512-oHQNYstM/361oJIKrj6wDFZhDWHg8M8sF7SszqWr8zH2EaoL36ccLq7F2XFWShYQshuKgY+V6axurDaxWo4jQA==}
-    peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
 
   '@strapi/content-releases@4.24.5':
     resolution: {integrity: sha512-5/TzgwGSnnCxJ/wtT53Gsc6koLuwvDxXs1nu9GFLct3A0bNPe7MyEUv8vdcdlW7UAD8IIdJnRixoJahnStagxQ==}
@@ -5554,6 +5548,10 @@ packages:
   nodemailer-shared@1.1.0:
     resolution: {integrity: sha512-68xW5LSyPWv8R0GLm6veAvm7E+XFXkVgvE3FW0FGxNMMZqMkPFeGDVALfR1DPdSfcoO36PnW7q5AAOgFImEZGg==}
 
+  nodemailer@6.9.14:
+    resolution: {integrity: sha512-Dobp/ebDKBvz91sbtRKhcznLThrKxKt97GI2FAlAyy+fk19j73Uz3sBXolVtmcXjaorivqsbbbjDY+Jkt4/bQA==}
+    engines: {node: '>=6.0.0'}
+
   nodemon@3.0.2:
     resolution: {integrity: sha512-9qIN2LNTrEzpOPBaWHTm4Asy1LxXLSickZStAQ4IZe7zsoIpD/A7LWxhZV3t4Zu352uBcqVnRsDXSMR2Sc3lTA==}
     engines: {node: '>=10'}
@@ -7603,7 +7601,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@auth/core@0.29.0':
+  '@auth/core@0.29.0(nodemailer@6.9.14)':
     dependencies:
       '@panva/hkdf': 1.1.1
       '@types/cookie': 0.6.0
@@ -7612,10 +7610,12 @@ snapshots:
       oauth4webapi: 2.10.4
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
+    optionalDependencies:
+      nodemailer: 6.9.14
 
-  '@auth/prisma-adapter@1.6.0(@prisma/client@5.15.0(prisma@5.15.0))':
+  '@auth/prisma-adapter@1.6.0(@prisma/client@5.15.0(prisma@5.15.0))(nodemailer@6.9.14)':
     dependencies:
-      '@auth/core': 0.29.0
+      '@auth/core': 0.29.0(nodemailer@6.9.14)
       '@prisma/client': 5.15.0(prisma@5.15.0)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
@@ -9343,11 +9343,6 @@ snapshots:
       - webpack-cli
       - webpack-dev-server
       - webpack-plugin-serve
-
-  '@strapi/blocks-react-renderer@1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
 
   ? '@strapi/content-releases@4.24.5(@babel/runtime@7.24.7)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.27.0)(@lezer/common@1.2.1))(@codemirror/language@6.10.2)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.27.0)(@strapi/admin@4.24.5(@babel/runtime@7.24.7)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.27.0)(@lezer/common@1.2.1))(@codemirror/language@6.10.2)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.27.0)(@strapi/data-transfer@4.24.5(@strapi/strapi@4.24.5(@babel/runtime@7.24.7)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.27.0)(@lezer/common@1.2.1))(@codemirror/language@6.10.2)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.27.0)(@swc/helpers@0.5.11)(@types/hoist-non-react-statics@3.3.5)(@types/node@20.14.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(codemirror@5.65.16)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(redux@4.2.1)(styled-components@5.3.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react-is@18.3.1)(react@18.2.0))(terser@5.31.1)(type-fest@2.19.0))(@types/node@20.14.2))(@strapi/strapi@4.24.5(@babel/runtime@7.24.7)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.27.0)(@lezer/common@1.2.1))(@codemirror/language@6.10.2)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.27.0)(@swc/helpers@0.5.11)(@types/hoist-non-react-statics@3.3.5)(@types/node@20.14.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(codemirror@5.65.16)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(redux@4.2.1)(styled-components@5.3.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react-is@18.3.1)(react@18.2.0))(terser@5.31.1)(type-fest@2.19.0))(@swc/helpers@0.5.11)(@types/hoist-non-react-statics@3.3.5)(@types/node@20.14.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(codemirror@5.65.16)(debug@4.3.4)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(redux@4.2.1)(styled-components@5.3.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react-is@18.3.1)(react@18.2.0))(terser@5.31.1)(type-fest@2.19.0))(@strapi/strapi@4.24.5(@babel/runtime@7.24.7)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.27.0)(@lezer/common@1.2.1))(@codemirror/language@6.10.2)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.27.0)(@swc/helpers@0.5.11)(@types/hoist-non-react-statics@3.3.5)(@types/node@20.14.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(codemirror@5.65.16)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(redux@4.2.1)(styled-components@5.3.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react-is@18.3.1)(react@18.2.0))(terser@5.31.1)(type-fest@2.19.0))(@types/node@20.14.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(codemirror@5.65.16)(debug@4.3.4)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(redux@4.2.1)(styled-components@5.3.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react-is@18.3.1)(react@18.2.0))(typescript@5.2.2)'
   : dependencies:
@@ -13962,7 +13957,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-auth@4.24.7(next@14.2.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-auth@4.24.7(next@14.2.3(@babel/core@7.24.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@babel/runtime': 7.24.7
       '@panva/hkdf': 1.1.1
@@ -13976,6 +13971,8 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       uuid: 8.3.2
+    optionalDependencies:
+      nodemailer: 6.9.14
 
   next-themes@0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
@@ -14057,6 +14054,8 @@ snapshots:
   nodemailer-shared@1.1.0:
     dependencies:
       nodemailer-fetch: 1.6.0
+
+  nodemailer@6.9.14: {}
 
   nodemon@3.0.2:
     dependencies:

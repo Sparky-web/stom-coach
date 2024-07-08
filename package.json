@@ -7,18 +7,21 @@
     "strapi": "cd backend && npm run develop",
     "frontend": "cd frontend && npm run dev",
     "start": "concurrently \"npm run strapi\" \"npm run frontend\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "rsync -avz --exclude './frontend/node_modules' --exclude './backend/node_modules' --exclude './node_modules' . root@45.11.27.62/stom-coach"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/nodemailer": "^6.4.15",
     "axios": "^1.6.8",
     "js-yaml": "^4.1.0",
     "moment": "^2.30.1",
     "react-cookie": "^7.1.4",
     "xml2js": "^0.6.2"
   },
+
   "devDependencies": {
     "concurrently": "^8.2.2"
   },

@@ -6,7 +6,7 @@ import MapComponent from "../events/[id]/map";
 export default function Contacts(props: { settings: Settings }) {
   console.log(props.settings)
   return (
-    <div className="bg-muted">
+    <div className="bg-muted" id="contacts">
       <div className="container py-[32px] grid md:grid-cols-[1fr,2fr] gap-6">
         <div className="p-6 bg-white rounded-xl grid gap-4">
           <h2 className="text-2xl font-semibold">Контакты</h2>

@@ -188,12 +188,16 @@ export const paymentRouder = createTRPCRouter({
 
       await strapi.update('orders', order, {
         sberbank_order_id: data.orderId,
+        sberbank_payment_url: data.formUrl,
         // is_paid: true
       })
 
       startCheckingPayment(data.orderId)
 
-      return data
+      return data as {
+        orderId: string;
+        formUrl: string;
+      }
     }
     catch (e) {
       throw new TRPCError({
@@ -208,6 +212,11 @@ async function startCheckingPayment(orderId: string, count: number = 0) {
   const maxCountCheck = (1000 * 60 * 20 / 30000) // 20 минут
 
   if (count > maxCountCheck) {
+    const [order] = await strapi.get('orders', {filters: {sberbank_order_id: orderId}});
+    await strapi.update('orders', order.id, {
+      expired: true
+    })
+ 
     return
   } 
 
@@ -240,7 +249,7 @@ async function getOrderStatus(orderId: string) {
     orderId: orderId, // Уникальный идентификатор заказа, который вы получили при создании счета
     userName: env.SBER_LOGIN, // Ваш логин для доступа к API Сбербанка
     password: env.SBER_PASSWORD // Ваш пароль для доступа к API Сбербанка
-  };
+  }
 
   const response = await axios.post(url, null, { params: data, httpsAgent: new https.Agent({ rejectUnauthorized: false }) });
   if (response.data.errorCode === '0') {

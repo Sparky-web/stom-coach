@@ -104,5 +104,31 @@ export type Option = {
   name: string;
   price: number;
   ticketsAmount: number;
+  ticketsLeft: number;
 }
 
+
+export type Order = {
+  phone: string;
+  option_id: number;
+  first_name: string;
+  last_name: string;
+  second_name: string;
+  email: string;
+  workplace: string;
+  custom_position: string | null;
+  custom_speciality: string | null;
+  createdAt: string;
+  updatedAt: string;
+  is_paid: boolean;
+  sberbank_order_id: string | undefined;
+  price: number;
+  option_name: string;
+  sberbank_payment_url: string | undefined;
+}
+
+export type LkEvent = {
+  id: number;
+  attributes: Event['attributes'];
+  order: Order;
+}

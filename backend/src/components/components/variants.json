@@ -17,6 +17,11 @@
     "ticketsAmount": {
       "type": "integer",
       "required": true
+    },
+    "ticketsLeft": {
+      "type": "integer",
+      "required": true,
+      "default": 0
     }
   }
 }

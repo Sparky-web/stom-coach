@@ -9,7 +9,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import strapi from "~/server/strapi";
-import { Settings, Event } from "~/types/entities";
+import { Settings, Event, City } from "~/types/entities";
 import { APIResponseCollection } from "~/types/types";
 
 
@@ -74,7 +74,13 @@ export const strapiRouter = createTRPCRouter({
   }),
   getCities: publicProcedure.query(async ({ ctx }) => {
     const data = await strapi.get("cities", { populate: "" });
-    return data.data as APIResponseCollection<"api::city.city">["data"];
+    return data.data as City[];
+  }),
+  getCityId: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    const data = await strapi.get("cities", { populate: "", filters: {
+      name: input
+    } });
+    return data.data[0]?.id || null as number | null;
   }),
   getSpecsAndPositions: publicProcedure.query(async ({ ctx }) => {
     const { data: specs } = await strapi.get("specialities", { populate: "" });

@@ -13,13 +13,16 @@ import { env } from "~/env";
 
 Settings.defaultLocale = 'ru';
 
-export default function EventCard(props: { event: Event }) {
+export default function EventCard(props: { event: Event, className?:   string }) {
   const { settings } = useContext(DataContext)
+
+  const cheapestOption =  props.event.attributes.options.length ?  props.event.attributes.options.reduce((a, b) => a.price < b.price ? a : b): null
+
   const prettyPrice = new Intl.NumberFormat("ru-RU", {
     style: "currency",
     currency: "RUB",
     minimumFractionDigits: 0,
-  }).format(props.event.attributes.price)
+  }).format(cheapestOption?.price || props.event.attributes.price )
 
   let _thumbnail = props.event.attributes.image?.data?.attributes?.formats?.thumbnail?.url || props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes?.formats?.thumbnail?.url
   const thumbnail = _thumbnail ? env.NEXT_PUBLIC_STRAPI_URL + _thumbnail : null
@@ -27,7 +30,7 @@ export default function EventCard(props: { event: Event }) {
 
   return (
     <Link href={`/events/${props.event.id}`}>
-      <div className="rounded-[18px] h-[530px] bg-white grid grid-rows-[250px,1fr]">
+      <div className={"rounded-[18px] h-[530px] bg-white grid grid-rows-[250px,1fr] " + (props.className || '')}>
         <Image
           src={props.event.attributes.image?.data?.attributes.url ||
             props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes.url ||
@@ -60,7 +63,7 @@ export default function EventCard(props: { event: Event }) {
             </p>
           </div>
           <div className="ml-auto py-2 px-3 border-black border-[2px] font-bold rounded-xl">
-            {prettyPrice}
+            {cheapestOption ? 'от '+ prettyPrice : prettyPrice}
           </div>
         </div>
       </div>

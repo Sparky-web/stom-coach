@@ -40,7 +40,14 @@ const strapi = {
     })
 
     return response?.data
-  }
+  },
+  delete: async (url: string, id: number, options?: AxiosRequestConfig) => {
+    const { data: response } = await axios.delete(`${env.STRAPI_URL}/api/${url}/${id}`, {
+      ...options
+    })
+
+    return response?.data
+  },
 }
 
 export default strapi;

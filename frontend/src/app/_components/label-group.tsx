@@ -1,7 +1,7 @@
-export default function LabelGroup({ children, label }: { children: React.ReactNode, label: string }) {
+export default function LabelGroup({ children, label, ...props }: { children: React.ReactNode, label: string, className?: string }) {
   return (
-    <div className="grid gap-1 content-start">
-      <span className="text-sm font-semibold text-muted-foreground">
+    <div {...props} className={"grid gap-1 content-start " + props.className || ''}> 
+      <span className="text-sm font-medium text-muted-foreground lowercase">
         {label}
       </span>
       {children}

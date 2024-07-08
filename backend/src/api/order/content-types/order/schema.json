@@ -73,6 +73,14 @@
     },
     "option_name": {
       "type": "string"
+    },
+    "sberbank_payment_url": {
+      "type": "string"
+    },
+    "expired": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

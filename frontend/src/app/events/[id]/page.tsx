@@ -24,7 +24,6 @@ export default async function EventPage({ params }: { params: { id: string } }) 
   } catch (e) {
     return <ErrorPage />
   }
-  console.log(event)
 
   const coordinates: [number, number] = event.attributes.location ? await api.map.getCoordinates.query(event.attributes.location) : [0, 0];
 
@@ -54,7 +53,6 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             {event.attributes.city.data && <div className="text-white/70 font-semibold text-sm items-center mt-3 whitespace-pre">
               {["г. " + event.attributes.city.data?.attributes.name, ...(event.attributes.speakers?.data || []).map(e => e.attributes.name)].join("  •  ")}
             </div>}
-            <Button variant={'outline'} className="mt-5 uppercase max-w-fit color-white text-white border-white hover:bg-white hover:text-primary">Записаться</Button>
           </div>
         </div>
       </div>
@@ -66,17 +64,17 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             <div className="text-black/70 prose" dangerouslySetInnerHTML={{ __html: event.attributes.description }}>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          {new Date(event.attributes.date) > new Date() ? <div className="flex flex-col gap-4">
             <h2 className="text-xl font-semibold">Оплата: </h2>
             {!event.attributes.options?.length && <div className="grid gap-4">
               {event.attributes?.ticketsLeft < 10 && <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>осталось мест: {event.attributes.ticketsLeft}</Badge>}
 
               <div className="flex justify-between gap-4">
                 <span className="text-3xl font-bold">{priceFormattedLocalized}</span>
-                <div className="flex gap-3">
+                {event.attributes.ticketsLeft > 0 && <div className="flex gap-3">
                   <SignUpDialog event={event} selectedOption={null} />
                   <Button variant={'outline'} className="uppercase">Для юр. лиц</Button>
-                </div>
+                </div>}
               </div>
             </div>}
 
@@ -87,18 +85,21 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                     <h4>{e.name}</h4>
                     <div className="flex justify-between gap-4">
                       <span className="text-3xl font-bold">{localizer.format(e.price)}</span>
-                      <div className="flex gap-3">
+                      {e.ticketsLeft > 0 ? <div className="flex gap-3">
                         <SignUpDialog event={event} selectedOption={e} />
                         <Button variant={'outline'} className="uppercase">Для юр. лиц</Button>
-                      </div>
+                      </div> :
+                        <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>мест нет</Badge>
+                      }
                     </div>
-                    {e.ticketsAmount < 10 && <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>осталось мест: {e.ticketsAmount}</Badge>}
+                    {e.ticketsLeft < 10 && e.ticketsLeft > 0 && <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>осталось мест: {e.ticketsLeft}</Badge>}
                   </div>
                 )
               })}
             </div>}
           </div>
-
+            : <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>мероприятие завершено</Badge>
+          }
 
         </div>
         <div className={cn("grid gap-4", event.attributes.location ? "content-between" : "content-start")}>

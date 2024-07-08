@@ -14,12 +14,13 @@
     --popover-foreground: 222.2 84% 4.9%;
 
     --primary: 222.2 47.4% 11.2%;
+    /* --primary: 43, 74%, 49%; */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
+    --muted: rgba(0,0,0,0.02);
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 210 40% 96.1%;
@@ -90,6 +91,6 @@ body {
   filter: grayscale(100)
 } */
 
-a {
+.highlight-links a {
   @apply text-primary underline underline-offset-2;
 }

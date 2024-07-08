@@ -16,6 +16,8 @@ import LabelGroup from "~/app/_components/label-group";
 import { formatDate } from "~/lib/utils";
 import LoginCard from "~/app/login/login-card";
 import PersonalInfoCheckbox from "~/app/_components/personal-info-checkbox";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function SignUp({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
   const { user } = useAuth()
@@ -33,6 +35,28 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
 
   const [data, setData] = useState<ClientFormValuesOutput | null>(user ? convertUserToClientFormValuesOutput(user) : null)
 
+  const router = useRouter()
+
+  const onSubmit = async () => {
+    if (!data) return
+
+    try {
+      const res = await mutateAsync({
+        eventId: event.id,
+        optionId: selectedOption?.id,
+        ...data
+      })
+
+      toast.success("Заказ создан, перевод на страницу оплаты")
+
+      router.push(res.formUrl)
+
+    } catch (e) {
+      toast.error("Ошибка записи: " + e.message as string)
+      console.log(e)
+    }
+  }
+
   useEffect(() => {
     if (user) {
       setData(convertUserToClientFormValuesOutput(user))
@@ -40,10 +64,13 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
     }
   }, [user])
 
+  const isDisabled = (selectedOption ? selectedOption.ticketsLeft < 1 : event.attributes.ticketsLeft < 1)
+    || new Date(event.attributes.date) < new Date()
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" className="uppercase">Записаться</Button>
+        <Button variant="default" className="uppercase" disabled={isDisabled}>Записаться</Button>
       </DialogTrigger>
       <DialogContent className="w-full max-w-5xl max-h-[calc(100dvh)] overflow-y-auto rounded-2xl">
         <DialogHeader>
@@ -157,9 +184,9 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
             </div>
 
             {selectedOption && <LabelGroup label="Выбранная опция">
-              <div className="flex justify-between gap-2">
-                <span className="text-lg">{selectedOption.name}</span>
-                <span className="text-2xl font-semibold">{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(selectedOption.price)}</span>
+              <div className="flex justify-between gap-2 items-center">
+                <span className="">{selectedOption.name}</span>
+                <span className="text-xl font-semibold">{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(selectedOption.price)}</span>
               </div>
             </LabelGroup>}
 
@@ -170,17 +197,7 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
             <PersonalInfoCheckbox value={checked} onChange={setChecked} />
 
             <Button variant={'default'}
-              onClick={async () => {
-                if(!data) return
-
-                const res = await mutateAsync({
-                  eventId: event.id,
-                  optionId: selectedOption?.id,
-                  ...data
-                })
-
-                console.log(res)
-              }}
+              onClick={onSubmit}
               disabled={!data || !checked}
               size="lg" className="mt-auto bg-[linear-gradient(135deg,#A5C83B,#2AC5A7,#189BDA)] hover:opacity-90 transition">
               <Wallet className="h-6 w-6" />

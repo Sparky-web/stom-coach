@@ -1,4 +1,4 @@
-import { LkEvent } from "~/types/event"
+import { LkEvent } from "~/types/entities"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 import strapi from "~/server/strapi"
 
@@ -6,7 +6,8 @@ export const lkRouter = createTRPCRouter({
   getMyEvents: protectedProcedure.query(async ({ ctx }) => {
     const { data: payments } = await strapi.get('orders', {
       filters: {
-        client: ctx.session.user.id
+        phone: ctx.session.user.attributes.phone,
+        expired: false
       },
       populate: '*'
     })
@@ -14,7 +15,6 @@ export const lkRouter = createTRPCRouter({
     const events = []
 
     for (const payment of payments) {
-      console.log(payment)
       const eventId = payment.attributes.event.data.id
 
       const { data } = await strapi.get('events/' + eventId, {
@@ -31,8 +31,8 @@ export const lkRouter = createTRPCRouter({
         ...data,
         attributes: {
           ...data.attributes,
-          isPaid: payment.attributes.isPaid
-        }
+        },
+        order: payment.attributes
       })
     }
 

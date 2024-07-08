@@ -246,7 +246,7 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
           const errors = getErrors({ values: form.values })
 
           return (
-            <Button size={"lg"} className="w-full" disabled={errors && errors.length > 0 || isLoading || type === "lk" && form.isPristine} type="submit">
+            <Button size={type !== "lk"  ? "lg" : 'default'} className={type !== "lk" ? "w-full" : "w-fit"} disabled={errors && errors.length > 0 || isLoading || type === "lk" && form.isPristine} type="submit">
               {isLoading && <Spinner />}
               {type === "lk" ? "Сохранить" : "Далее"}
             </Button>

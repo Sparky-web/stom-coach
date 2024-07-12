@@ -14,7 +14,22 @@ const Hero = (props: { data: APIResponse<"api::nastrojki.nastrojki">['data']['at
   return (
     <div className="container min-h-[400px] grid max-lg:gap-6 lg:grid-cols-[1fr,1fr] mt-6">
       <div className="p-8 bg-primary/10 rounded-l-xl flex justify-between items-start gap-8 max-lg:rounded-xl">
-        <h1 className="font-medium text-2xl">Учебный центр для стоматологов и зубных техников</h1>
+        <div className="grid gap-6">
+          <h1 className="font-medium text-2xl">
+            Учебный центр для стоматологов и зубных техников
+          </h1>
+          <h1 className="font-medium ">
+            ваш наставник в профессиональном росте
+          </h1>
+          {/* <p className="text-sm">
+            Учебный центр для стоматологов и зубных техников
+          </p> */}
+          <ul className="text-sm list-disc grid gap-1 pl-3">
+            <li>Обучение для стоматологов всех специальностей</li>
+            <li>Самые актуальные тематики</li>
+            <li>Высокая наполненность практическими решениями</li>
+          </ul>
+        </div>
         {logoUrl && <Image
           className="min-w-[96px]"
           alt="StomCoach логотип"

@@ -37,7 +37,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
     <div>
       <div className="relative">
         {event.attributes.image?.data && <Image src={event.attributes.image?.data?.attributes.url} width={700} height={700}
-          className="object-cover object-center absolute h-full w-full "
+          className="object-cover object-top absolute h-full w-full "
           alt={event.attributes.image?.data.attributes.name} />}
 
         <div className="absolute h-full w-full bg-primary" style={{ background: event.attributes.image?.data ? 'linear-gradient(180deg, rgba(28.85, 36.66, 52.06, 0.70) 0%, rgba(29, 37, 52, 0.50) 38%, rgba(29, 37, 52, 0.25) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%)' : '' }} />

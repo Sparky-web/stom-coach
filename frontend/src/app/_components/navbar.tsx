@@ -26,64 +26,64 @@ const Navbar = () => {
   return (
     <>
       <nav className={cn(
-        "max-md:bg-slate-100 bg-white dark:bg-gray-900 w-full border-b border-gray-200 dark:border-gray-600 relative z-10 max-md:fixed",
-        isEventPage && "bg-transparent md:text-white"
+        " w-full bg-neutral-800  relative z-10 max-md:fixed text-slate-100",
+        // isEventPage && "bg-transparent md:text-white"
       )}>
-        <div className="container gap-4 flex md:grid md:grid-cols-[250px_1fr_250px] items-center justify-between mx-auto py-6">
+        <div className="container gap-4 flex flex-wrap md:grid md:grid-cols-[250px_1fr_250px] items-center justify-between mx-auto py-6">
           <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
             <span className="self-center text-2xl font-semibold whitespace-nowrap uppercase ">{data.title}</span>
           </Link>
-          <div className="flex md:order-2 gap-4 justify-end">
+          <div className="flex md:order-2 justify-end ">
             {user && <Link href={"/lk/settings"} >
-              <Button variant={"ghost"} className="hover:bg-transparent hover:text-black/65">
+              <Button variant={"ghost"} className="hover:bg-transparent hover:text-gray-300">
                 <User className="w-6 h-6" />
-                {user.attributes.first_name}
+                {/* {user.attributes.first_name} */}
               </Button>
             </Link>}
 
 
             {!user && <div className="flex flex-wrap gap-2 max-md:hidden">
               <Link href={"/login"} >
-                <Button variant={"tenary"}>Вход</Button>
+                <Button variant={"tenary"} className="text-gray-200">Вход</Button>
               </Link>
               <Link href={"/login"}>
                 <Button>Регистрация</Button>
               </Link>
             </div>}
 
-            <Button onClick={() => setOpen(!open)} data-collapse-toggle="navbar-sticky" variant={"ghost"} size={'icon'} className="md:hidden hover:bg-transparent" aria-controls="navbar-sticky" aria-expanded="false">
+            <Button onClick={() => setOpen(!open)} data-collapse-toggle="navbar-sticky" variant={"ghost"} size={'icon'} className="md:hidden hover:bg-transparent hover:text-gray-300" aria-controls="navbar-sticky" aria-expanded="false">
               <span className="sr-only">Открыть меню</span>
-              {!open ? <Menu className="w-6 h-6 hover:text-black/65" /> : <X className="w-6 h-6 hover:text-black/65" />}
+              {!open ? <Menu className="w-6 h-6 " /> : <X className="w-6 h-6 " />}
             </Button>
           </div>
           <div className={
             cn(
-              "justify-center transition-all max-md:left-[-100%] max-md:w-[calc(100%)] md:flex md:w-auto md:order-1 max-md:fixed max-md:top-[89px] max-md:bg-slate-100 ",
-              open && "max-md:left-[0] max-md:h-[calc(100vh-89px)]"
+              "justify-center transition-all max-md:left-[-100%] max-md:h-[calc(100dvh-86px)] max-md:w-[calc(100%)] md:flex md:w-auto md:order-1 max-md:fixed max-md:top-[88px] max-md:bg-neutral-800 ",
+              open && "max-md:left-[0] "
             )
           }>
-            <ul className={cn("z-10 max-md:rounded-b max-md:container flex flex-col flex-wrap justify-center justify-items-center max-md:gap-2 p-4 md:p-0 mt-4 md:space-x-4  rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ", "max-md:bg-slate-100")}>
+            <ul className={cn("z-10 max-md:rounded-b max-md:container flex flex-col flex-wrap justify-center justify-items-center max-md:gap-2 p-4 md:p-0 mt-4 md:space-x-4  rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ")}>
               <li>
                 <Link href="/">
-                <NavButton className={isEventPage ? "hover:bg-[#6998F4]/25 hover:text-[#CADCFF]" : ""}>Главная</NavButton>
-</Link>
+                  <NavButton>Главная</NavButton> 
+                </Link>
               </li>
               <li >
                 <Link href="/events">
-                  <NavButton className={isEventPage ? "hover:bg-[#6998F4]/25 hover:text-[#CADCFF]" : ""}>Все мероприятия</NavButton>
+                  <NavButton>Все мероприятия</NavButton>
                 </Link>
               </li>
               <li>
                 <Link href="/#contacts">
-                  <NavButton className={isEventPage ? "hover:bg-[#6998F4]/25 hover:text-[#CADCFF]" : ""}>Контакты</NavButton>
+                  <NavButton>Контакты</NavButton>
                 </Link>
               </li>
               {!user && <li className="flex flex-wrap gap-2 md:hidden justify-center mt-3">
                 <Link href={"/login"} >
-                  <Button variant={"tenary"}>Вход</Button>
+                  <Button variant={"tenary"} className="text-gray-200" >Вход</Button>
                 </Link>
                 <Link href={"/login"}>
-                  <Button>Регистрация</Button>
+                  <Button className="font-normal">Регистрация</Button>
                 </Link>
               </li>}
             </ul>

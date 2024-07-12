@@ -60,6 +60,14 @@
     },
     "whatsapp_link": {
       "type": "string"
+    },
+    "telegram_link": {
+      "type": "string",
+      "required": true
+    },
+    "admin_email": {
+      "type": "email",
+      "required": true
     }
   }
 }

@@ -10,7 +10,7 @@ import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
 import { Event } from "~/types/entities";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { Edit2, GraduationCap, LogIn, ScrollText, UserIcon, Wallet } from "lucide-react";
+import { CircleAlert, Edit2, GraduationCap, LogIn, ScrollText, UserIcon, Wallet } from "lucide-react";
 import Card from "~/app/_components/card";
 import LabelGroup from "~/app/_components/label-group";
 import { formatDate } from "~/lib/utils";
@@ -196,6 +196,10 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
 
             <PersonalInfoCheckbox value={checked} onChange={setChecked} />
 
+
+            <div className="bg-amber-50 rounded-lg p-3 text-amber-700 text-sm flex gap-2 items-center">
+              <CircleAlert className="h-4 w-4" /> ссылка на оплату действительна 20 минут
+            </div>
             <Button variant={'default'}
               onClick={onSubmit}
               disabled={!data || !checked}

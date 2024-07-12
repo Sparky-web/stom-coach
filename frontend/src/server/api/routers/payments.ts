@@ -30,13 +30,16 @@ export const paymentRouder = createTRPCRouter({
     first_name: z.string(),
     last_name: z.string(),
     second_name: z.string(),
-    speciality: z.number(),
+    speciality: z.number().nullable().optional(),
     custom_speciality: z.string().optional().nullable(),
     position: z.number(),
     custom_position: z.string().optional().nullable(),
     workplace: z.string()
   })).mutation(async ({ ctx, input }) => {
     try {
+
+      await onPaymentSuccess('cb849792-c13b-7322-bbb1-e372028b0139')
+      return
       const res = await strapi.get('events/' + input.eventId, {
         populate: "*"
       })
@@ -302,7 +305,8 @@ const onPaymentSuccess = async (orderId: string) => {
 
   let emailTemplate = await fs.readFile('./src/email-template.html', 'utf8');
 
-  emailTemplate = emailTemplate.replace(/{{order_number}}/g, order.attributes.order_number)
+  emailTemplate = emailTemplate.replace(/{{order_number}}/g, order.id)
+    .replace(/{{order_date}}/g, DateTime.fromISO(order.attributes.updatedAt).toLocaleString(DateTime.DATETIME_MED))
     .replace(/{{event_name}}/g, order.attributes.event.data.attributes.name + (order.attributes.option_name ? " — " + order.attributes.option_name : ""))
     .replace(/{{event_url}}/g, env.BASE_URL + '/events/' + order.attributes.event.data.id)
     .replace(/{{client_name}}/g, order.attributes.first_name + " " + order.attributes.second_name)
@@ -310,12 +314,15 @@ const onPaymentSuccess = async (orderId: string) => {
     .replace(/{{location}}/g, order.attributes.event.data.attributes.location)
 
   let transporter = nodemailer.createTransport({
-    host: 'smtp.example.com', // SMTP-сервер
+    host: 'smtp.stom-coach.ru', // SMTP-сервер
     port: 587, // Порт
     secure: false, // true для 465, false для других портов
     auth: {
-      user: 'your_email@example.com', // Ваш email
-      pass: 'your_email_password' // Ваш пароль от email
+      user: 'education@stom-coach.ru', // Ваш email
+      pass: '9kA949gKxKmR5urN' // Ваш пароль от email
+    },
+    tls: {
+      rejectUnauthorized: false // This bypasses the certificate validation
     }
   });
 

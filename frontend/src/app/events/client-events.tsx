@@ -16,22 +16,35 @@ export default function ClientEvents(props: {
 }) {
   const [selectedSpec, setSelectedSpec] = useState(null)
   const [selectedCity, setSelectedCity] = useState<number | null>(props.cityId)
+  const [type, setType] = useState<'all' | 'active' | 'past'>('active')
 
   const { data: events } = api.strapi.getEvents.useQuery({
     filters: {
       city: selectedCity,
       date: {
-        $gte: new Date().toISOString()
+        $gte: type === 'active' ? new Date().toISOString() : undefined,
+        $lte: type === 'past' ? new Date().toISOString() : undefined
       }
+    },
+    options: {
+      sort: type === 'active' ? 'date:asc' : 'date:desc'
     }
   }, {
-    queryHash: 'events.' + selectedCity
+    queryHash: 'events.' + selectedCity + '.' + type
   })
 
   return (
     <div className="grid md:grid-cols-[300px,1fr] gap-8 mt-6">
       <div className="grid gap-6 content-start">
         <h1 className="text-2xl font-bold">Все мероприятия</h1>
+        <div>
+          <h3 className="text-sm text-muted-foreground">Тип</h3>
+          <div className="flex gap-2 mt-2 flex-wrap">
+            <CityBadge variant={type === 'active' ? 'selected' : 'default'} onClick={() => setType('active')}>Актуальные</CityBadge>
+            <CityBadge variant={type === 'all' ? 'selected' : 'default'} onClick={() => setType('all')}>Все</CityBadge>
+            <CityBadge variant={type === 'past' ? 'selected' : 'default'} onClick={() => setType('past')}>Прошедшие</CityBadge>
+          </div>
+        </div>
         <div>
           <h3 className="text-sm text-muted-foreground">Город</h3>
           <div className="flex gap-2 mt-2 flex-wrap">
@@ -58,6 +71,9 @@ export default function ClientEvents(props: {
             <CityBadge variant={"default"} disabled>Эстетика</CityBadge>
           </div>
         </div>
+
+
+
         {/* <div>
           <h3 className="text-sm text-muted-foreground">Тип</h3>
           <div className="flex gap-2 mt-2 flex-wrap">

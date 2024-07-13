@@ -1,0 +1,39 @@
+{
+    "kind": "collectionType",
+    "collectionName": "photoalbums",
+    "info": {
+        "singularName": "photoalbum",
+        "pluralName": "photoalbums",
+        "displayName": "Фотоальбомы",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "description": {
+            "type": "text",
+            "required": true
+        },
+        "link": {
+            "type": "string",
+            "required": true
+        },
+        "cover": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        }
+    }
+}

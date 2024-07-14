@@ -5,6 +5,9 @@ import Menu from "./menu";
 import Events from "./events";
 import AboutUs from "./about-us";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function Home() {
   const settings = await api.strapi.getSettings.query()
   const mainEvent = await api.strapi.getMainEvent.query()

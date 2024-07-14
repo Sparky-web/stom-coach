@@ -5,6 +5,8 @@ import { getConfig } from "~/lib/getConfig";
 import ClientEvents from "./client-events";
 import _ from "lodash";
 
+export const dynamic = "force-dynamic";
+
 export default async function Events() {
   const { city } = await getConfig()
   const cityId = await api.strapi.getCityId.query(city)

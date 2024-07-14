@@ -1,0 +1,86 @@
+{
+    "kind": "collectionType",
+    "collectionName": "orders",
+    "info": {
+        "singularName": "order",
+        "pluralName": "orders",
+        "displayName": "Заказы",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "phone": {
+            "type": "string",
+            "required": true
+        },
+        "event": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::event.event"
+        },
+        "option_id": {
+            "type": "integer"
+        },
+        "first_name": {
+            "type": "string",
+            "required": true
+        },
+        "last_name": {
+            "type": "string",
+            "required": true
+        },
+        "second_name": {
+            "type": "string",
+            "required": false
+        },
+        "email": {
+            "type": "email",
+            "required": true
+        },
+        "workplace": {
+            "type": "string",
+            "required": true
+        },
+        "speciality": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::speciality.speciality"
+        },
+        "position": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::position.position"
+        },
+        "custom_position": {
+            "type": "string"
+        },
+        "custom_speciality": {
+            "type": "string"
+        },
+        "is_paid": {
+            "type": "boolean",
+            "default": false,
+            "required": true
+        },
+        "sberbank_order_id": {
+            "type": "string"
+        },
+        "price": {
+            "type": "integer"
+        },
+        "option_name": {
+            "type": "string"
+        },
+        "sberbank_payment_url": {
+            "type": "string"
+        },
+        "expired": {
+            "type": "boolean",
+            "default": false,
+            "required": true
+        }
+    }
+}

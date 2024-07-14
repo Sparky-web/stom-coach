@@ -22,6 +22,8 @@ const config = {
       // allowedOrigins: ['*.app.github.dev']
     },
   },
+  
+
   // basePath: "https://symmetrical-xylophone-45vw4477g3j4xx-3000.app.github.dev"
 
 

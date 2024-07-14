@@ -1,6 +1,8 @@
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { api } from "~/trpc/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function Privacy() {
   const data = await api.strapi.getPrivacyPolicy.query();
 

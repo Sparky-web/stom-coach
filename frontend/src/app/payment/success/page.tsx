@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export default function Page() {
   return <div className="container py-16">
     <div className="flex flex-col items-center justify-center gap-4 justify-items-center">

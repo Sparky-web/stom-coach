@@ -5,6 +5,8 @@ import LkEventCard from "./lk-event-card";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default function Courses() {
   const { data: events, isPending } = api.lk.getMyEvents.useQuery()
 

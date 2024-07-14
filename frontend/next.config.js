@@ -6,10 +6,10 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  images: {
-    loader: "custom",
-    loaderFile: "./src/functions/loader.js"
-  },
+  // images: {
+    // loader: "custom",
+    // loaderFile: "./src/functions/loader.js"
+  // },
   typescript: {
     ignoreBuildErrors: true
   },

@@ -3,6 +3,7 @@ import { api } from "~/trpc/server";
 import Hero from "./hero";
 import Menu from "./menu";
 import Events from "./events";
+import AboutUs from "./about-us";
 
 export default async function Home() {
   const settings = await api.strapi.getSettings.query()
@@ -17,12 +18,15 @@ export default async function Home() {
   })
 
   return (
-    <main className="flex flex-col gap-[36px]">
-      <div className="flex flex-col gap-[36px]">
+    <main className="flex flex-col">
+      <div className="flex flex-col gap-[36px] mt-8">
         <Hero data={settings} event={mainEvent} />
         <Menu />
       </div>
+
+      <div className="h-[36px]"></div>
       <Events events={events} />
+      <AboutUs />
     </main>
   );
 }

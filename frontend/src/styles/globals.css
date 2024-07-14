@@ -70,7 +70,10 @@
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  /* font-family: 'Open Sans', sans-serif; */
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
 
 @layer base {
@@ -93,4 +96,10 @@ body {
 
 .highlight-links a {
   @apply text-primary underline underline-offset-2;
+}
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
+  }
+  
 }

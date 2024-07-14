@@ -8,7 +8,8 @@
     "frontend": "cd frontend && npm run dev",
     "start": "concurrently \"npm run strapi\" \"npm run frontend\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "rsync -avz --exclude './frontend/node_modules' --exclude './backend/node_modules' --exclude './node_modules' . root@45.11.27.62/stom-coach"
+    "ssh": "ssh root@45.11.27.62",
+    "deploy": "cdc_rsync -rv --exclude './frontend/node_modules' --exclude './backend/node_modules' --exclude './node_modules' C:\\User\\babin\\Projects\\stom-coach root@45.11.27.62:~/stom-coach"
   },
   "keywords": [],
   "author": "",

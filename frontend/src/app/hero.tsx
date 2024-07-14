@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image"
 import { APIResponse } from "~/types/types"
 import { Badge } from "~/components/ui/badge"
@@ -7,6 +8,7 @@ import { Button } from "~/components/ui/button"
 import { Event } from "~/types/entities"
 import { DateTime } from "luxon"
 import Link from "next/link"
+import imageLoader from "~/functions/loader"
 
 const Hero = (props: { data: APIResponse<"api::nastrojki.nastrojki">['data']['attributes'], event: Event }) => {
   const logoUrl = props.data.logo?.data.attributes.url
@@ -18,19 +20,9 @@ const Hero = (props: { data: APIResponse<"api::nastrojki.nastrojki">['data']['at
           <h1 className="font-medium text-2xl">
             Учебный центр для стоматологов и зубных техников
           </h1>
-          <h1 className="font-medium ">
-            ваш наставник в профессиональном росте
-          </h1>
-          {/* <p className="text-sm">
-            Учебный центр для стоматологов и зубных техников
-          </p> */}
-          <ul className="text-sm list-disc grid gap-1 pl-3">
-            <li>Обучение для стоматологов всех специальностей</li>
-            <li>Самые актуальные тематики</li>
-            <li>Высокая наполненность практическими решениями</li>
-          </ul>
         </div>
         {logoUrl && <Image
+        loader={imageLoader}
           className="min-w-[96px]"
           alt="StomCoach логотип"
           src={logoUrl}

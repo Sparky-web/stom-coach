@@ -1,6 +1,5 @@
 import { MapPin, User } from "lucide-react";
 import { DateTime, Settings } from "luxon";
-import Image from "next/image";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 
@@ -14,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { Event } from "~/types/entities";
 import { formatDate } from "~/lib/utils";
+import ClientImage, { SpeakerImage } from "./client-image";
 
 
 export default async function EventPage({ params }: { params: { id: string } }) {
@@ -36,9 +36,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
   return (
     <div>
       <div className="relative">
-        {event.attributes.image?.data && <Image src={event.attributes.image?.data?.attributes.url} width={700} height={700}
-          className="object-cover object-top absolute h-full w-full "
-          alt={event.attributes.image?.data.attributes.name} />}
+        {event.attributes.image?.data && <ClientImage url={event.attributes.image?.data?.attributes.url} alt={event.attributes.image?.data.attributes.name} />}
 
         <div className="absolute h-full w-full bg-primary" style={{ background: event.attributes.image?.data ? 'linear-gradient(180deg, rgba(28.85, 36.66, 52.06, 0.70) 0%, rgba(29, 37, 52, 0.50) 38%, rgba(29, 37, 52, 0.25) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%)' : '' }} />
 
@@ -114,7 +112,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                       <div className="justify-start items-center gap-4 flex">
                         {
                           e.attributes.avatar?.data?.attributes.url ?
-                            <Image src={e.attributes.avatar?.data?.attributes.url || ""} alt={e.attributes.name} width={70} height={70} className="w-16 h-16 rounded-3xl border-3 border-blue-800" />
+                            <SpeakerImage url={e.attributes.avatar?.data?.attributes.url || ""} alt={e.attributes.name} />
                             : <div className="w-16 h-16 rounded-3xl bg-blue-800 flex items-center justify-center">
                               <User className="w-10 h-8 text-white" />
                             </div>

@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image"
-import Dora from "~/app/dora.jpg"
 import { EventBadge } from "~/components/ui/event-badge"
 import { Event } from "~/types/entities"
 import { DateTime } from "luxon"
@@ -10,6 +9,7 @@ import { useContext } from "react"
 import { DataContext } from "../context"
 import Link from "next/link"
 import { env } from "~/env";
+import imageLoader from "~/functions/loader";
 
 Settings.defaultLocale = 'ru';
 
@@ -32,6 +32,7 @@ export default function EventCard(props: { event: Event, className?: string }) {
     <Link href={`/events/${props.event.id}`}>
       <div className={"rounded-[18px] h-full bg-white grid grid-rows-[250px,1fr] " + (props.className || '')}>
         <Image
+          loader={imageLoader}
           src={props.event.attributes.image?.data?.attributes.url ||
             props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes.url ||
             settings.eventPlaceholderImage?.data.attributes.url ||

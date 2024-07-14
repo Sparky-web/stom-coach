@@ -11,8 +11,9 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "~/components/ui/input-otp
 import { api } from "~/trpc/react";
 import Card from "../_components/card";
 import Spinner from "../_components/spinner";
+import Link from "next/link";
 
-export default function LoginCard({onAuthenticated}: {onAuthenticated: () => void}) {
+export default function LoginCard({ onAuthenticated }: { onAuthenticated: () => void }) {
   const [cookies, setCookie] = useCookies(['token']);
   const inputRef = useMask({ mask: '+7 (___) ___-__-__', replacement: { _: /\d/ } });
 
@@ -83,6 +84,9 @@ export default function LoginCard({onAuthenticated}: {onAuthenticated: () => voi
                   <InputOTPSlot index={3} className="bg-white " />
                 </InputOTPGroup>
               </InputOTP>
+              <span className="text-sm  max-w-[400px] mt-3 highlight-links"> Вводя код, вы соглашаетесь с <Link href="https://docs.google.com/document/d/1JHTxriSUbvL4hVF1QajdIjizfwl1slOs/" target="_blank">Договором публичной оферты
+              </Link> и <Link href="/privacy" target="_blank">политикой в отношении обработки персональных данных</Link>
+              </span>
             </div>}
           </div>
 

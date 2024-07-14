@@ -72,15 +72,15 @@ export const authRouter = createTRPCRouter({
     const number = data.numbers?.[0]?.number_name;
     if (!number) throw new Error('неизвестная ошибка')
 
-    // const {data: {message_id}} = await axios.post('https://api.exolve.ru/messaging/v1/SendSMS', {
-    //   number,
-    //   destination: phone,
-    //   text: `${code} — ваш код для входа в личный кабинет учебного центра StomCoach`
-    // }, {
-    //   headers: {
-    //     'Authorization': `Bearer ${env.EXOLVE_API_KEY}`,
-    //   }
-    // });
+    const {data: {message_id}} = await axios.post('https://api.exolve.ru/messaging/v1/SendSMS', {
+      number,
+      destination: phone,
+      text: `${code} — ваш код для входа в личный кабинет учебного центра StomCoach`
+    }, {
+      headers: {
+        'Authorization': `Bearer ${env.EXOLVE_API_KEY}`,
+      }
+    });
     // let message_id = '1234'
 
     if (!foundCode) {

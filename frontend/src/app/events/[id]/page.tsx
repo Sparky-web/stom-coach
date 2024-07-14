@@ -36,9 +36,6 @@ export default async function EventPage({ params }: { params: { id: string } }) 
 
   return (
     <div>
-      <head>
-        <title>{event.attributes.name} | STOMCOACH</title>
-      </head>
       <div className="relative">
         {event.attributes.image?.data && <ClientImage url={event.attributes.image?.data?.attributes.url} alt={event.attributes.image?.data.attributes.name} />}
 
@@ -49,7 +46,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             {!!event.attributes.tags?.length && <div className="text-white/70 font-semibold text-sm items-center whitespace-pre">
               {event.attributes.tags.map(e => e.name).join("  •  ")}
             </div>}
-            <h1 className="font-bold text-[42px] leading-snug">
+            <h1 className="font-bold text-2xl lg:text-[42px] leading-snug">
               {event.attributes.name}
             </h1>
             {event.attributes.city.data && <div className="text-white/70 font-semibold text-sm items-center mt-3 ">
@@ -73,7 +70,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
 
               <div className="flex justify-between gap-4">
                 <span className="text-3xl font-bold">{priceFormattedLocalized}</span>
-                {event.attributes.ticketsLeft > 0 && <div className="flex gap-3">
+                {event.attributes.ticketsLeft > 0 && <div className="flex gap-3 flex-wrap">
                   <SignUpDialog event={event} selectedOption={null} />
                   <SignUpDialogLegal event={event} selectedOption={null} />
                   {/* <Button variant={'outline'} className="uppercase">Для юр. лиц</Button> */}
@@ -86,7 +83,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                 return (
                   <div className="grid gap-2 rounded-xl bg-neutral-100 p-4 text-sm font-semibold">
                     <h4>{e.name}</h4>
-                    <div className="flex justify-between gap-4">
+                    <div className="flex justify-between gap-4 flex-wrap">
                       <span className="text-3xl font-bold">{localizer.format(e.price)}</span>
                       {e.ticketsLeft > 0 ? <div className="flex gap-3">
                         <SignUpDialog event={event} selectedOption={e} />
@@ -130,7 +127,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                       </div>
 
                       <AccordionTrigger className="hover:no-underline">
-                        <Button variant={'outline'} className="uppercase mr-3" style={{ textDecoration: 'none !important' }} size={'sm'}>Биография</Button>
+                        <Button variant={'outline'} className="uppercase mr-3 max-md:hidden" style={{ textDecoration: 'none !important' }} size={'sm'}>Биография</Button>
                       </AccordionTrigger>
                     </div>
                     <AccordionContent>

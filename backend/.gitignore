@@ -70,6 +70,7 @@ $RECYCLE.BIN/
 *.sqlite
 *.sqlite3
 
+dist
 
 ############################
 # Misc.

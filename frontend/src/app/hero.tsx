@@ -15,9 +15,9 @@ const Hero = (props: { data: APIResponse<"api::nastrojki.nastrojki">['data']['at
 
   return (
     <div className="container min-h-[400px] grid max-lg:gap-6 lg:grid-cols-[1fr,1fr] mt-6">
-      <div className="p-8 bg-primary/10 rounded-l-xl flex justify-between items-start gap-8 max-lg:rounded-xl">
+      <div className="p-8 bg-primary/10 rounded-l-xl flex justify-between items-start gap-8 max-lg:rounded-xl flex-wrap">
         <div className="grid gap-6">
-          <h1 className="font-medium text-2xl leading-relaxed ">
+          <h1 className="font-medium text-xl md:text-2xl leading-relaxed max-w-[400px] ">
             Учебный центр для стоматологов и зубных техников
           </h1>
         </div>
@@ -33,7 +33,7 @@ const Hero = (props: { data: APIResponse<"api::nastrojki.nastrojki">['data']['at
       {props.event && <div className="p-8 bg-neutral-800 rounded-r-xl text-white flex flex-col justify-between max-lg:rounded-xl gap-8">
         <EventBadge variant={"yellow"}>Актуальное</EventBadge>
         <div className="flex flex-col gap-5">
-          <h2 className="font-semibold text-[24px] ">
+          <h2 className="font-semibold text-xl ">
             {props.event.attributes.name}
             {/* Стоматологический конгресс SNOWRESTO */}
           </h2>

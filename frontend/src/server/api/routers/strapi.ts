@@ -9,7 +9,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import strapi from "~/server/strapi";
-import { Settings, Event, City } from "~/types/entities";
+import { Settings, Event, City, PhotoAlbum } from "~/types/entities";
 import { APIResponseCollection } from "~/types/types";
 
 
@@ -140,7 +140,11 @@ export const strapiRouter = createTRPCRouter({
     })
 
     return event.data as Event;
-  })
+  }),
+  getPhotoAlbums: publicProcedure.query(async ({ ctx }) => {
+    const { data } = await strapi.get("photoalbums", { populate: "*" });
+    return data as PhotoAlbum[];
+  }),
 
   // add: publicProcedure.query(async ({ ctx }) => {
   //   const positions = [

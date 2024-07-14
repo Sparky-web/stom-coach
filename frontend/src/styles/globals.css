@@ -101,5 +101,22 @@ body {
   :root {
     font-size: 14px;
   }
-  
+}
+
+.card .cover {
+  transition: 200ms ease-in-out;
+}
+
+.card:hover .cover{
+  /* filter: grayscale(1); */
+  transform: scale(1.05);
+}
+
+.photoalbum img {
+  transition: 200ms ease-in-out;
+}
+
+.photoalbum:hover img {
+  /* filter: grayscale(1); */
+  transform: scale(1.1);
 }

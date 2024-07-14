@@ -14,6 +14,7 @@ import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { Event } from "~/types/entities";
 import { formatDate } from "~/lib/utils";
 import ClientImage, { SpeakerImage } from "./client-image";
+import SignUpDialogLegal from "./sign-up-dialog-legal";
 
 
 export default async function EventPage({ params }: { params: { id: string } }) {
@@ -35,6 +36,9 @@ export default async function EventPage({ params }: { params: { id: string } }) 
 
   return (
     <div>
+      <head>
+        <title>{event.attributes.name} | STOMCOACH</title>
+      </head>
       <div className="relative">
         {event.attributes.image?.data && <ClientImage url={event.attributes.image?.data?.attributes.url} alt={event.attributes.image?.data.attributes.name} />}
 
@@ -48,7 +52,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             <h1 className="font-bold text-[42px] leading-snug">
               {event.attributes.name}
             </h1>
-            {event.attributes.city.data && <div className="text-white/70 font-semibold text-sm items-center mt-3 whitespace-pre">
+            {event.attributes.city.data && <div className="text-white/70 font-semibold text-sm items-center mt-3 ">
               {["г. " + event.attributes.city.data?.attributes.name, ...(event.attributes.speakers?.data || []).map(e => e.attributes.name)].join("  •  ")}
             </div>}
           </div>
@@ -71,7 +75,8 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                 <span className="text-3xl font-bold">{priceFormattedLocalized}</span>
                 {event.attributes.ticketsLeft > 0 && <div className="flex gap-3">
                   <SignUpDialog event={event} selectedOption={null} />
-                  <Button variant={'outline'} className="uppercase">Для юр. лиц</Button>
+                  <SignUpDialogLegal event={event} selectedOption={null} />
+                  {/* <Button variant={'outline'} className="uppercase">Для юр. лиц</Button> */}
                 </div>}
               </div>
             </div>}
@@ -85,7 +90,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                       <span className="text-3xl font-bold">{localizer.format(e.price)}</span>
                       {e.ticketsLeft > 0 ? <div className="flex gap-3">
                         <SignUpDialog event={event} selectedOption={e} />
-                        <Button variant={'outline'} className="uppercase">Для юр. лиц</Button>
+                        <SignUpDialogLegal event={event} selectedOption={e} />
                       </div> :
                         <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>мест нет</Badge>
                       }

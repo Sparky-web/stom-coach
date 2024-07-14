@@ -37,9 +37,6 @@ export const paymentRouder = createTRPCRouter({
     workplace: z.string()
   })).mutation(async ({ ctx, input }) => {
     try {
-
-      await onPaymentSuccess('cb849792-c13b-7322-bbb1-e372028b0139')
-      return
       const res = await strapi.get('events/' + input.eventId, {
         populate: "*"
       })
@@ -81,6 +78,7 @@ export const paymentRouder = createTRPCRouter({
           password: env.SBER_PASSWORD,
           amount: price * 100,
           currency: 643,
+          sessionTimeoutSecs: 1200,
           language: 'ru',
           email: input.email,
           // phone: "9998888888",
@@ -213,14 +211,65 @@ export const paymentRouder = createTRPCRouter({
         message: 'Ошибка при создании заказа на оплату',
       })
     }
+  }),
+  legalSignUp: publicProcedure.input(z.object({
+    event: z.string(),
+    option: z.string().optional().nullable(),
+    name: z.string(),
+    phone: z.string(),
+    email: z.string().email(),
+    company: z.string().nullable().optional()
+  })).mutation(async ({ ctx, input }) => {
+    try {
+      const { data: settings } = await strapi.get('nastrojki', { populate: "admin_emails" });
+      const adminEmails = settings.attributes.admin_emails.map(e => e.email)
+
+      let transporter = nodemailer.createTransport({
+        host: 'smtp.stom-coach.ru', // SMTP-сервер
+        port: 587, // Порт
+        secure: false, // true для 465, false для других портов
+        auth: {
+          user: 'education@stom-coach.ru', // Ваш email
+          pass: '9kA949gKxKmR5urN' // Ваш пароль от email
+        },
+        tls: {
+          rejectUnauthorized: false // This bypasses the certificate validation
+        }
+      });
+
+      const emailOptions = {
+        from: '"Учебный центр STOMCOACH" <education@stom-coach.ru>', // Адрес отправителя
+        subject: 'Новая заявка на мероприятие от юр. лица', // Тема письма
+        text: `` +
+          `Новая заявка на мероприятие в Учебном центре STOMCOACH от юр. лица
+Название мероприятия: ${input.event} ${input.option ? `— ${input.option}` : ''}
+контактное лицо: ${input.name}
+телефон: ${input.phone}
+email: ${input.email}
+название компании: ${input.company}`
+      }
+
+      for (const email of adminEmails) {
+        await transporter.sendMail({
+          ...emailOptions,
+          to: email
+        });
+      }
+    }
+    catch (e) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Ошибка при создании заявки',
+      })
+    }
   })
-});
+})
 
 async function startCheckingPayment(orderId: string, count: number = 0) {
   const maxCountCheck = (1000 * 60 * 20 / 30000) // 20 минут
 
   if (count > maxCountCheck) {
-    const [order] = await strapi.get('orders', { filters: { sberbank_order_id: orderId } });
+    const { data: [order] } = await strapi.get('orders', { filters: { sberbank_order_id: orderId } });
     await strapi.update('orders', order.id, {
       expired: true
     })
@@ -301,6 +350,10 @@ async function getOrderStatus(orderId: string) {
 }
 
 const onPaymentSuccess = async (orderId: string) => {
+  // 
+  const { data: settings } = await strapi.get('nastrojki', { populate: "admin_emails" });
+  const adminEmails = settings.attributes.admin_emails.map(e => e.email)
+
   const { data: [order] } = await strapi.get('orders', { filters: { sberbank_order_id: orderId }, populate: "*" });
 
   let emailTemplate = await fs.readFile('./src/email-template.html', 'utf8');
@@ -335,9 +388,52 @@ const onPaymentSuccess = async (orderId: string) => {
     html: emailTemplate // HTML-версия письма
   };
 
+  let adminMailOptions = {
+    from: '"Учебный центр STOMCOACH" <education@stom-coach.ru>', // Адрес отправителя
+    // to: adminEmails, // Адрес получателя
+    subject: 'Новая запись на мероприятие', // Тема письмYj
+    text: `` +
+      `Новая запись на мероприятие в Учебном центре STOMCOACH
+
+Название мероприятия: ${order.attributes.event?.data.attributes.name} ${order.attributes.option_name ? `— ${order.attributes.option_name}` : ''}
+
+Статус заказа: ${order.attributes.is_paid ? 'Оплачен' : 'Не оплачен'}
+
+Order ID из Сбербанка: ${order.attributes.sberbank_order_id}
+
+Дата и время оплаты: ${DateTime.fromISO(order.attributes.updatedAt).toLocaleString(DateTime.DATETIME_MED)}
+
+Участник:  ${order.attributes.last_name} ${order.attributes.first_name} ${order.attributes.second_name}
+
+Email: ${order.attributes.email}
+
+Номер телефона: ${order.attributes.phone}
+
+Место работы: ${order.attributes.workplace}
+
+Должность: ${order.attributes.position?.data?.attributes.name || order.attributes.custom_position}
+
+Специальность: ${order.attributes.speciality?.data?.attributes.name || order.attributes.custom_speciality}
+
+Сумма оплаты: ${order.attributes.price} руб.
+`
+
+    // html: emailTemplate // HTML-версия письма
+  };
+
   try {
     let info = await transporter.sendMail(mailOptions);
     console.log('Письмо отправлено: %s', info.messageId);
+
+    for (const email of adminEmails) {
+      await transporter.sendMail({
+        ...adminMailOptions,
+        to: email
+      });
+    }
+
+    console.log('Письмо отправлено админам: %s', info.messageId);
+
     // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
   } catch (error) {
     console.error('Ошибка при отправке письма:', error);

@@ -5,7 +5,7 @@ const links = [
   {href: "/lk/settings", name: 'Личный кабинет'},
   {href: "/events", name: 'Все мероприятия'},
   {href: "/#contacts", name: 'Контакты'},
-  {href: "/albums", name: 'Фотоальбомы', disabled: true},
+  {href: "/photoalbums", name: 'Фотоальбомы', disabled: false},
 ]
 
 export default function Menu() {

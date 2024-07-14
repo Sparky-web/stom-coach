@@ -132,3 +132,14 @@ export type LkEvent = {
   attributes: Event['attributes'];
   order: Order;
 }
+
+
+export type PhotoAlbum = {
+  id: number;
+  attributes: {
+    name: string;
+    description: string;
+    link: string;
+    cover: {data: Image | null};
+  };
+}

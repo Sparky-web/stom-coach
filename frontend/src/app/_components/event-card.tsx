@@ -30,20 +30,22 @@ export default function EventCard(props: { event: Event, className?: string }) {
 
   return (
     <Link href={`/events/${props.event.id}`}>
-      <div className={"rounded-[18px] h-full bg-white grid grid-rows-[250px,1fr] " + (props.className || '')}>
-        <Image
-          loader={imageLoader}
-          src={props.event.attributes.image?.data?.attributes.url ||
-            props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes.url ||
-            settings.eventPlaceholderImage?.data.attributes.url ||
-            ""}
-          {...(thumbnail ? {
-            placeholder: "blur",
-            blurDataURL: thumbnail
-          } : {})}
-          width={300}
-          height={500}
-          alt={props.event.attributes.name} className="rounded-t-[18px] w-full h-[250px] object-cover" />
+      <div className={"rounded-[18px] card h-full bg-white grid grid-rows-[250px,1fr] " + (props.className || '')}>
+        <div className="h-[250px] overflow-hidden rounded-t-[18px]">
+          <Image
+            loader={imageLoader}
+            src={props.event.attributes.image?.data?.attributes.url ||
+              props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes.url ||
+              settings.eventPlaceholderImage?.data.attributes.url ||
+              ""}
+            {...(thumbnail ? {
+              placeholder: "blur",
+              blurDataURL: thumbnail
+            } : {})}
+            width={300}
+            height={500}
+            alt={props.event.attributes.name} className="rounded-t-[18px] w-full h-[250px] object-cover cover" />
+        </div>
         <div className="p-5 flex-col flex  justify-between h-full">
           <div>
             <span className="flex gap-2 content-center items-center text-sm text-muted-foreground">

@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_components_admin_emails",
+  "info": {
+    "displayName": "admin_emails",
+    "icon": "envelop"
+  },
+  "options": {},
+  "attributes": {
+    "email": {
+      "type": "string"
+    }
+  }
+}

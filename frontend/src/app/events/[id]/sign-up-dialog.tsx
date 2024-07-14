@@ -44,7 +44,8 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
       const res = await mutateAsync({
         eventId: event.id,
         optionId: selectedOption?.id,
-        ...data
+        ...data,
+        speciality: data.speciality ? data.speciality : null
       })
 
       toast.success("Заказ создан, перевод на страницу оплаты")
@@ -196,7 +197,6 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
 
             <PersonalInfoCheckbox value={checked} onChange={setChecked} />
 
-
             <div className="bg-amber-50 rounded-lg p-3 text-amber-700 text-sm flex gap-2 items-center">
               <CircleAlert className="h-4 w-4" /> ссылка на оплату действительна 20 минут
             </div>
@@ -209,7 +209,6 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
             </Button>
           </div>
         </div>
-
       </DialogContent>
     </Dialog>
   )

@@ -58,7 +58,7 @@ const Navbar = () => {
           </div>
           <div className={
             cn(
-              "justify-center transition-all max-md:left-[-100%] max-md:h-[calc(100dvh-86px)] max-md:w-[calc(100%)] md:flex md:w-auto md:order-1 max-md:fixed max-md:top-[88px] max-md:bg-neutral-800 ",
+              "justify-center transition-all max-md:left-[-100%] max-md:h-[calc(100dvh-77px)] max-md:w-[calc(100%)] md:flex md:w-auto md:order-1 max-md:fixed max-md:top-[77px] max-md:bg-neutral-800 ",
               open && "max-md:left-[0] "
             )
           }>
@@ -78,6 +78,11 @@ const Navbar = () => {
                   <NavButton>Контакты</NavButton>
                 </Link>
               </li>
+              <li>
+                <Link href="/photoalbums">
+                  <NavButton>Фотоальбомы</NavButton>
+                </Link>
+              </li>
               {!user && <li className="flex flex-wrap gap-2 md:hidden justify-center mt-3">
                 <Link href={"/login"} >
                   <Button variant={"tenary"} className="text-gray-200" >Вход</Button>
@@ -90,7 +95,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <div className="hidden max-md:block h-[88px]"></div>
+      <div className="hidden max-md:block h-[77px]"></div>
     </>
   )
 }

@@ -19,7 +19,7 @@ export default async function Home() {
 
   return (
     <main className="flex flex-col">
-      <div className="flex flex-col gap-[36px] mt-8">
+      <div className="flex flex-col gap-[36px] mt-3 md:mt-8">
         <Hero data={settings} event={mainEvent} />
         <Menu />
       </div>

@@ -65,8 +65,11 @@
       "type": "string",
       "required": true
     },
-    "admin_email": {
-      "type": "email",
+    "admin_emails": {
+      "displayName": "admin_emails",
+      "type": "component",
+      "repeatable": true,
+      "component": "components.admin-emails",
       "required": true
     }
   }

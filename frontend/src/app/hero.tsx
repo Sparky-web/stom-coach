@@ -17,12 +17,12 @@ const Hero = (props: { data: APIResponse<"api::nastrojki.nastrojki">['data']['at
     <div className="container min-h-[400px] grid max-lg:gap-6 lg:grid-cols-[1fr,1fr] mt-6">
       <div className="p-8 bg-primary/10 rounded-l-xl flex justify-between items-start gap-8 max-lg:rounded-xl">
         <div className="grid gap-6">
-          <h1 className="font-medium text-2xl">
+          <h1 className="font-medium text-2xl leading-relaxed ">
             Учебный центр для стоматологов и зубных техников
           </h1>
         </div>
         {logoUrl && <Image
-        loader={imageLoader}
+          loader={imageLoader}
           className="min-w-[96px]"
           alt="StomCoach логотип"
           src={logoUrl}

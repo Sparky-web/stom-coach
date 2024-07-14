@@ -11,7 +11,6 @@ export default function AboutUs() {
       <div className="  grid gap-6 md:grid-cols-[1fr,1fr] ">
         <div className="grid gap-6">
           <Card className="bg-white grid gap-6 py-8 content-between">
-           
             {/* <ul className="text grid gap-3">
               <li className="flex content-center gap-2">
                 <Sparkle className="text-[#FFD250]" />
@@ -31,24 +30,24 @@ export default function AboutUs() {
                 <span className="text-4xl font-extrabold flex items-center gap-2">
                   <Sparkle className="text-[#FFD250] h-8 w-8" />
                   40+
-                  </span>
-                <span className="">Известных спикеров проводят наши мероприятия</span> 
+                </span>
+                <span className="">Известных спикеров сотрудничают с нами</span>
               </div>
 
               <div className="grid gap-2">
                 <span className="text-4xl font-extrabold flex items-center gap-2">
                   <Sparkle className="text-[#FFD250] h-8 w-8" />
-                  100+ 
-                  </span>
-                <span className="">Мероприятий мы уже провели</span> 
+                  100+
+                </span>
+                <span className="">Мероприятий мы уже провели</span>
               </div>
 
               <div className="grid gap-2">
                 <span className="text-4xl font-extrabold flex items-center gap-2">
                   <Sparkle className="text-[#FFD250] h-8 w-8" />
-                  2000+ 
-                  </span>
-                <span className="">Участников курсов</span> 
+                  2000+
+                </span>
+                <span className="">Участников курсов</span>
               </div>
             </div>
             <h3 className=" mt-auto text-xl">

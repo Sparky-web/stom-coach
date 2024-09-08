@@ -24,9 +24,7 @@ export default function EventCard(props: { event: Event, className?: string }) {
     minimumFractionDigits: 0,
   }).format(cheapestOption?.price || props.event.attributes.price)
 
-  let _thumbnail = props.event.attributes.image?.data?.attributes?.formats?.thumbnail?.url || props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes?.formats?.thumbnail?.url
-  const thumbnail = _thumbnail ? env.NEXT_PUBLIC_STRAPI_URL + _thumbnail : null
-
+  const thumbnail = props.event.attributes.cover_image?.data?.attributes?.placeholder || props.event.attributes.image?.data?.attributes?.placeholder || props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes?.placeholder
 
   return (
     <Link href={`/events/${props.event.id}`}>
@@ -34,7 +32,7 @@ export default function EventCard(props: { event: Event, className?: string }) {
         <div className="h-[250px] overflow-hidden rounded-t-[18px]">
           <Image
             loader={imageLoader}
-            src={props.event.attributes.image?.data?.attributes.url ||
+            src={props.event.attributes.cover_image?.data?.attributes.url ||
               props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes.url ||
               settings.eventPlaceholderImage?.data.attributes.url ||
               ""}
@@ -55,6 +53,7 @@ export default function EventCard(props: { event: Event, className?: string }) {
             <h3 className="text-[18px] font-bold line-clamp-3 my-0 py-0 mt-2 hover:text-gray-700 transition" >{props.event.attributes.name}</h3>
             {!!props.event.attributes.tags?.length && <div className="flex flex-wrap gap-3 mt-3 mb-3">
               {props.event.attributes.tags?.map(tag => (
+                // <span className="text-sm uppercase text-blue-800 opacity-70 font-semibold">{tag.name}</span>
                 <EventBadge variant={"outline"}>{tag.name}</EventBadge>
               ))}
             </div>}

@@ -37,12 +37,14 @@ export default async function EventPage({ params }: { params: { id: string } }) 
   return (
     <div>
       <div className="relative">
-        {event.attributes.image?.data && <ClientImage url={event.attributes.image?.data?.attributes.url} alt={event.attributes.image?.data.attributes.name} />}
+        {event.attributes.image?.data && <ClientImage 
+          blurDataURL={event.attributes.image?.data?.attributes.placeholder}
+        url={event.attributes.image?.data?.attributes.url} alt={event.attributes.image?.data.attributes.name} />}
 
         <div className="absolute h-full w-full bg-primary" style={{ background: event.attributes.image?.data ? 'linear-gradient(180deg, rgba(28.85, 36.66, 52.06, 0.70) 0%, rgba(29, 37, 52, 0.50) 38%, rgba(29, 37, 52, 0.25) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%)' : '' }} />
 
         <div className="container">
-          <div className="flex flex-col gap-3 relative text-white  py-[64px]  max-w-[650px]">
+          <div className="flex flex-col gap-3 relative text-white  py-[64px]  max-w-[650px] lg:min-h-[400px] justify-center ">
             {!!event.attributes.tags?.length && <div className="text-white/70 font-semibold text-sm items-center whitespace-pre">
               {event.attributes.tags.map(e => e.name).join("  •  ")}
             </div>}
@@ -63,9 +65,10 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             <div className="text-black/70 prose" dangerouslySetInnerHTML={{ __html: event.attributes.description }}>
             </div>
           </div>
+          {event.attributes.enable_payment !== false && <>
           {new Date(event.attributes.date) > new Date() ? <div className="flex flex-col gap-4">
             <h2 className="text-xl font-semibold">Оплата: </h2>
-            {!event.attributes.options?.length && <div className="grid gap-4">
+            { !event.attributes.options?.length && <div className="grid gap-4">
               {event.attributes?.ticketsLeft < 10 && <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>осталось мест: {event.attributes.ticketsLeft}</Badge>}
 
               <div className="flex justify-between gap-4">
@@ -77,8 +80,9 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                 </div>}
               </div>
             </div>}
+            
 
-            {!!event.attributes.options?.length && <div className="grid gap-4">
+            { !!event.attributes.options?.length && <div className="grid gap-4">
               {event.attributes.options.map(e => {
                 return (
                   <div className="grid gap-2 rounded-xl bg-neutral-100 p-4 text-sm font-semibold">
@@ -100,7 +104,8 @@ export default async function EventPage({ params }: { params: { id: string } }) 
           </div>
             : <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>мероприятие завершено</Badge>
           }
-
+          </>}
+          
         </div>
         <div className={cn("grid gap-4", event.attributes.location ? "content-between" : "content-start")}>
           <div className="flex-col gap-4 flex">

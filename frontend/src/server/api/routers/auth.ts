@@ -8,8 +8,6 @@ import {
   rateLimiter,
 } from "~/server/api/trpc";
 import strapi from "~/server/strapi";
-import { Settings, Event } from "~/types/entities";
-import { APIResponseCollection } from "~/types/types";
 
 import axios from "axios";
 import { env } from "~/env";
@@ -54,14 +52,17 @@ export type User = {
 export const authRouter = createTRPCRouter({
   getSmsCode: publicProcedure.input(z.string().length(11)).query(async ({ ctx, input: phone }) => {
     const { data: codes } = await strapi.get('sms-codes', {
-      phone,
-      expires_at: {
-        lt: new Date().toISOString()
+      filters: {
+        phone,
+        expires_at: {
+          lt: new Date().toISOString()
+        }
       }
     });
+
     const foundCode = codes[0] ?? null;
 
-    const code = foundCode.attributes.code || Math.floor(1000 + Math.random() * 9000);
+    const code = foundCode?.attributes?.code || Math.floor(1000 + Math.random() * 9000);
 
     const { data } = await axios.post('https://api.exolve.ru/number/customer/v1/GetList', {}, {
       headers: {
@@ -72,7 +73,7 @@ export const authRouter = createTRPCRouter({
     const number = data.numbers?.[0]?.number_name;
     if (!number) throw new Error('неизвестная ошибка')
 
-    const {data: {message_id}} = await axios.post('https://api.exolve.ru/messaging/v1/SendSMS', {
+    const { data: d1 } = await axios.post('https://api.exolve.ru/messaging/v1/SendSMS', {
       number,
       destination: phone,
       text: `${code} — ваш код для входа в личный кабинет учебного центра StomCoach`
@@ -81,6 +82,7 @@ export const authRouter = createTRPCRouter({
         'Authorization': `Bearer ${env.EXOLVE_API_KEY}`,
       }
     });
+    console.log('Отправлено сообщение на телефон', d1)
     // let message_id = '1234'
 
     if (!foundCode) {

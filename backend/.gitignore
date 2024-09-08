@@ -70,6 +70,10 @@ $RECYCLE.BIN/
 *.sqlite
 *.sqlite3
 
+.tmp
+
+public/uploads/*
+
 dist
 
 ############################

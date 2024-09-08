@@ -86,6 +86,7 @@ export type Image = {
     provider_metadata: string;
     createdAt: string;
     updatedAt: string;
+    placeholder?: string;
   };
 }
 
@@ -125,6 +126,32 @@ export type Order = {
   price: number;
   option_name: string;
   sberbank_payment_url: string | undefined;
+}
+
+export type SanitizedOrder = {
+  event_name: string;
+  option_name: string;
+  phone: string;
+  first_name: string;
+  last_name: string;
+  second_name: string;
+  email: string;
+  price: number;
+  is_paid: boolean;
+  sberbank_order_id: string | undefined;
+  sberbank_payment_url: string | undefined;
+  workplace: string;
+  position: string;
+  speciality: string;
+}
+
+export type SanitizedLegalOrder = {
+  event_name: string;
+  option_name: string;
+  name: string;
+  phone: string;
+  company: string;
+  email: string;
 }
 
 export type LkEvent = {

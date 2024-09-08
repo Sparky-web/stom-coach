@@ -29,6 +29,7 @@ export const strapiRouter = createTRPCRouter({
           populate: "*"
         },
         image: "*",
+        cover_image: "*",
         city: "*",
         options: "*"
       }, sort: "date:asc",

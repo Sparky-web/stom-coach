@@ -43,6 +43,7 @@
     "clsx": "^2.1.0",
     "embla-carousel-react": "^8.0.2",
     "flowbite": "^2.3.0",
+    "googleapis": "^144.0.0",
     "i18next": "^23.11.5",
     "input-otp": "^1.2.4",
     "ip2location-nodejs": "^9.6.1",

@@ -20,6 +20,7 @@ import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import fs from "fs/promises";
 import { DateTime } from "luxon";
+import { addLegalOrderToSpreadsheet, addOrderToSpreadsheet, main } from "~/lib/add-new-order-to-spreadsheet";
 
 export const paymentRouder = createTRPCRouter({
   getPaymentLink: publicProcedure.input(z.object({
@@ -71,6 +72,17 @@ export const paymentRouder = createTRPCRouter({
         option_name: input.optionId ? event.attributes.options.find(e => e.id === input.optionId)?.name : null,
         price: price
       })
+
+      if (!env.ENABLE_PAYMENTS) {
+        const orderId = Math.floor(1000 + Math.random() * 9000).toString()
+        await strapi.update('orders', order, {
+          sberbank_order_id: orderId,
+          sberbank_payment_url: Math.floor(1000 + Math.random() * 9000).toString(),
+          // is_paid: true
+        })
+        onPaymentSuccess(orderId)
+        return
+      }
 
       const { data } = await axios.post('https://securepayments.sberbank.ru/payment/rest/register.do', null, {
         params: {
@@ -224,13 +236,22 @@ export const paymentRouder = createTRPCRouter({
       const { data: settings } = await strapi.get('nastrojki', { populate: "admin_emails" });
       const adminEmails = settings.attributes.admin_emails.map(e => e.email)
 
+      await addLegalOrderToSpreadsheet({
+        event_name: input.event,
+        option_name: input.option || '',
+        name: input.name,
+        phone: input.phone,
+        company: input.company || '',
+        email: input.email
+      })
+
       let transporter = nodemailer.createTransport({
-        host: 'smtp.stom-coach.ru', // SMTP-сервер
-        port: 587, // Порт
+        host: env.SMTP_HOST, // SMTP-сервер
+        port: env.SMTP_PORT, // Порт
         secure: false, // true для 465, false для других портов
         auth: {
-          user: 'education@stom-coach.ru', // Ваш email
-          pass: '9kA949gKxKmR5urN' // Ваш пароль от email
+          user: env.SMPT_EMAIL, // Ваш email
+          pass: env.SMTP_PASSWORD // Ваш пароль от email
         },
         tls: {
           rejectUnauthorized: false // This bypasses the certificate validation
@@ -249,13 +270,16 @@ email: ${input.email}
 название компании: ${input.company}`
       }
 
-      for (const email of adminEmails) {
-        await transporter.sendMail({
-          ...emailOptions,
-          to: email
-        });
+      if (env.ENABLE_EMAILS) {
+        for (const email of adminEmails) {
+          await transporter.sendMail({
+            ...emailOptions,
+            to: email
+          });
+        }
       }
     }
+
     catch (e) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
@@ -367,12 +391,12 @@ const onPaymentSuccess = async (orderId: string) => {
     .replace(/{{location}}/g, order.attributes.event.data.attributes.location)
 
   let transporter = nodemailer.createTransport({
-    host: 'smtp.stom-coach.ru', // SMTP-сервер
-    port: 587, // Порт
+    host: env.SMTP_HOST, // SMTP-сервер
+    port: env.SMTP_PORT, // Порт
     secure: false, // true для 465, false для других портов
     auth: {
-      user: 'education@stom-coach.ru', // Ваш email
-      pass: '9kA949gKxKmR5urN' // Ваш пароль от email
+      user: env.SMPT_EMAIL, // Ваш email
+      pass: env.SMTP_PASSWORD // Ваш пароль от email.
     },
     tls: {
       rejectUnauthorized: false // This bypasses the certificate validation
@@ -422,17 +446,37 @@ Email: ${order.attributes.email}
   };
 
   try {
-    let info = await transporter.sendMail(mailOptions);
-    console.log('Письмо отправлено: %s', info.messageId);
+    if (env.ENABLE_EMAILS) {
+      let info = await transporter.sendMail(mailOptions);
+      console.log('Письмо отправлено: %s', info.messageId);
 
-    for (const email of adminEmails) {
-      await transporter.sendMail({
-        ...adminMailOptions,
-        to: email
-      });
+
+      for (const email of adminEmails) {
+        await transporter.sendMail({
+          ...adminMailOptions,
+          to: email
+        });
+      }
+
+      console.log('Письмо отправлено админам: %s', info.messageId);
     }
 
-    console.log('Письмо отправлено админам: %s', info.messageId);
+    await addOrderToSpreadsheet({
+      event_name: order.attributes.event.data.attributes.name,
+      option_name: order.attributes.option_name,
+      first_name: order.attributes.first_name,
+      last_name: order.attributes.last_name,
+      second_name: order.attributes.second_name,
+      email: order.attributes.email,
+      price: order.attributes.price,
+      is_paid: order.attributes.is_paid,
+      sberbank_order_id: order.attributes.sberbank_order_id,
+      sberbank_payment_url: order.attributes.sberbank_payment_url,
+      workplace: order.attributes.workplace,
+      position: order.attributes.position?.data?.attributes.name,
+      speciality: order.attributes.speciality?.data?.attributes.name,
+      phone: order.attributes.phone
+    })
 
     // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
   } catch (error) {

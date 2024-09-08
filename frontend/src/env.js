@@ -38,6 +38,15 @@ export const env = createEnv({
     SBER_LOGIN: z.string(),
     SBER_PASSWORD: z.string(),
     BASE_URL: z.string(),
+    GOOGLE_API_KEY: z.string(),
+    GOOGLE_API_EMAIL: z.string().email(),
+    GOOGLE_SPREADSHEET_ID: z.string(),
+    ENABLE_EMAILS: z.boolean(),
+    SMTP_HOST: z.string(),
+    SMTP_PORT: z.number(),
+    SMPT_EMAIL: z.string().email(),
+    SMTP_PASSWORD: z.string(),
+    ENABLE_PAYMENTS: z.boolean(),
   },
 
   /**
@@ -70,6 +79,15 @@ export const env = createEnv({
     SBER_LOGIN: process.env.SBER_LOGIN,
     SBER_PASSWORD: process.env.SBER_PASSWORD,
     BASE_URL: process.env.BASE_URL,
+    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+    GOOGLE_API_EMAIL: process.env.GOOGLE_API_EMAIL,
+    GOOGLE_SPREADSHEET_ID: process.env.GOOGLE_SPREADSHEET_ID,
+    ENABLE_EMAILS: process.env.ENABLE_EMAILS === "true" ? true : false,
+    SMTP_HOST: process.env.SMTP_HOST,
+    SMTP_PORT: +process.env.SMTP_PORT,
+    SMPT_EMAIL: process.env.SMTP_EMAIL,
+    SMTP_PASSWORD: process.env.SMTP_PASSWORD,
+    ENABLE_PAYMENTS: process.env.ENABLE_PAYMENTS === "true" ? true : false,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

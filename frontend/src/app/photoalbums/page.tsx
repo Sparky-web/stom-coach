@@ -22,6 +22,8 @@ export default async function PhotoAlbums() {
         {photoAlbums.map(album => {
 
           const cover = album.attributes.cover.data?.attributes.url
+          const placeholder = album.attributes.cover.data?.attributes.placeholder
+
           return (
             <Link key={album.id} href={album.attributes.link} target="_blank" rel="noreferrer">
               <div key={album.id} className="rounded-2xl relative overflow-hidden h-[250px] photoalbum">
@@ -31,7 +33,7 @@ export default async function PhotoAlbums() {
                   <p className="text-gray-100">{album.attributes.description}</p>
                 </div>
 
-                {cover && <PhotoAlbumImage src={cover} alt={album.attributes.name} />}
+                {cover && <PhotoAlbumImage src={cover} alt={album.attributes.name}  placeholder={placeholder} />}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(0,0,0,0.8)]"></div>
               </div>
             </Link>

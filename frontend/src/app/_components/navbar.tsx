@@ -26,7 +26,7 @@ const Navbar = () => {
   return (
     <>
       <nav className={cn(
-        " w-full bg-neutral-800  relative z-10 max-md:fixed text-slate-100",
+        " w-full bg-neutral-800  relative z-[100] max-md:fixed text-slate-100",
         // isEventPage && "bg-transparent md:text-white"
       )}>
         <div className="container gap-4 flex flex-wrap md:grid md:grid-cols-[250px_1fr_250px] items-center justify-between mx-auto py-6">

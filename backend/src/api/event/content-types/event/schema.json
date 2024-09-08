@@ -70,6 +70,21 @@
     },
     "description": {
       "type": "richtext"
+    },
+    "enable_payment": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "cover_image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

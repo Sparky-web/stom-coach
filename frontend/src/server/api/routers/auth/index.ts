@@ -13,6 +13,7 @@ import axios from "axios";
 import { env } from "~/env";
 
 import jwt from "jsonwebtoken";
+import registerUser from "./_lib/register-user";
 
 const secret = env.JWT_SECRET;
 
@@ -147,5 +148,12 @@ export const authRouter = createTRPCRouter({
 
     return { ...ctx.session.user, isCompleted: isUserCompleted }
   }),
-})
 
+  signUp: publicProcedure.input(z.object({
+    phone: z.string().length(11),
+    password: z.string().min(6).max(255),
+    email: z.string().email(),
+  })).mutation(async ({ input }) => {
+    await registerUser(input.phone, input.password, input.email)
+  })
+})

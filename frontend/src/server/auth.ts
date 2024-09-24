@@ -9,6 +9,9 @@ import DiscordProvider from "next-auth/providers/discord";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
+import strapi from "~/server/strapi";
+import { compare } from "bcrypt";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -52,7 +55,42 @@ export const authOptions: NextAuthOptions = {
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
-    
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        phone: { label: "Phone", type: "text", placeholder: "you@example.com" }, 
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.phone || !credentials?.password) {
+          return null;
+        }
+        const { phone, password } = credentials;
+
+        // Найдите пользователя в базе данных
+        // const user = await db.user.findUnique({
+        //   where: { email },
+        // });
+
+        const {data: [user]} = await strapi.get('clients', {
+          filters: {
+            phone
+          }
+        })
+
+  
+
+        // console.log(user);
+
+        // Если пользователь найден и пароли совпадают
+        if (user && (await compare(password, user.attributes.password))) {
+          return user; // Вернуть данные пользователя, если авторизация успешна
+        }
+
+        // Если авторизация не удалась, вернуть null
+        return null;
+      },
+    }),
 
     /**
      * ...add more providers here.

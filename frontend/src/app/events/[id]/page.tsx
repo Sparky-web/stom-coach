@@ -16,6 +16,7 @@ import { formatDate } from "~/lib/utils";
 import ClientImage, { SpeakerImage } from "./client-image";
 import SignUpDialogLegal from "./sign-up-dialog-legal";
 
+export const revalidate = 300
 
 export default async function EventPage({ params }: { params: { id: string } }) {
 

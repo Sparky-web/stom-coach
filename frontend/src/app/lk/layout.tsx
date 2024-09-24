@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useContext } from "react";
 import { DataContext } from "../context";
 import { redirect } from "next/navigation";
@@ -7,6 +8,7 @@ import { useAuth } from "../auth-context";
 import Menu from "./menu";
 import { Button } from "~/components/ui/button";
 import { LogOutIcon } from "lucide-react";
+
 
 export default function LkLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth()

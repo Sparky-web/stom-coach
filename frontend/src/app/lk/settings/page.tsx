@@ -20,8 +20,6 @@ import { useRouter } from "next/navigation"
 import { ClientForm, convertUserToClientFormValues } from "~/app/_components/client-form"
 import { ClientFormValuesInput, ClientFormValuesOutput } from "~/app/_components/field"
 
-export const dynamic = "force-dynamic";
-
 export default function Settings() {
   const utils = api.useUtils()
 

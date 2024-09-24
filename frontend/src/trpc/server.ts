@@ -14,7 +14,7 @@ import { cache } from "react";
 import { appRouter, type AppRouter } from "~/server/api/root";
 import { createTRPCContext } from "~/server/api/trpc";
 import { transformer } from "./shared";
-import { cookies } from 'next/headers'
+// import { cookies } from 'next/headers'
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when

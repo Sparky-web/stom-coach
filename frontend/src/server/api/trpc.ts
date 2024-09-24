@@ -21,7 +21,7 @@ import {
   defaultFingerPrint,
 } from '@trpc-limiter/memory'
 import { env } from "~/env";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import strapi from "../strapi";
 
 /**
@@ -113,28 +113,30 @@ const validateToken = (token: string) => new Promise((resolve, reject) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
-  const token = cookies().get('token')?.value
+  return await next()
 
-  if (!token) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
+  // const token = cookies().get('token')?.value
 
-  const decoded = (await validateToken(token)) as any | false
-  if (!decoded) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
+  // if (!token) {
+  //   throw new TRPCError({ code: "UNAUTHORIZED" });
+  // }
 
-  const { data: [user] } = await strapi.get('clients', {
-    filters: {
-      phone: decoded.phone
-    },
-    populate: '*'
-  })
+  // const decoded = (await validateToken(token)) as any | false
+  // if (!decoded) {
+  //   throw new TRPCError({ code: "UNAUTHORIZED" });
+  // }
 
-  return next({
-    ctx: {
-      // infers the `session` as non-nullable
-      session: { user },
-    },
-  });
+  // const { data: [user] } = await strapi.get('clients', {
+  //   filters: {
+  //     phone: decoded.phone
+  //   },
+  //   populate: '*'
+  // })
+
+  // return next({
+  //   ctx: {
+  //     // infers the `session` as non-nullable
+  //     session: { user },
+  //   },
+  // });
 });

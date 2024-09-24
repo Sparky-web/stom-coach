@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "~/trpc/react";
 import { useCookies } from "react-cookie";
-import { User } from "~/server/api/routers/auth";
+import { User } from "~/server/api/routers/auth/auth";
 import { usePathname, useRouter } from "next/navigation";
 
 export const AuthContext = createContext<{ user: User | null , logout: () => {}}>({ user: null, logout: () => { } })

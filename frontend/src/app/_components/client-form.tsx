@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { Button } from '~/components/ui/button';
 import Spinner from './spinner';
 import { ClientFormValuesInput, ClientFormValuesOutput, getErrors, getFormField } from './field';
-import { User } from '~/server/api/routers/auth';
+import { User } from '~/server/api/routers/auth/auth';
 
 export const convertUserToClientFormValues = (user: User): ClientFormValuesInput => {
   return {

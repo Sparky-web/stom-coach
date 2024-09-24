@@ -52,6 +52,9 @@
       "type": "boolean",
       "default": false,
       "required": true
+    },
+    "password": {
+      "type": "string"
     }
   }
 }

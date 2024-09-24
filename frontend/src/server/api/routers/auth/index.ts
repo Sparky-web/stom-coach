@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { cookies } from 'next/headers'
+// import { cookies } from 'next/headers'
 
 import {
   createTRPCRouter,
@@ -82,6 +82,7 @@ export const authRouter = createTRPCRouter({
         'Authorization': `Bearer ${env.EXOLVE_API_KEY}`,
       }
     });
+
     console.log('Отправлено сообщение на телефон', d1)
     // let message_id = '1234'
 

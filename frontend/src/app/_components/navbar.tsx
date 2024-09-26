@@ -43,10 +43,10 @@ const Navbar = () => {
 
 
             {!user && <div className="flex flex-wrap gap-2 max-md:hidden">
-              <Link href={"/login"} >
+              <Link href={"/auth/signin"} >
                 <Button variant={"tenary"} className="text-gray-200">Вход</Button>
               </Link>
-              <Link href={"/login"}>
+              <Link href={"/auth/signup"}>
                 <Button>Регистрация</Button>
               </Link>
             </div>}
@@ -84,10 +84,10 @@ const Navbar = () => {
                 </Link>
               </li>
               {!user && <li className="flex flex-wrap gap-2 md:hidden justify-center mt-3">
-                <Link href={"/login"} >
+                <Link href={"/auth/signin"} >
                   <Button variant={"tenary"} className="text-gray-200" >Вход</Button>
                 </Link>
-                <Link href={"/login"}>
+                <Link href={"/auth/signup"}>
                   <Button className="font-normal">Регистрация</Button>
                 </Link>
               </li>}

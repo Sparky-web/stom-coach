@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "~/trpc/react";
 import { useCookies } from "react-cookie";
-import { User } from "~/server/api/routers/auth/auth";
+import { User } from "~/server/api/routers/auth";
 import { usePathname, useRouter } from "next/navigation";
 
 export const AuthContext = createContext<{ user: User | null , logout: () => {}}>({ user: null, logout: () => { } })
@@ -13,8 +13,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   const utils = api.useUtils()
   const { data: user, isError, error, isLoading } = api.auth.me.useQuery(undefined, {
-    queryKey: [cookies.token || 'me'],
-    enabled: !!cookies.token
+    // queryKey: [cookies.token || 'me'],
+    // enabled: !!cookies.token
   })
 
   const router = useRouter()

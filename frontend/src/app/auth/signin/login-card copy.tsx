@@ -9,8 +9,8 @@ import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from 
 import { Input } from "~/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "~/components/ui/input-otp";
 import { api } from "~/trpc/react";
-import Card from "../_components/card";
-import Spinner from "../_components/spinner";
+import Card from "../../_components/card";
+import Spinner from "../../_components/spinner";
 import Link from "next/link";
 
 export default function LoginCard({ onAuthenticated }: { onAuthenticated: () => void }) {

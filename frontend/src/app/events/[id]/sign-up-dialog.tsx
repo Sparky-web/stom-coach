@@ -14,7 +14,7 @@ import { CircleAlert, Edit2, GraduationCap, LogIn, ScrollText, UserIcon, Wallet 
 import Card from "~/app/_components/card";
 import LabelGroup from "~/app/_components/label-group";
 import { formatDate } from "~/lib/utils";
-import LoginCard from "~/app/login/login-card";
+import LoginCard from "~/app/auth/signin/login-card";
 import PersonalInfoCheckbox from "~/app/_components/personal-info-checkbox";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

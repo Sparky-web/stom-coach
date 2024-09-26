@@ -113,6 +113,8 @@ const validateToken = (token: string) => new Promise((resolve, reject) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
+  const session = await getServerAuthSession()
+  console.log(session)
   return await next()
 
   // const token = cookies().get('token')?.value

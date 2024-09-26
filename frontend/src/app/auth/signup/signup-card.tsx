@@ -103,7 +103,6 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
                       )
                     }
                     placeholder="example@yandex.ru"
-                    ref={inputRef}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
@@ -124,7 +123,6 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
               {(field) => (
                 <LabelGroup label="Пароль">
                   <Input className="py-3 h-full rounded-lg text-base"
-                    ref={inputRef}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
@@ -155,7 +153,6 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
                               , field.state.meta.errors?.length > 0 ? "border-red-500" : ""
                             )
                           }
-                          ref={inputRef}
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
@@ -184,7 +181,7 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
           </form.Subscribe>
 
           <span className="text-sm text-center ">
-            Уже есть аккаунт? <Link href="/auth/signup" className="text-blue-600 underline font-medium">Войти</Link>
+            Уже есть аккаунт? <Link href="/auth/signin" className="text-blue-600 underline font-medium">Войти</Link>
           </span>
         </CardFooter>
       </form>

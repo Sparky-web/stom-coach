@@ -14,6 +14,8 @@ import { env } from "~/env";
 
 import jwt from "jsonwebtoken";
 import registerUser from "./_lib/register-user";
+import { transporter } from "~/lib/mail";
+import bcrypt from 'bcrypt';
 
 const secret = env.JWT_SECRET;
 
@@ -137,6 +139,69 @@ export const authRouter = createTRPCRouter({
     return {
       token,
       user: client as User
+    }
+  }),
+
+  sendResetPasswordLink: publicProcedure.input(z.object({
+    email: z.string().email(),
+  })).mutation(async ({ ctx, input }) => {
+    const { data: [client] } = await strapi.get('clients', { filters: { email: input.email } });
+
+    if (!client) return;
+
+    const token = jwt.sign({ email: input.email }, secret, { expiresIn: '12h' });
+
+    await transporter.sendMail({
+      from: '"Учебный центр STOMCOACH" <education@stom-coach.ru>', // Адрес отправителя
+      to: client.attributes.email, // Адрес получателя
+      subject: 'Восстановление пароля', // Тема письма
+      text: `` +
+        `Восстановление пароля в Учебном центре STOMCOACH\n` +
+        `Ссылка для восстановления пароля: https://stom-coach.ru/auth/reset-password/${token} \n` +
+        `Если вы не запрашивали сброс пароля, просто проигнорируйте это письмо.`
+    });
+  }),
+  resetPassword: publicProcedure.input(z.object({
+    token: z.string(),
+    password: z.string().min(6).max(255),
+  })).mutation(async ({ ctx, input }) => {
+    const { token } = input;
+    let email: string;
+
+    try {
+      const data = jwt.verify(token, secret) as { email: string };
+      email = data.email;
+    } catch (e) {
+      throw new Error('ссылка на сброс пароля недействительна')
+    }
+
+    const { data: [client] } = await strapi.get('clients', { filters: { email } });
+
+    if (!client) throw new Error('пользователь не найден')
+
+    await strapi.update('clients', client.id, {
+      password: await bcrypt.hash(input.password, 10)
+    })
+
+    return {
+      message: 'Пароль успешно изменен'
+    }
+  }),
+  checkToken: publicProcedure.input(z.object({
+    token: z.string(),
+  })).query(async ({ ctx, input }) => {
+    const { token } = input;
+    let email: string;
+
+    try {
+      const data = jwt.verify(token, secret) as { email: string };
+      email = data.email;
+    } catch (e) {
+      throw new Error('ссылка на сброс пароля недействительна')
+    }
+
+    return {
+      email
     }
   }),
   me: protectedProcedure.query(async ({ ctx }) => {

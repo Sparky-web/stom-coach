@@ -1,14 +1,10 @@
 "use client";
 import { useMask } from "@react-input/mask";
 import { Button } from "~/components/ui/button";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useCookies } from "react-cookie";
 import { toast } from "sonner";
 import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "~/components/ui/input-otp";
-import { api } from "~/trpc/react";
 import Card from "../../_components/card";
 import Spinner from "../../_components/spinner";
 import Link from "next/link";
@@ -19,16 +15,17 @@ import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
 import { cn } from "~/lib/utils";
 import { AlertCircle } from "lucide-react";
+import { api } from "~/trpc/react";
 
 
 export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () => void }) {
-  const inputRef = useMask({ mask: '+7 (___) ___-__-__', replacement: { _: /\d/ } });
-
   const [error, setError] = useState<string | null>(null)
+
+  const utils = api.useUtils()
 
   const form = useForm({
     defaultValues: {
-      phone: '+7 ',
+      email: '',
       password: '',
     },
     validatorAdapter: zodValidator,
@@ -36,14 +33,17 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
       setError(null)
       try {
         const res = await signIn('credentials', {
-          phone: value.phone.replace(/\D/g, '')
-          , password: value.password, redirect: false
+          email: value.email,
+          password: value.password, redirect: false
         })
         if (!res?.ok) {
-          throw new Error('неверный номер телефона или пароль')
+          throw new Error('неверный email или пароль')
         }
+
+        utils.auth.invalidate()
+
         toast.success("Вход выполнен")
-        // onAuthenticated()
+        onAuthenticated()
       } catch (e) {
         toast.error("Ошибка входа: " + e.message)
         setError(e?.message || "Неизвестная ошибка")
@@ -70,24 +70,23 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
             </div>
           }
           <div className="grid gap-4">
-            <form.Field name="phone"
+            <form.Field name="email"
               validators={{
-                onBlur: z.string().refine((val) => val.replace(/\D/g, '').length === 11, "Неверный номер телефона"),
+                onBlur: z.string().email({message: "Неверный email"}),
               }}
             >
               {(field) => (
-                <LabelGroup label="Номер телефона">
+                <LabelGroup label="Email">
                   <Input className={
                     cn("py-3 h-full rounded-lg text-base"
                       , field.state.meta.errors?.length > 0 ? "border-red-500" : ""
                     )
                   }
-                    placeholder="Номер телефона"
+                    placeholder="example@yandex.ru"
                     value={field.state.value}
-                    ref={inputRef}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    type="tel"
+                    type="email"
                   />
                   {field.state.meta.errors?.length > 0 && <span className="text-sm text-red-700">
                     {field.state.meta.errors.join(', ')}
@@ -104,7 +103,6 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
               {(field) => (
                 <LabelGroup label="Пароль">
                   <Input className="py-3 h-full rounded-lg text-base"
-                    ref={inputRef}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
@@ -131,11 +129,11 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
           </form.Subscribe>
 
           <span className="text-sm text-center ">
-            Забыли пароль? <Link href="/auth/fogot-password" className="text-blue-600 underline font-medium">Восстановить</Link>
+            Забыли пароль? <Link href="/auth/reset-password" className="text-blue-600 underline font-medium">Восстановить</Link>
           </span>
 
           <span className="text-sm text-center ">
-            Нет аккаунта? <Link href="/auth/fogot-password" className="text-blue-600 underline font-medium">Войти</Link>
+            Нет аккаунта? <Link href="/auth/signup" className="text-blue-600 underline font-medium">Регистрация</Link>
           </span>
         </CardFooter>
       </form>

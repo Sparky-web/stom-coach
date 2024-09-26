@@ -59,19 +59,19 @@ export default async function RootLayout({
       </head>
       <body className="min-h-[100dvh] flex flex-col">
         <TRPCReactProvider>
-          <AuthProvider>
-            <DataProvider
-              data={{ settings }}
-            >
-              <Navbar />
-              {children}
-              <Contacts settings={settings} />
-              <div className="mt-auto">
-                <Footer />
-              </div>
-              <Toaster />
-            </DataProvider>
-          </AuthProvider>
+            <AuthProvider>
+              <DataProvider
+                data={{ settings }}
+              >
+                <Navbar />
+                {children}
+                <Contacts settings={settings} />
+                <div className="mt-auto">
+                  <Footer />
+                </div>
+                <Toaster />
+              </DataProvider>
+            </AuthProvider>
         </TRPCReactProvider>
       </body>
     </html>

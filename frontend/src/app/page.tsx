@@ -4,6 +4,7 @@ import Hero from "./hero";
 import Menu from "./menu";
 import Events from "./events";
 import AboutUs from "./about-us";
+import { getServerAuthSession } from "~/server/auth";
 
 export default async function Home() {
   const settings = await api.strapi.getSettings.query()

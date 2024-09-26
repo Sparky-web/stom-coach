@@ -39,8 +39,11 @@ import strapi from "../strapi";
 
 // t
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const session = await getServerAuthSession();
+
   return {
     db,
+    session,
     ...opts,
   };
 };
@@ -113,9 +116,26 @@ const validateToken = (token: string) => new Promise((resolve, reject) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
-  const session = await getServerAuthSession()
-  console.log(session)
-  return await next()
+  if (!ctx.session || !ctx.session.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const { data: [user] } = await strapi.get('clients', {
+    filters: {
+      id: ctx.session.user.id
+    },
+    populate: '*'
+  })
+
+  if(!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+  delete user.attributes.password
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user },
+    },
+  });
 
   // const token = cookies().get('token')?.value
 

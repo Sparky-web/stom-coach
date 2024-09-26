@@ -21,6 +21,7 @@ import { TRPCError } from "@trpc/server";
 import fs from "fs/promises";
 import { DateTime } from "luxon";
 import { addLegalOrderToSpreadsheet, addOrderToSpreadsheet, main } from "~/lib/add-new-order-to-spreadsheet";
+import { transporter } from "~/lib/mail";
 
 export const paymentRouder = createTRPCRouter({
   getPaymentLink: publicProcedure.input(z.object({
@@ -244,20 +245,7 @@ export const paymentRouder = createTRPCRouter({
         company: input.company || '',
         email: input.email
       })
-
-      let transporter = nodemailer.createTransport({
-        host: env.SMTP_HOST, // SMTP-сервер
-        port: env.SMTP_PORT, // Порт
-        secure: false, // true для 465, false для других портов
-        auth: {
-          user: env.SMPT_EMAIL, // Ваш email
-          pass: env.SMTP_PASSWORD // Ваш пароль от email
-        },
-        tls: {
-          rejectUnauthorized: false // This bypasses the certificate validation
-        }
-      });
-
+      
       const emailOptions = {
         from: '"Учебный центр STOMCOACH" <education@stom-coach.ru>', // Адрес отправителя
         subject: 'Новая заявка на мероприятие от юр. лица', // Тема письма
@@ -374,7 +362,6 @@ async function getOrderStatus(orderId: string) {
 }
 
 const onPaymentSuccess = async (orderId: string) => {
-  // 
   const { data: settings } = await strapi.get('nastrojki', { populate: "admin_emails" });
   const adminEmails = settings.attributes.admin_emails.map(e => e.email)
 
@@ -389,19 +376,6 @@ const onPaymentSuccess = async (orderId: string) => {
     .replace(/{{client_name}}/g, order.attributes.first_name + " " + order.attributes.second_name)
     .replace(/{{event_date}}/g, DateTime.fromISO(order.attributes.event.data.attributes.date).toLocaleString(DateTime.DATE_FULL))
     .replace(/{{location}}/g, order.attributes.event.data.attributes.location)
-
-  let transporter = nodemailer.createTransport({
-    host: env.SMTP_HOST, // SMTP-сервер
-    port: env.SMTP_PORT, // Порт
-    secure: false, // true для 465, false для других портов
-    auth: {
-      user: env.SMPT_EMAIL, // Ваш email
-      pass: env.SMTP_PASSWORD // Ваш пароль от email.
-    },
-    tls: {
-      rejectUnauthorized: false // This bypasses the certificate validation
-    }
-  });
 
   // Определяем параметры письма
   let mailOptions = {

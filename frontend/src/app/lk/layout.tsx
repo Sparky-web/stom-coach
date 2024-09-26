@@ -13,7 +13,7 @@ import { LogOutIcon } from "lucide-react";
 export default function LkLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth()
 
-  if (!user) return redirect('/login')
+  if (!user) return redirect('/auth/signin')
 
   return <div className="h-full">
     <div className="container grid gap-8 mb-8">

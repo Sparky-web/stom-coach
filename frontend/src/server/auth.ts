@@ -41,80 +41,58 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: ({ session, token }) => {
+      return ({
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+        },
+      })
+    },
+    jwt({ token, user, session }) {
+      // console.log(token, user);
+      if (user) {
+        token.id = user.id; // Добавить id пользователя в токен
+      }
+
+      return token;
+    }
+  },
+  session: {
+    strategy: 'jwt',
+    // jwt: true,
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-<<<<<<< HEAD
-        phone: { label: "Phone", type: "text", placeholder: "799999999" },
+        email: { label: "Email", type: "text", placeholder: "you@example.com" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log(credentials)
-        if (!credentials?.phone || !credentials?.password) {
+        if (!credentials?.email || !credentials?.password) {
           return null;
         }
-
-        const { phone, password } = credentials;
+        const { email, password } = credentials;
 
         const { data: [user] } = await strapi.get('clients', {
-=======
-        phone: { label: "Phone", type: "text", placeholder: "you@example.com" }, 
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.phone || !credentials?.password) {
-          return null;
-        }
-        const { phone, password } = credentials;
-
-        // Найдите пользователя в базе данных
-        // const user = await db.user.findUnique({
-        //   where: { email },
-        // });
-
-        const {data: [user]} = await strapi.get('clients', {
->>>>>>> e0dfe55b51b21ebc89e35da7ee837793e8affb4b
           filters: {
-            phone
+            email
           }
         })
 
-<<<<<<< HEAD
-        try {
-          if (user && (await compare(password, user?.attributes?.password))) {
-            return user; // Вернуть данные пользователя, если авторизация успешна
-          }
-          return null;
-        } catch (error) {
-          return null;
-        }
-=======
-  
-
-        // console.log(user);
-
-        // Если пользователь найден и пароли совпадают
         if (user && (await compare(password, user.attributes.password))) {
-          return user; // Вернуть данные пользователя, если авторизация успешна
+          return {
+            name: user.attributes.first_name || '',
+            email: user.attributes.email,
+            id: user.id
+          }; // Вернуть данные пользователя, если авторизация успешна
         }
 
         // Если авторизация не удалась, вернуть null
         return null;
->>>>>>> e0dfe55b51b21ebc89e35da7ee837793e8affb4b
       },
     }),
 

@@ -43,7 +43,7 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
           throw new Error('неверный номер телефона или пароль')
         }
         toast.success("Вход выполнен")
-        onAuthenticated()
+        // onAuthenticated()
       } catch (e) {
         toast.error("Ошибка входа: " + e.message)
         setError(e?.message || "Неизвестная ошибка")
@@ -130,12 +130,12 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
             }}
           </form.Subscribe>
 
-          <span className="text-sm text-center mt-3">
+          <span className="text-sm text-center ">
             Забыли пароль? <Link href="/auth/fogot-password" className="text-blue-600 underline font-medium">Восстановить</Link>
           </span>
 
           <span className="text-sm text-center ">
-            Нет аккаунта? <Link href="/auth/login" className="text-blue-600 underline font-medium">Войти</Link>
+            Нет аккаунта? <Link href="/auth/fogot-password" className="text-blue-600 underline font-medium">Войти</Link>
           </span>
         </CardFooter>
       </form>

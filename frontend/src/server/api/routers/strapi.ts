@@ -10,7 +10,6 @@ import {
 } from "~/server/api/trpc";
 import strapi from "~/server/strapi";
 import { Settings, Event, City, PhotoAlbum } from "~/types/entities";
-import { APIResponseCollection } from "~/types/types";
 
 
 export const strapiRouter = createTRPCRouter({
@@ -34,7 +33,10 @@ export const strapiRouter = createTRPCRouter({
         options: "*"
       }, sort: "date:asc",
       filters: input?.filters,
-      ...input?.options
+      ...input?.options,
+      pagination: {
+        limit: 100
+      }
     });
     return data.data as Event[];
   }),

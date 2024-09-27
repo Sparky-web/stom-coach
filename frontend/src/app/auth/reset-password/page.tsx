@@ -55,21 +55,27 @@ export default function Page() {
               Ссылка отправлена
             </span>}
 
-            <form.Field name="email"
+            {!isSuccess && <form.Field name="email"
               validators={{
-                onBlur: z.string().email({ message: "Неверный email" }),
+                onChange: z.string().email({ message: "Неверный email" }),
               }}
             >
               {getFormField({ label: 'Email' })}
-            </form.Field>
+            </form.Field>}
           </div>
 
         </CardContent>
         <CardFooter>
-          <Button size="lg" className="w-full max-w-full font-medium py-3" type="submit" disabled={isLoading}>
-            {isLoading && <Spinner />}
-            Отправить
-          </Button>
+          {!isSuccess && <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+            {([canSubmit, isSubmitting]) => {
+              return (
+                <Button size="lg" className="w-full max-w-full font-medium py-3" type="submit" disabled={isSubmitting || !canSubmit}>
+                  {isSubmitting && <Spinner />}
+                  Отправить
+                </Button>
+              )
+            }}
+          </form.Subscribe>}
         </CardFooter>
       </form>
     </Card>

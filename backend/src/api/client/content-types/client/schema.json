@@ -48,13 +48,18 @@
     "custom_speciality": {
       "type": "string"
     },
-    "isRegistred": {
-      "type": "boolean",
-      "default": false,
-      "required": true
-    },
     "password": {
       "type": "string"
+    },
+    "bonuses": {
+      "type": "integer",
+      "required": true,
+      "default": 500
+    },
+    "level": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::level.level"
     }
   }
 }

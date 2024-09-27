@@ -99,14 +99,6 @@ export const rateLimiter = createTRPCStoreLimiter<typeof t>({
   windowMs: 60000,
 })
 
-
-const validateToken = (token: string) => new Promise((resolve, reject) => {
-  jwt.verify(token, env.JWT_SECRET, (err, decoded) => {
-    if (err) return resolve(false)
-    else return resolve(decoded)
-  })
-})
-
 /**
  * Protected (authenticated) procedure
  *
@@ -124,7 +116,7 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
     filters: {
       id: ctx.session.user.id
     },
-    populate: '*'
+    populate: "*"
   })
 
   if(!user) throw new TRPCError({ code: "UNAUTHORIZED" });

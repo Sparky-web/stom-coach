@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_components_level_privileges",
+  "info": {
+    "displayName": "level_privileges"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    }
+  }
+}

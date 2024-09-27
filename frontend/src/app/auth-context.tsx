@@ -10,18 +10,19 @@ import { toast } from "sonner";
 
 export const AuthContext = createContext<{ user: User | null, logout: () => {} }>({ user: null, logout: () => { } })
 
+
+
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [cookies, setCookie] = useCookies(['token']);
   const pathname = usePathname()
 
   const utils = api.useUtils()
   const { data: user, isError, error, isLoading } = api.auth.me.useQuery(undefined, {
-    // retry: (failureCount, error) => {
-    //   if (error?.data?.code === 'UNAUTHORIZED') {
-    //     return false;
-    //   }
-    //   return failureCount < 3; // Retry up to 3 times for other errors
-    // },
+    retry: (failureCount, error) => {
+      if (error?.data?.code === 'UNAUTHORIZED') {
+        return false;
+      }
+      return failureCount < 3; // Retry up to 3 times for other errors
+    },
     // queryKey: [cookies.token || 'me'],
     // enabled: !!cookies.token
   })
@@ -42,9 +43,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const router = useRouter()
 
   const logout = () => {
+    // router.push('/')
     signOut().then(() => {
       toast.success("Вы успешно вышли из системы")
-      router.push('/')
     })
   }
 

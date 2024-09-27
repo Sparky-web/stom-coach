@@ -11,7 +11,7 @@ import { LogOutIcon } from "lucide-react";
 
 
 export default function LkLayout({ children }: { children: React.ReactNode }) {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth()  
 
   if (!user) return redirect('/auth/signin')
 
@@ -28,10 +28,10 @@ export default function LkLayout({ children }: { children: React.ReactNode }) {
           Выйти
         </Button>
       </div>
-      <div className=" max-w-full border rounded-xl ">
-        <div className="grid md:grid-cols-[300px,1fr]  md:gap-8">
+      <div className="max-w-full md:border rounded-xl"> 
+        <div className="grid md:grid-cols-[300px,1fr] md:gap-8">
           <Menu />
-          <div className="p-6 md:p-4 max-md:border-t md:pl-0 ">
+          <div className="max-md:pt-6 md:p-4 max-md:border-t md:pl-0">
             {children}
           </div>
         </div>

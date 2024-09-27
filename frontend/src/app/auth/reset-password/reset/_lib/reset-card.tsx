@@ -2,6 +2,9 @@
 import { useForm } from "@tanstack/react-form"
 import { zodValidator } from "@tanstack/zod-form-adapter"
 import { AlertCircle, CheckCircle } from "lucide-react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { z } from "zod"
 import Card from "~/app/_components/card"
 import { getFormField } from "~/app/_components/field"
@@ -12,6 +15,9 @@ import { api } from "~/trpc/react"
 
 export default function ResetCard({ email, token }: { email: string, token: string }) {
   const { mutateAsync, isLoading, error, isSuccess } = api.auth.resetPassword.useMutation()
+  const router = useRouter()
+
+  const utils = api.useUtils() 
 
   const form = useForm({
     defaultValues: {
@@ -27,6 +33,25 @@ export default function ResetCard({ email, token }: { email: string, token: stri
         })
 
         form.reset()
+
+        toast.success("Пароль успешно изменен")
+
+        const data = await signIn('credentials', {
+          email: email,
+          password: value.password,
+          redirect: false
+        })
+
+        await utils.auth.invalidate()
+
+        if (data) {
+          toast.success("Вход выполнен")
+          router.push('/lk/settings')
+        }
+        else {
+          toast.error("Ошибка входа: " + data?.message)
+        }
+
       } catch (e) {
         // toast.error("Ошибка отправки ссылки: " + e.message as string)
         console.log(e)
@@ -62,7 +87,7 @@ export default function ResetCard({ email, token }: { email: string, token: stri
                 onBlur: z.string().min(8, { message: 'Пароль должен содержать не менее 8 символов' }).max(255, { message: 'Пароль должен содержать не более 255 символов' }),
               }}
             >
-              {getFormField({ label: 'Пароль',type: 'password' })}
+              {getFormField({ label: 'Пароль', type: 'password' })}
             </form.Field>
 
             <form.Subscribe selector={(state) => [state.values.password]}>

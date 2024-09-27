@@ -8,8 +8,6 @@ import Link from "next/link";
 export default function Courses() {
   const { data: events, isPending } = api.lk.getMyEvents.useQuery()
 
-  console.log(events)
-
   return <div className="grid gap-4 mt-2">
     <h2 className="text-2xl font-semibold">Мои курсы</h2>
     {events && <div className="grid md:grid-cols-[1fr,1fr] xl:grid-cols-[1fr,1fr,1fr] gap-3">

@@ -16,8 +16,10 @@ import jwt from "jsonwebtoken";
 import registerUser from "./_lib/register-user";
 import { transporter } from "~/lib/mail";
 import bcrypt from 'bcrypt';
+import verifyResetToken from "./_lib/verify-reset-token";
+import createToken from "./_lib/create-token";
 
-const secret = env.JWT_SECRET;
+const secret = env.NEXTAUTH_SECRET;
 
 export type User = {
   id: string;
@@ -149,7 +151,7 @@ export const authRouter = createTRPCRouter({
 
     if (!client) return;
 
-    const token = jwt.sign({ email: input.email }, secret, { expiresIn: '12h' });
+    const token = createToken(input.email, client.attributes.password)
 
     await transporter.sendMail({
       from: '"Учебный центр STOMCOACH" <education@stom-coach.ru>', // Адрес отправителя
@@ -157,7 +159,7 @@ export const authRouter = createTRPCRouter({
       subject: 'Восстановление пароля', // Тема письма
       text: `` +
         `Восстановление пароля в Учебном центре STOMCOACH\n` +
-        `Ссылка для восстановления пароля: https://stom-coach.ru/auth/reset-password/${token} \n` +
+        `Ссылка для восстановления пароля: https://stom-coach.ru/auth/reset-password/reset?token=${token} \n` +
         `Если вы не запрашивали сброс пароля, просто проигнорируйте это письмо.`
     });
   }),
@@ -166,18 +168,10 @@ export const authRouter = createTRPCRouter({
     password: z.string().min(6).max(255),
   })).mutation(async ({ ctx, input }) => {
     const { token } = input;
-    let email: string;
 
-    try {
-      const data = jwt.verify(token, secret) as { email: string };
-      email = data.email;
-    } catch (e) {
-      throw new Error('ссылка на сброс пароля недействительна')
-    }
+    const {email} = await verifyResetToken(token)
 
-    const { data: [client] } = await strapi.get('clients', { filters: { email } });
-
-    if (!client) throw new Error('пользователь не найден')
+    const {data: [client]} = await strapi.get('clients', { filters: { email } });
 
     await strapi.update('clients', client.id, {
       password: await bcrypt.hash(input.password, 10)
@@ -190,19 +184,8 @@ export const authRouter = createTRPCRouter({
   checkToken: publicProcedure.input(z.object({
     token: z.string(),
   })).query(async ({ ctx, input }) => {
-    const { token } = input;
-    let email: string;
-
-    try {
-      const data = jwt.verify(token, secret) as { email: string };
-      email = data.email;
-    } catch (e) {
-      throw new Error('ссылка на сброс пароля недействительна')
-    }
-
-    return {
-      email
-    }
+    const { token } = input
+    return await verifyResetToken(token)
   }),
   me: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.session.user) throw new Error('нет авторизации')

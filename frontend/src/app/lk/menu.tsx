@@ -10,7 +10,7 @@ import { cn } from "~/lib/utils";
 const menu = [
   { link: "/lk/settings", name: "Личные данные", icon: UserIcon },
   { link: "/lk/courses", name: "Мои курсы", icon: GraduationCap },
-  { link: "/lk/bonuses", name: "Программа лояльности", icon: Heart, disabled: true }
+  { link: "/lk/bonuses", name: "Программа лояльности", icon: Heart }
 ]
 
 export default function Menu() {
@@ -19,7 +19,7 @@ export default function Menu() {
   const pathname = usePathname()
 
   return (
-    <div className="grid gap-2 p-4 border-r content-start">
+    <div className="grid gap-2 max-md:pb-4 md:p-4 md:border-r content-start">
       {menu.map((item) => (
           <Button 
             disabled={!user?.isCompleted && !(item.name === "Личные данные") || item.disabled}

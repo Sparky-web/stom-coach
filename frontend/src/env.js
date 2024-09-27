@@ -16,10 +16,7 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    NEXTAUTH_SECRET:
-      process.env.NODE_ENV === "production"
-        ? z.string()
-        : z.string().optional(),
+    NEXTAUTH_SECRET: z.string(),
     NEXTAUTH_URL: z.preprocess(
       // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
@@ -34,7 +31,6 @@ export const env = createEnv({
     STRAPI_URL: z.string().url(),
     YMAPS_API_KEY: z.string(),
     EXOLVE_API_KEY: z.string(),
-    JWT_SECRET: z.string(),
     SBER_LOGIN: z.string(),
     SBER_PASSWORD: z.string(),
     BASE_URL: z.string(),
@@ -75,7 +71,6 @@ export const env = createEnv({
     STRAPI_URL: process.env.STRAPI_URL,
     YMAPS_API_KEY: process.env.YMAPS_API_KEY,
     EXOLVE_API_KEY: process.env.EXOLVE_API_KEY,
-    JWT_SECRET: process.env.JWT_SECRET,
     SBER_LOGIN: process.env.SBER_LOGIN,
     SBER_PASSWORD: process.env.SBER_PASSWORD,
     BASE_URL: process.env.BASE_URL,

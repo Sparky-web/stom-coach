@@ -10,7 +10,7 @@ import {
 } from "~/components/ui/carousel"
 import { Card, CardContent } from "~/components/ui/card"
 import React from "react"
-import EventComponent from "./_components/event-card"
+import EventComponent from "../../_components/event-card"
 import { Event } from "~/types/entities";
 
 
@@ -33,7 +33,7 @@ export default function Events(props: { events: Event[] }) {
   }, [api])
 
   return (
-    <div className="bg-slate-200">
+    <div className="bg-muted">
       <div className="container py-[48px]">
         <Carousel
           setApi={setApi}
@@ -63,7 +63,9 @@ export default function Events(props: { events: Event[] }) {
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
             {Array(count).fill("").map((e, i) => (
-              <span key={e} className={`inline-block w-[10px] h-[10px] rounded-full mx-2 ${current === i + 1 ? "bg-primary" : "bg-primary/25"}`}></span>
+              <span key={e}
+                onClick={() => api?.scrollTo(i)}
+                className={`cursor-pointer inline-block w-[10px] h-[10px] rounded-full mx-2 ${current === i + 1 ? "bg-primary" : "bg-primary/25"}`}></span>
             ))}
           </div>
         </Carousel>

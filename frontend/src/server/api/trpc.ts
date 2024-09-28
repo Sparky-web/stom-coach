@@ -90,7 +90,31 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure.use(async ({ ctx, next }) => {
+  if (ctx.session?.user) {
+    const { data: [user] } = await strapi.get('clients', {
+      filters: {
+        id: ctx.session.user.id
+      },
+      populate: "*"
+    })
+
+    if (!user) return next({ ctx })
+
+    delete user.attributes.password
+
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: { ...ctx.session, user },
+      },
+    });
+  }
+  return next({ ctx })
+
+
+});
+;
 
 export const rateLimiter = createTRPCStoreLimiter<typeof t>({
   fingerprint: (ctx) => defaultFingerPrint(ctx),
@@ -119,7 +143,7 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
     populate: "*"
   })
 
-  if(!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+  if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
   delete user.attributes.password
 
   return next({
@@ -129,28 +153,5 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
     },
   });
 
-  // const token = cookies().get('token')?.value
 
-  // if (!token) {
-  //   throw new TRPCError({ code: "UNAUTHORIZED" });
-  // }
-
-  // const decoded = (await validateToken(token)) as any | false
-  // if (!decoded) {
-  //   throw new TRPCError({ code: "UNAUTHORIZED" });
-  // }
-
-  // const { data: [user] } = await strapi.get('clients', {
-  //   filters: {
-  //     phone: decoded.phone
-  //   },
-  //   populate: '*'
-  // })
-
-  // return next({
-  //   ctx: {
-  //     // infers the `session` as non-nullable
-  //     session: { user },
-  //   },
-  // });
 });

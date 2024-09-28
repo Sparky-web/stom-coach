@@ -2,7 +2,7 @@
 import { useMask } from "@react-input/mask";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { toast } from "sonner";
 import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "~/components/ui/card";
@@ -16,14 +16,21 @@ import LabelGroup from "~/app/_components/label-group";
 import { useForm } from "@tanstack/react-form";
 import { signIn } from "next-auth/react";
 import { zodValidator } from "@tanstack/zod-form-adapter";
-import { z } from "zod";
+import { util, z } from "zod";
 import { cn } from "~/lib/utils";
-
+import PersonalInfoCheckbox from "~/app/_components/personal-info-checkbox";
+import { ArrowLeft } from "lucide-react";
 
 export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () => void }) {
   const inputRef = useMask({ mask: '+7 (___) ___-__-__', replacement: { _: /\d/ } });
 
-  const { mutateAsync } = api.auth.signUp.useMutation()
+  const [code, setCode] = useState<string>('')
+  const [isCodeSent, setIsCodeSent] = useState(false)
+  const [values, setValues] = useState<null | any>(null)
+  const [isAgreed, setIsAgreed] = useState(false)
+
+  const { mutateAsync, isLoading } = api.auth.signUp.useMutation()
+  const { mutateAsync: sendCode } = api.auth.sendCode.useMutation()
 
   const form = useForm({
     defaultValues: {
@@ -35,20 +42,40 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
     validatorAdapter: zodValidator,
     onSubmit: async ({ value }) => {
       try {
-        await mutateAsync({
-          phone: value.phone.replace(/\D/g, ''),
-          email: value.email,
-          password: value.password,
+        await sendCode({
+          email: value.email
         })
-        toast.success("Вход выполнен")
-        await signIn()
-        onAuthenticated()
+        setValues(value)
       } catch (e) {
-        toast.error("Ошибка входа: " + e.message)
+        toast.error("Ошибка отправки кода: " + e.message)
       }
     }
   })
 
+  const utils = api.useUtils()
+
+  const handleSignUp = async () => {
+    try {
+      await mutateAsync({
+        phone: values.phone.replace(/\D/g, ''),
+        email: values.email,
+        password: values.password,
+        code: +code
+      })
+      await signIn('credentials', {
+        email: values.email,
+        password: values.password,
+        redirect: false
+      })
+
+      await utils.auth.invalidate()
+
+      toast.success("Вход выполнен")
+      onAuthenticated()
+    } catch (e) {
+      toast.error("Ошибка регистрации: " + e.message)
+    }
+  }
 
   return (
     <Card className="bg-slate-50 border-none rounded-2xl ">
@@ -61,8 +88,8 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
         form.handleSubmit()
       }}>
         <CardContent className="p-2">
-          <div className="grid gap-4">
-            <form.Field name="phone"
+          {!values && <div className="grid gap-4">
+            <form.Field preserveValue={true} name="phone"
               validators={{
                 onBlur: z.string().refine((val) => val.replace(/\D/g, '').length === 11, "Неверный номер телефона"),
               }}
@@ -88,9 +115,9 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
               )}
             </form.Field>
 
-            <form.Field name="email"
+            <form.Field preserveValue={true} name="email"
               validators={{
-                onBlur: z.string().email({message: "Неверный email"}),
+                onBlur: z.string().email({ message: "Неверный email" }),
               }}
             >
               {(field) => (
@@ -115,9 +142,9 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
               )}
             </form.Field>
 
-            <form.Field name="password"
+            <form.Field preserveValue={true} name="password"
               validators={{
-                onBlur: z.string().min(8, {message: 'Пароль должен содержать не менее 8 символов'}).max(255, {message: 'Пароль должен содержать не более 255 символов'}),
+                onBlur: z.string().min(8, { message: 'Пароль должен содержать не менее 8 символов' }).max(255, { message: 'Пароль должен содержать не более 255 символов' }),
               }}
             >
               {(field) => (
@@ -167,18 +194,45 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
                 )
               }}
             </form.Subscribe>
-          </div>
+
+            <div className="max-w-[450px]">
+              <PersonalInfoCheckbox value={isAgreed} onChange={setIsAgreed} />
+            </div>
+          </div>}
+
+          {values && <div className="grid gap-4">
+            <Button variant={'tenary'} size="sm" onClick={() => setValues(null)} className="w-fit">
+              <ArrowLeft className="w-4 h-4" />
+              назад
+            </Button>
+            <span className="font-semibold mt-2">Код подтверждения отправлен на {values.email}</span>
+
+            <LabelGroup label="Код из письма">
+              <InputOTP maxLength={4} className="bg-white text-lg" value={code} onChange={(newValue) => setCode(newValue)}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} className="bg-white " />
+                  <InputOTPSlot index={1} className="bg-white " />
+                  <InputOTPSlot index={2} className="bg-white " />
+                  <InputOTPSlot index={3} className="bg-white " />
+                </InputOTPGroup>
+              </InputOTP>
+            </LabelGroup>
+          </div>}
         </CardContent>
         <CardFooter className="w-full p-2 mt-2 grid gap-4">
-          <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+          {!values && <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
             {([canSubmit, isSubmitting]) => {
               return (
-                <Button disabled={!canSubmit} type="submit" className="w-full max-w-full font-medium py-3 h-full text-base" size={'lg'}>
+                <Button disabled={!canSubmit || !isAgreed} type="submit" className="w-full max-w-full font-medium py-3 h-full text-base" size={'lg'}>
                   {isSubmitting && <Spinner />} Регистрация
                 </Button>
               )
             }}
-          </form.Subscribe>
+          </form.Subscribe>}
+
+          {values && <Button onClick={handleSignUp} className="w-full max-w-full font-medium py-3 h-full text-base" size={'lg'}>
+            {isLoading && <Spinner />} Регистрация
+          </Button>}
 
           <span className="text-sm text-center ">
             Уже есть аккаунт? <Link href="/auth/signin" className="text-blue-600 underline font-medium">Войти</Link>

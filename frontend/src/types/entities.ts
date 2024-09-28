@@ -3,7 +3,7 @@ import { APIResponse, APIResponseCollection } from "./types";
 
 export type Settings =
   APIResponse<"api::nastrojki.nastrojki">["data"]["attributes"] & {
-    city: string | null
+    city: string | null;
   };
 
 
@@ -140,6 +140,7 @@ export type SanitizedOrder = {
   is_paid: boolean;
   sberbank_order_id: string | undefined;
   sberbank_payment_url: string | undefined;
+  bonuses: number;
   workplace: string;
   position: string;
   speciality: string;

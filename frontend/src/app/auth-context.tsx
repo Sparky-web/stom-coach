@@ -12,11 +12,12 @@ export const AuthContext = createContext<{ user: User | null, logout: () => {} }
 
 
 
-export default function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({ children, user: userServer }: { children: React.ReactNode, user: User | null }) {
   const pathname = usePathname()
 
   const utils = api.useUtils()
   const { data: user, isError, error, isLoading } = api.auth.me.useQuery(undefined, {
+    placeholderData: userServer,
     retry: (failureCount, error) => {
       if (error?.data?.code === 'UNAUTHORIZED') {
         return false;

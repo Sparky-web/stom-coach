@@ -72,19 +72,10 @@ export default function ClientEvents(props: {
           </div>
         </div>
 
-
-
-        {/* <div>
-          <h3 className="text-sm text-muted-foreground">Тип</h3>
-          <div className="flex gap-2 mt-2 flex-wrap">
-            <CityBadge variant={"default"}>Лекция</CityBadge>
-            <CityBadge variant={"default"}>Практический курс</CityBadge>
-          </div>
-        </div> */}
       </div>
       <div className="grid lg:grid-cols-[1fr,1fr,1fr] gap-4">
         {events?.map((e, index) => (
-          <EventCard event={e} key={index} className="!bg-muted" />
+          <EventCard event={e} key={index} className="!bg-[rgba(0,0,0,0.02)]" />
         ))}
       </div>
     </div>

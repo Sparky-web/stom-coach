@@ -2,20 +2,19 @@
 import { ShoppingCart, User, Menu, X, ShoppingBasket } from "lucide-react"
 import { useContext, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { DataContext } from "../context";
+import { DataContext } from "../../context";
 import { Button } from "~/components/ui/button";
 import { NavButton } from "~/components/ui/nav-button";
 import { cn } from "~/lib/utils";
 import { usePathname } from "next/navigation";
-import { useAuth } from "../auth-context";
+import { useAuth } from "../../auth-context";
+import NavbarBonusPointsIcon from "./bonuses";
 
 const Navbar = () => {
   const { settings: data } = useContext(DataContext)
   const { user } = useAuth()
 
   const pathname = usePathname()
-  // const isEventPage = pathname?.match(/events\/.+/) && !pathname.includes("not-found")
-  const isEventPage = false
 
   const [open, setOpen] = useState(false)
 
@@ -26,7 +25,7 @@ const Navbar = () => {
   return (
     <>
       <nav className={cn(
-        " w-full bg-neutral-800  relative z-[100] max-md:fixed text-slate-100",
+        " w-full bg-neutral-900  relative z-[2] max-md:fixed text-slate-100",
         // isEventPage && "bg-transparent md:text-white"
       )}>
         <div className="container gap-4 flex flex-wrap md:grid md:grid-cols-[250px_1fr_250px] items-center justify-between mx-auto py-6">
@@ -34,12 +33,18 @@ const Navbar = () => {
             <span className="self-center text-2xl font-semibold whitespace-nowrap uppercase ">{data.title}</span>
           </Link>
           <div className="flex md:order-2 justify-end ">
-            {user && <Link href={"/lk/settings"} >
-              <Button variant={"ghost"} className="hover:bg-transparent hover:text-gray-300">
-                <User className="w-6 h-6" />
-                {/* {user.attributes.first_name} */}
-              </Button>
-            </Link>}
+            {user &&
+              <div className="flex items-center">
+                <Link href={"/lk/bonuses"} >
+                  <NavbarBonusPointsIcon points={user.attributes.bonuses} />
+                </Link>
+                <Link href={"/lk/settings"} >
+                  <Button variant={"ghost"} className="hover:bg-transparent hover:text-gray-300">
+                    <User className="w-6 h-6" />
+                  </Button>
+                </Link>
+              </div>
+            }
 
 
             {!user && <div className="flex flex-wrap gap-2 max-md:hidden">
@@ -65,7 +70,7 @@ const Navbar = () => {
             <ul className={cn("z-10 max-md:rounded-b max-md:container flex flex-col flex-wrap justify-center justify-items-center max-md:gap-2 p-4 md:p-0 mt-4 md:space-x-4  rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ")}>
               <li>
                 <Link href="/">
-                  <NavButton>Главная</NavButton> 
+                  <NavButton>Главная</NavButton>
                 </Link>
               </li>
               <li >

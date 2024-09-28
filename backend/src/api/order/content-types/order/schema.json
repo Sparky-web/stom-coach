@@ -81,6 +81,11 @@
       "type": "boolean",
       "default": false,
       "required": true
+    },
+    "bonuses": {
+      "type": "integer",
+      "required": true,
+      "default": 0
     }
   }
 }

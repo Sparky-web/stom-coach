@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import strapi from '~/server/strapi';
+import countBonuses from './count-bonuses';
 
 
 export default async function registerUser(phone: string, email: string, password: string) {
@@ -18,17 +19,18 @@ export default async function registerUser(phone: string, email: string, passwor
   })
 
   if (client) {
-    throw new Error('Пользователь с таким номером уже зарегистрирован')
+    throw new Error('пользователь с таким номером уже зарегистрирован')
   }
 
   if (clientByEmail) {
-    throw new Error('Пользователь с таким email уже зарегистрирован')
+    throw new Error('пользователь с таким email уже зарегистрирован')
   }
 
   const id = await strapi.insert('clients', {
     phone,
     email,
-    password: hashedPassword
+    password: hashedPassword,
+    bonuses: await countBonuses(email)
   })
 
   return id;

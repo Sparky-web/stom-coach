@@ -10,6 +10,9 @@ const config = {
     // loader: "custom",
     // loaderFile: "./src/functions/loader.js"
   // },
+  images: {
+    domains: ['admin.stom-coach.ru']
+  },
   typescript: {
     ignoreBuildErrors: true
   },

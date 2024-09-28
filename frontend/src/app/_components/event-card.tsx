@@ -28,8 +28,8 @@ export default function EventCard(props: { event: Event, className?: string }) {
 
   return (
     <Link href={`/events/${props.event.id}`}>
-      <div className={"rounded-[18px] card h-full bg-white grid grid-rows-[250px,1fr] " + (props.className || '')}>
-        <div className="h-[250px] overflow-hidden rounded-t-[18px]">
+      <div className={"rounded-xl card h-full bg-white grid grid-rows-[250px,1fr] " + (props.className || '')}>
+        <div className="h-[250px] overflow-hidden rounded-t-xl">
           <Image
             loader={imageLoader}
             src={props.event.attributes.cover_image?.data?.attributes.url ||
@@ -42,7 +42,7 @@ export default function EventCard(props: { event: Event, className?: string }) {
             } : {})}
             width={300}
             height={500}
-            alt={props.event.attributes.name} className="rounded-t-[18px] w-full h-[250px] object-cover cover" />
+            alt={props.event.attributes.name} className="rounded-t-xl w-full h-[250px] object-cover cover" />
         </div>
         <div className="p-5 flex-col flex  justify-between h-full">
           <div>

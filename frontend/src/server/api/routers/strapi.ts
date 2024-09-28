@@ -142,7 +142,10 @@ export const strapiRouter = createTRPCRouter({
       }
     })
 
-    return event.data as Event;
+    return {
+      event: event.data as Event,
+      image: data.attributes?.main_event_image as Image
+    }
   }),
   getPhotoAlbums: publicProcedure.query(async ({ ctx }) => {
     const { data } = await strapi.get("photoalbums", { populate: "*" });

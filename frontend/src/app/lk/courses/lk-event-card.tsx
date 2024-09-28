@@ -85,7 +85,8 @@ export default function LkEventCard(props: { event: LkEvent }) {
           </div>
         </div>
 
-        {!props.event.order.is_paid && <Link href={props.event.order.sberbank_payment_url} target="_blank">
+        {!props.event.order.is_paid && <Link href={props.event.order.sberbank_payment_url || ''
+        } target="_blank">
           <Button className="mt-4 w-full font-medium" variant={'tenary'}>
             <Wallet className="h-5 w-5" /> Оплатить
           </Button>

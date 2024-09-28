@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import Navbar from "~/app/_components/navbar";
+import Navbar from "~/app/_components/navbar/index";
 import { api } from "~/trpc/server";
 import DataProvider from "./context";
 import { Open_Sans } from "next/font/google";
@@ -44,6 +44,13 @@ export default async function RootLayout({
 }) {
   const settings = await getConfig();
 
+  let user = null
+  try {
+    user = await api.auth.me.query()
+  } catch (e) {
+    
+  }
+
   return (
     <html lang="ru">
       <head>
@@ -61,19 +68,19 @@ export default async function RootLayout({
       </head>
       <body className="min-h-[100dvh] flex flex-col">
         <TRPCReactProvider>
-            <AuthProvider>
-              <DataProvider
-                data={{ settings }}
-              >
-                <Navbar />
-                {children}
-                <Contacts settings={settings} />
-                <div className="mt-auto">
-                  <Footer />
-                </div>
-                <Toaster />
-              </DataProvider>
-            </AuthProvider>
+          <AuthProvider user={user}>
+            <DataProvider
+              data={{ settings }}
+            >
+              <Navbar />
+              {children}
+              <Contacts settings={settings} />
+              <div className="mt-auto">
+                <Footer />
+              </div>
+              <Toaster />
+            </DataProvider>
+          </AuthProvider>
         </TRPCReactProvider>
       </body>
     </html>

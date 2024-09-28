@@ -4,21 +4,22 @@
   "info": {
     "singularName": "sms-code",
     "pluralName": "sms-codes",
-    "displayName": "SmsCodes"
+    "displayName": "SmsCodes",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "phone": {
-      "type": "string"
-    },
     "code": {
       "type": "integer"
     },
     "expires_at": {
       "type": "datetime"
+    },
+    "email": {
+      "type": "email"
     }
   }
 }

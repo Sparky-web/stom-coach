@@ -31,8 +31,6 @@ export const env = createEnv({
     STRAPI_URL: z.string().url(),
     YMAPS_API_KEY: z.string(),
     EXOLVE_API_KEY: z.string(),
-    SBER_LOGIN: z.string(),
-    SBER_PASSWORD: z.string(),
     BASE_URL: z.string(),
     GOOGLE_API_KEY: z.string(),
     GOOGLE_API_EMAIL: z.string().email(),
@@ -43,6 +41,8 @@ export const env = createEnv({
     SMPT_EMAIL: z.string().email(),
     SMTP_PASSWORD: z.string(),
     ENABLE_PAYMENTS: z.boolean(),
+    YOOKASSA_SECRET_KEY: z.string(),
+    YOOKASSA_SHOP_ID: z.string(),
   },
 
   /**
@@ -71,8 +71,6 @@ export const env = createEnv({
     STRAPI_URL: process.env.STRAPI_URL,
     YMAPS_API_KEY: process.env.YMAPS_API_KEY,
     EXOLVE_API_KEY: process.env.EXOLVE_API_KEY,
-    SBER_LOGIN: process.env.SBER_LOGIN,
-    SBER_PASSWORD: process.env.SBER_PASSWORD,
     BASE_URL: process.env.BASE_URL,
     GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
     GOOGLE_API_EMAIL: process.env.GOOGLE_API_EMAIL,
@@ -83,6 +81,8 @@ export const env = createEnv({
     SMPT_EMAIL: process.env.SMTP_EMAIL,
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
     ENABLE_PAYMENTS: process.env.ENABLE_PAYMENTS === "true" ? true : false,
+    YOOKASSA_SECRET_KEY: process.env.YOOKASSA_SECRET_KEY,
+    YOOKASSA_SHOP_ID: process.env.YOOKASSA_SHOP_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

@@ -72,7 +72,7 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
           <div className="grid gap-4">
             <form.Field name="email"
               validators={{
-                onBlur: z.string().email({message: "Неверный email"}),
+                onChange: z.string().email({message: "Неверный email"}),
               }}
             >
               {(field) => (
@@ -97,7 +97,7 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
 
             <form.Field name="password"
               validators={{
-                onBlur: z.string().min(8, { message: 'Пароль должен содержать не менее 8 символов' }).max(255, { message: 'Пароль должен содержать не более 255 символов' }),
+                onChange: z.string().min(8, { message: 'Пароль должен содержать не менее 8 символов' }).max(255, { message: 'Пароль должен содержать не более 255 символов' }),
               }}
             >
               {(field) => (

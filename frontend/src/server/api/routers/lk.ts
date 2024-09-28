@@ -13,6 +13,9 @@ export const lkRouter = createTRPCRouter({
       populate: '*',
       pagination: {
         limit: 1000,
+      },
+      sort: {
+        createdAt: 'desc'
       }
     })
 
@@ -31,7 +34,7 @@ export const lkRouter = createTRPCRouter({
           image: "*",
           city: "*"
         },
-       
+        
       })
       events.push({
         ...data,
@@ -54,7 +57,7 @@ export const lkRouter = createTRPCRouter({
       },
       pagination: {
         limit: 1000
-      }
+      },
     })
 
     return {

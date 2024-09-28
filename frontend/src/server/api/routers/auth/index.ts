@@ -18,6 +18,8 @@ import { transporter } from "~/lib/mail";
 import bcrypt from 'bcrypt';
 import verifyResetToken from "./_lib/verify-reset-token";
 import createToken from "./_lib/create-token";
+import sendCode from "./_lib/send-code";
+import verifyCode from "./_lib/verify-code";
 
 const secret = env.NEXTAUTH_SECRET;
 
@@ -31,6 +33,7 @@ export type User = {
     second_name: string | null;
     email: string | null;
     workplace: string | null;
+    bonuses: number;
     speciality: {
       data: {
         id: number;
@@ -55,7 +58,7 @@ export type User = {
 
 // TODO: ограничить кол-во запросов
 export const authRouter = createTRPCRouter({
-  getSmsCode: publicProcedure.input(z.string().length(11)).query(async ({ ctx, input: phone }) => {
+  getSmsCode: publicProcedure.input(z.string().length(11)).query(async ({ input: phone }) => {
     const { data: codes } = await strapi.get('sms-codes', {
       filters: {
         phone,
@@ -106,7 +109,7 @@ export const authRouter = createTRPCRouter({
       phone: z.string().length(11),
       code: z.number().min(1000).max(9999),
     })
-  ).query(async ({ ctx, input }) => {
+  ).query(async ({ input }) => {
     const { phone, code } = input
 
     const { data: [foundCode] } = await strapi.get('sms-codes', {
@@ -146,7 +149,7 @@ export const authRouter = createTRPCRouter({
 
   sendResetPasswordLink: publicProcedure.input(z.object({
     email: z.string().email(),
-  })).mutation(async ({ ctx, input }) => {
+  })).mutation(async ({ input }) => {
     const { data: [client] } = await strapi.get('clients', { filters: { email: input.email } });
 
     if (!client) return;
@@ -166,7 +169,7 @@ export const authRouter = createTRPCRouter({
   resetPassword: publicProcedure.input(z.object({
     token: z.string(),
     password: z.string().min(6).max(255),
-  })).mutation(async ({ ctx, input }) => {
+  })).mutation(async ({ input }) => {
     const { token } = input;
 
     const {email} = await verifyResetToken(token)
@@ -183,7 +186,7 @@ export const authRouter = createTRPCRouter({
   }),
   checkToken: publicProcedure.input(z.object({
     token: z.string(),
-  })).query(async ({ ctx, input }) => {
+  })).query(async ({ input }) => {
     const { token } = input
     return await verifyResetToken(token)
   }),
@@ -196,11 +199,24 @@ export const authRouter = createTRPCRouter({
 
     return { ...ctx.session.user, isCompleted: isUserCompleted }
   }),
+  sendCode: publicProcedure.input(z.object({
+    email: z.string().email(),
+  })).mutation(async ({ input }) => {
+    const {data: [client]} = await strapi.get('clients', { filters: { email: input.email } });
+
+    if (client) {
+      throw new Error('пользователь с таким email уже зарегистрирован')
+    }
+
+    await sendCode(input.email)
+  }),
   signUp: publicProcedure.input(z.object({
     phone: z.string().length(11),
     password: z.string().min(6).max(255),
     email: z.string().email(),
+    code: z.number().min(0).max(9999),
   })).mutation(async ({ input }) => {
+    await verifyCode(input.code, input.email)
     await registerUser(input.phone, input.email, input.password)
   }),
 })

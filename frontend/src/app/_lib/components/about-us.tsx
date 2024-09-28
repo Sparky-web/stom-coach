@@ -1,16 +1,16 @@
 import { Sparkle } from "lucide-react"
-import Card from "./_components/card"
+import Card from "../../_components/card"
 import Image from "next/image"
-import aboutUsImg from "./about-us.jpg"
+import aboutUsImg from "../../about-us.jpg"
 
 export default function AboutUs() {
 
-  return <div className="bg-muted">
+  return <div className="">
     <div className="container grid gap-6 py-12">
       <h2 className="text-3xl font-semibold">О нас</h2>
       <div className="  grid gap-6 md:grid-cols-[1fr,1fr] ">
         <div className="grid gap-6">
-          <Card className="bg-white grid gap-6 py-8 content-between">
+          <Card className="bg-muted grid gap-6 py-8 content-between">
             {/* <ul className="text grid gap-3">
               <li className="flex content-center gap-2">
                 <Sparkle className="text-[#FFD250]" />

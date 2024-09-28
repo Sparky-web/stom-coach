@@ -63,27 +63,11 @@ export default function BonusesComponent({ levels, userBonuses }: BonusPage) {
         )}
       </div>
 
+      {/* Для того чтобы загрузить цвета, это костыль */}
+      <div className="bg-amber-400/70 bg-green-600/40 bg-orange-600/50"></div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {levels.map((level, index) => (
-          // <Card key={level.name} className={index === 0 ? "border-primary" : ""}>
-          //   <CardHeader>
-          //     <CardTitle className="flex justify-between items-center">
-          //       <span>{level.name}</span>
-          //     </CardTitle>
-          //   </CardHeader>
-          //   <CardContent className="grid gap-2 content-between ">
-          //     <div className="">
-          //       <p className="font-semibold mb-2">Кэшбэк: {level.cashbackPercent}%</p>
-          //       <p className="mb-4">Требуется посещений: {level.requiredEventsVisits}</p>
-          //       <ul className="list-disc list-inside text-sm mb-4">
-          //         {level.additionalBonuses.map((bonus, i) => (
-          //           <li key={i}>{bonus}</li>
-          //         ))}
-          //       </ul>
-          //     </div>
-          //     <Badge variant={index === 0 ? "default" : "outline"} className="mt-auto">{index === 0 ? "Текущий" : "Следующий"}</Badge>
-          //   </CardContent>
-          // </Card>
           <div className={cn("p-5 rounded-xl grid gap-4 content-start",
             currentLevelIndex >= index ? level.color : "bg-slate-50 text-muted-foreground",
           )}>
@@ -97,7 +81,7 @@ export default function BonusesComponent({ levels, userBonuses }: BonusPage) {
               </h3>
             </div>
             <div className="grid gap-3 content-start">
-              <span className="p-2 font-semibold border-black border rounded-lg w-fit text-sm">Кэшбэк: {level.cashbackPercent}%</span>
+              <span className="p-2 font-semibold border-[currentColor] border rounded-lg w-fit text-sm">Кэшбэк: {level.cashbackPercent}%</span>
 
               <ul className="list-disc list-inside text-sm mb-4">
                 {level.additionalBonuses.map((bonus, i) => (
@@ -107,7 +91,7 @@ export default function BonusesComponent({ levels, userBonuses }: BonusPage) {
             </div>
             <div className="text-sm mt-auto">
               {currentLevelIndex >= index && <span className="">Активирован</span>}
-              {currentLevelIndex < index && <span className="text-muted-foreground">Активируется после {nextLevel?.requiredEventsVisits} посещений</span>}
+              {currentLevelIndex < index && <span className="text-muted-foreground">Активируется после {level.requiredEventsVisits} посещений</span>}
             </div>
           </div>
         ))}

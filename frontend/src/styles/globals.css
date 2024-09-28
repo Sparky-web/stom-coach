@@ -20,7 +20,7 @@
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: rgba(0,0,0,0.02);
+    --muted: rgba(0,0,0,0.04);
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 210 40% 96.1%;
@@ -126,4 +126,8 @@ body {
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
   }
+}
+
+img {
+  transition: 0.3s ease-in-out !important;
 }

@@ -18,6 +18,8 @@ import LoginCard from "~/app/auth/signin/login-card";
 import PersonalInfoCheckbox from "~/app/_components/personal-info-checkbox";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import cn from "~/functions/cn";
+import NavbarBonusPointsIcon from "~/app/_components/navbar/bonuses";
 
 export default function SignUp({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
   const { user } = useAuth()
@@ -31,11 +33,16 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
 
   const [checked, setChecked] = useState(false)
 
+  const [useBonuses, setUseBonuses] = useState(false)
+
   const [defaultValues, setDefaultValues] = useState<ClientFormValuesInput | null>(user ? convertUserToClientFormValues(user) : null)
 
   const [data, setData] = useState<ClientFormValuesOutput | null>(user ? convertUserToClientFormValuesOutput(user) : null)
 
   const router = useRouter()
+
+  const sumWithoutBonuses = selectedOption ? selectedOption.price : event.attributes.price
+  const sumWithBonuces = user?.attributes.bonuses ? sumWithoutBonuses - user.attributes.bonuses : null
 
   const onSubmit = async () => {
     if (!data) return
@@ -45,7 +52,8 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
         eventId: event.id,
         optionId: selectedOption?.id,
         ...data,
-        speciality: data.speciality ? data.speciality : null
+        speciality: data.speciality ? data.speciality : null,
+        useBonuses
       })
 
       toast.success("Заказ создан, перевод на страницу оплаты")
@@ -73,7 +81,7 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
       <DialogTrigger asChild>
         <Button variant="default" className="uppercase" disabled={isDisabled}>Записаться</Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-5xl max-h-[calc(100dvh)] overflow-y-auto rounded-2xl">
+      <DialogContent className="w-full max-w-6xl max-h-[calc(100dvh)] overflow-y-auto rounded-2xl">
         <DialogHeader>
           <DialogTitle>Запись на мероприятие</DialogTitle>
         </DialogHeader>
@@ -118,7 +126,7 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
                 <div className="flex gap-4">
 
                   <UserIcon className="h-8 w-8" />
-                  <div className="grid grid-cols-[1fr,1fr] gap-4">
+                  <div className="grid md:grid-cols-[1fr,1fr] gap-4">
                     <LabelGroup label="Имя">
                       {data.first_name}
                     </LabelGroup>
@@ -194,6 +202,35 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
             {!selectedOption && <LabelGroup label="Стоимость">
               <span className="text-2xl font-semibold">{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(event.attributes.price)}</span>
             </LabelGroup>}
+
+            {user?.attributes.bonuses > 0 &&
+              <div className="grid p-3 border border-black rounded-xl gap-3">
+                <div className=" grid grid-cols-[2fr,3fr,2fr] gap-3  content-center items-center  ">
+                  <span className="font-medium">Бонусы</span>
+                  {/* <span className={cn("text-2xl font-bold text-primary text-center", useBonuses ? "text-primary/60" : "")}>
+                    {user.attributes.bonuses} ₽
+                  </span> */}
+                  <div className={
+                    cn('justify-self-center', useBonuses ? 'opacity-60' : '')
+                  }>
+                    <NavbarBonusPointsIcon points={user.attributes.bonuses} />
+                  </div>
+
+                  <Button variant={'tenary'} size="sm" onClick={() => setUseBonuses(!useBonuses)}>
+                    {useBonuses ? "отменить" : "списать"}
+                  </Button>
+                </div>
+                {useBonuses && <div className="border-t border-black" />}
+                {useBonuses && <div className="flex justify-between gap-3  content-center items-center ">
+                  <span className="font-medium">Итого</span>
+                  <span className="text-xl font-semibold">
+                    <span className="text-sm line-through text-muted-foreground">{sumWithoutBonuses}&nbsp;₽ </span>
+                    &nbsp;{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(sumWithBonuces)}
+                  </span>
+                </div>}
+              </div>
+
+            }
 
             <PersonalInfoCheckbox value={checked} onChange={setChecked} />
 

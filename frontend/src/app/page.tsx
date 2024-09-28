@@ -1,9 +1,9 @@
 import { api } from "~/trpc/server";
 
-import Hero from "./hero";
-import Menu from "./menu";
-import Events from "./events";
-import AboutUs from "./about-us";
+import Hero from "./_lib/components/hero";
+import Menu from "./_lib/components/menu";
+import Events from "./_lib/components/events";
+import AboutUs from "./_lib/components/about-us";
 import { getServerAuthSession } from "~/server/auth";
 
 export default async function Home() {

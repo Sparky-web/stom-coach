@@ -5,16 +5,17 @@ import { Button } from "~/components/ui/button";
 
 import { api } from "~/trpc/server";
 
-import MapComponent from "./map";
+import MapComponent from "./_lib/components/map";
 import cn from "~/functions/cn";
 import ErrorPage from "./404";
-import SignUpDialog from "./sign-up-dialog";
+import SignUpDialog from "./_lib/components/sign-up-dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/components/ui/accordion";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { Event } from "~/types/entities";
 import { formatDate } from "~/lib/utils";
-import ClientImage, { SpeakerImage } from "./client-image";
-import SignUpDialogLegal from "./sign-up-dialog-legal";
+import ClientImage, { SpeakerImage } from "./_lib/components/client-image";
+import SignUpDialogLegal from "./_lib/components/sign-up-dialog-legal";
+import Description from "./_lib/components/description";
 
 export const revalidate = 300
 
@@ -46,7 +47,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
 
         <div className="container">
           <div className="flex flex-col gap-3 relative text-white  py-[64px]  max-w-[650px] lg:min-h-[400px] justify-center ">
-            {!!event.attributes.tags?.length && <div className="text-white/70 font-semibold text-sm items-center whitespace-pre">
+            {!!event.attributes.tags?.length && <div className="text-white/70 font-semibold text-sm items-center ">
               {event.attributes.tags.map(e => e.name).join("  •  ")}
             </div>}
             <h1 className="font-bold text-2xl lg:text-[42px] leading-snug">
@@ -63,8 +64,9 @@ export default async function EventPage({ params }: { params: { id: string } }) 
         <div className="grid gap-8 content-between">
           <div className="grid gap-6">
             <h2 className="text-xl font-semibold">{formattedDate}</h2>
-            <div className="text-black/70 prose" dangerouslySetInnerHTML={{ __html: event.attributes.description }}>
-            </div>
+            {/* <div className="text-black/70 prose" dangerouslySetInnerHTML={{ __html: event.attributes.description }}>
+            </div> */}
+            <Description content={event.attributes.description} />
           </div>
           {event.attributes.enable_payment !== false && <>
           {new Date(event.attributes.date) > new Date() ? <div className="flex flex-col gap-4">
@@ -128,7 +130,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
 
                         <div className="flex-col gap-1 ">
                           <div className="text-black text-base font-bold">{e.attributes.name}</div>
-                          <div className="text-black text-opacity-60 text-sm font-normal">{e.attributes.workplace || ""}</div>
+                          <div className="text-black text-opacity-60 text-sm font-normal max-w-[250px]">{e.attributes.workplace || ""}</div>
                         </div>
                       </div>
 

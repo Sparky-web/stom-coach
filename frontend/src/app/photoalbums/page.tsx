@@ -27,13 +27,15 @@ export default async function PhotoAlbums() {
             <Link key={album.id} href={album.attributes.link} target="_blank" rel="noreferrer">
               <div key={album.id} className="rounded-2xl relative overflow-hidden h-[250px] photoalbum">
 
-                <div className="content relative z-10 p-6 h-full grid gap-4 content-end text-white">
-                  <h2 className="text-3xl font-semibold">{album.attributes.name}</h2>
-                  <p className="text-gray-100">{album.attributes.description}</p>
-                </div>
+              
 
                 {cover && <PhotoAlbumImage src={cover} alt={album.attributes.name}  placeholder={placeholder} />}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(0,0,0,0.8)]"></div>
+
+                <div className="content relative z-1 p-6 h-full grid gap-4 content-end text-white">
+                  <h2 className="text-3xl font-semibold">{album.attributes.name}</h2>
+                  <p className="text-gray-100">{album.attributes.description}</p>
+                </div>
               </div>
             </Link>
           )

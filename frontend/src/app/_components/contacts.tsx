@@ -1,7 +1,7 @@
 import { Button } from "~/components/ui/button";
 import { Settings } from "~/types/entities";
 import { BlocksRenderer, type BlocksContent } from '@strapi/blocks-react-renderer';
-import MapComponent from "../events/[id]/map";
+import MapComponent from "../events/[id]/_lib/components/map";
 
 export default function Contacts(props: { settings: Settings }) {
   console.log(props.settings)

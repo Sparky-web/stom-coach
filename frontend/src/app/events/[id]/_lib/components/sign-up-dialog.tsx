@@ -89,7 +89,7 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
         <div className="grid gap-6 md:grid-cols-[3fr,2fr] mt-3">
           <div className="grid gap-4">
 
-            {!user && <Card className="flex justify-between gap-2 ">
+            {!user && <Card className="flex justify-between gap-2 flex-wrap">
               <div className="grid gap-2">
                 <span className="font-semibold font-lg">Зарегистрированны в StomClub?</span>
                 <span className="text-sm text-muted-foreground">

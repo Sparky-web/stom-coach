@@ -40,7 +40,8 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
           throw new Error('неверный email или пароль')
         }
 
-        utils.auth.invalidate()
+        await utils.auth.invalidate()
+        await new Promise(r => setTimeout(r, 1000))
 
         toast.success("Вход выполнен")
         onAuthenticated()
@@ -78,7 +79,7 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
               {(field) => (
                 <LabelGroup label="Email">
                   <Input className={
-                    cn("py-3 h-full rounded-lg text-base"
+                    cn("py-3 h-full rounded-lg  "
                       , field.state.meta.errors?.length > 0 ? "border-red-500" : ""
                     )
                   }
@@ -102,7 +103,7 @@ export default function SignUpCard({ onAuthenticated }: { onAuthenticated: () =>
             >
               {(field) => (
                 <LabelGroup label="Пароль">
-                  <Input className="py-3 h-full rounded-lg text-base"
+                  <Input className="py-3 h-full rounded-lg  "
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}

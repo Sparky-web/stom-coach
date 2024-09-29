@@ -99,8 +99,8 @@ export default function BonusesComponent({ levels, userBonuses }: BonusPage) {
 
       <p className="text-center text-sm text-muted-foreground">
         Для записи на бесплатные для вашего уровня мероприятия
-        напишите в WhatsApp по номеру +7 (999) 999 99-99
-        или на почту example@mail.ru
+        напишите в WhatsApp по номеру +7 (922) 207-50-50 (Виктория)
+        или на почту education@stom-coach.ru
       </p>
     </div>
   )

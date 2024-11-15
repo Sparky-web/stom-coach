@@ -156,3 +156,9 @@ img {
 .react-dadata__input {
   height: 3rem !important;
 }
+
+.react-dadata__suggestions {
+  /* z-index: 99999 !important; */
+  /* position: relative !important; */
+  /* position: fixed; */
+}

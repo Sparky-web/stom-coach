@@ -13,7 +13,8 @@ const legalSignUp = publicProcedure.input(z.object({
   name: z.string(),
   phone: z.string(),
   email: z.string().email(),
-  company: z.string().nullable().optional()
+  company: z.string().nullable().optional(),
+  companyFull: z.string()
 })).mutation(async ({ ctx, input }) => {
   try {
     const { data: settings } = await strapi.get('nastrojki', { populate: "admin_emails" });
@@ -25,7 +26,8 @@ const legalSignUp = publicProcedure.input(z.object({
       name: input.name,
       phone: input.phone,
       company: input.company || '',
-      email: input.email
+      email: input.email,
+      companyFull: input.companyFull
     })
 
     const emailOptions = {

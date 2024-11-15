@@ -1,12 +1,9 @@
-import { DaDataBank, DaDataParty, DaDataSuggestion } from "react-dadata"
+import RequisitesInterface from "../types/requisites"
 
 export const getRequisitesString = ({
   company, bankAccount, bankDetails,
-}: {
-  company: DaDataSuggestion<DaDataParty>,
-  bankAccount: string,
-  bankDetails: DaDataSuggestion<DaDataBank>
-}) => {
+}: RequisitesInterface) => {
+  console.log(bankDetails)
   return `${company.value}
 Адрес: ${company.data.address.value}
 ИНН: ${company.data.inn}

@@ -1,6 +1,7 @@
 "use client";
 
-import { CircleAlert, Wallet } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "~/components/ui/table";
+import { CircleAlert, InfoIcon, Wallet } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import LabelGroup from "~/app/_components/label-group";
@@ -15,15 +16,20 @@ import { api } from "~/trpc/react";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
 import { getFormField } from "~/app/_components/field";
+import CompanyData from "~/types/company-data";
+import { BankSuggestions, DaDataBank, DaDataParty, DaDataSuggestion, PartySuggestions } from 'react-dadata';
+import 'react-dadata/dist/react-dadata.css';
+
 import { toast } from "sonner";
-
-
+import { getRequisitesString } from "../utils/get-requisites-string";
 
 export default function SignUpDialogLegal({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
   const isDisabled = (selectedOption ? selectedOption.ticketsLeft < 1 : event.attributes.ticketsLeft < 1)
     || new Date(event.attributes.date) < new Date()
 
   const [open, setOpen] = useState(false)
+  const [value, setValue] = useState();
+
 
   const { mutateAsync } = api.payments.legalSignUp.useMutation()
 
@@ -33,12 +39,13 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
       name: '',
       email: '',
       phone: '',
-      company: '',
+      company: undefined as DaDataSuggestion<DaDataParty> | undefined,
+      bankDetails: undefined as DaDataSuggestion<DaDataBank> | undefined,
+      bankAccount: "",
     },
     validatorAdapter: zodValidator,
     onSubmit: async (values) => {
       try {
-
         await mutateAsync({
           event: event.attributes.name,
           option: selectedOption?.name,
@@ -61,14 +68,14 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
         для юр. лиц
       </Button>
     </DialogTrigger>
-    <DialogContent className="w-full max-w-4xl max-h-[calc(100dvh)] overflow-y-auto rounded-2xl">
+    <DialogContent className="w-full max-w-5xl max-h-[calc(100dvh)] overflow-y-auto rounded-2xl">
       <DialogHeader>
         <DialogTitle>Запись на мероприятие для юр. лиц</DialogTitle>
       </DialogHeader>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-4 content-start items-start">
 
-        <div className="grid gap-4">
+        <div className="grid gap-2">
           <form.Field name="name"
             validators={{
               onBlur: z.string().min(2).max(50),
@@ -93,26 +100,85 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
             {getFormField({ label: 'телефон', placeholder: '79121234567' })}
           </form.Field>
 
+
+
           <form.Field name="company"
+            validators={{
+              onChange: z.record(z.any())
+            }}
+          >
+            {(field) => {
+              const { value: company } = field.state;
+              return (
+                <div className="grid gap-4">
+                  <div className="grid gap-1.5">
+                    <span className="text-sm font-semibold">компания</span>
+                    <PartySuggestions token="4a7011eaf1d840bcfe7435719aa23158748a866b"
+                      value={field.state.value}
+                      onChange={(newValue) => field.handleChange(newValue)}
+                      // hintText={"компания"}
+                      count={5}
+                    />
+                    {field.state.meta.errors?.length > 0 && <span className="text-sm text-red-700">
+                      {field.state.meta.errors.join(', ')}
+                    </span>}
+                  </div>
+                </div>
+              )
+            }}
+          </form.Field>
+
+          <form.Field name="bankDetails"
+            validators={{
+              onChange: z.record(z.any())
+            }}
+          >
+            {(field) => {
+              return (
+                <div className="grid gap-1.5">
+                  <span className="text-sm font-semibold">банк</span>
+                  <BankSuggestions token="4a7011eaf1d840bcfe7435719aa23158748a866b"
+                    value={field.state.value}
+                    onChange={(newValue) => field.handleChange(newValue)}
+                    // hintText={"компания"}
+                    count={5}
+                  />
+                  {field.state.meta.errors?.length > 0 && <span className="text-sm text-red-700">
+                    {field.state.meta.errors.join(', ')}
+                  </span>}
+                </div>
+              )
+            }}
+          </form.Field>
+
+          <form.Field name="bankAccount"
+            validators={{
+              onChange: z.string().min(2).max(255),
+            }}
+          >
+            {getFormField({ label: 'банковский счет' })}
+          </form.Field>
+
+          {/* <form.Field name="company"
             validators={{
               onBlur: z.string().min(2).max(255),
             }}
           >
             {getFormField({ label: 'компания' })}
-          </form.Field>
+          </form.Field> */}
 
-          <Card className="grid gap-4 content-start p-0 bg-slate-100">
-            <span className=" font-semibold">В ближайшее время мы свяжемся с вами по одному из указаных вами контактов.</span>
-          </Card>
+
         </div>
 
-        <div className="grid gap-4">
+        <div className="grid gap-3">
+
+
           <span className="text-sm font-semibold">мероприятие</span>
           <h3 className="text-lg font-semibold">
             {event.attributes.name}
           </h3>
           <div className="grid grid-cols-1 gap-2">
-            <LabelGroup label="Дата проведения">
+            <LabelGroup label="Дата проведения" >
               {formatDate(event.attributes.date)}
             </LabelGroup>
             <LabelGroup label="Место проведения">
@@ -126,6 +192,31 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
             </div>
           </LabelGroup>}
 
+          <form.Subscribe selector={(state) => [state.values.company, state.values.bankAccount, state.values.bankDetails]}>
+            {([company, bankAccount, bankDetails]) => {
+              return (
+                <>
+                  {company && bankDetails && bankAccount && <div className="grid gap-1.5">
+
+                    <div className="bg-primary/10 p-3 rounded-lg ">
+                      <div className="font-medium text-sm content-center items-center flex">
+                        <InfoIcon className="mr-2 w-4 h-4" />
+                        на данные реквизиты будет выставлен счет
+                      </div>
+                      <div className="text-sm  whitespace-pre-wrap mt-3">
+                        {getRequisitesString({
+                          company,
+                          bankAccount: bankAccount,
+                          bankDetails: bankDetails,
+                        })}
+                      </div>
+                    </div>
+                  </div>}
+                </>
+              )
+            }}
+          </form.Subscribe>
+
           <PersonalInfoCheckbox value={isChecked} onChange={setIsChecked} />
 
           <form.Subscribe
@@ -134,7 +225,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
             {([canSubmit]) => {
               return (
                 <Button variant={'default'}
-                  onClick={() => {form.handleSubmit()}}
+                  onClick={() => { form.handleSubmit() }}
                   disabled={!isChecked || !canSubmit}
                   size="lg" className="mt-auto hover:opacity-90 transition"
                 >

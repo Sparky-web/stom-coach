@@ -137,3 +137,22 @@ img {
     font-size: 16px; /* Only apply 16px font-size on Safari */
   }
 /* } */
+
+.table-bordered {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid #ccc; /* цвет границы */
+  padding: 8px;
+  text-align: left;
+}
+
+.table-bordered th {
+  background-color: #f9f9f9;
+}
+.react-dadata__input {
+  height: 3rem !important;
+}

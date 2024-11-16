@@ -212,7 +212,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
               <div className="text-black text-base font-normal">{event.attributes.location || event.attributes.city.data?.attributes.name}</div>
             </div>
             {event.attributes.location && <div className="h-56 bg-zinc-300 rounded-2xl relative overflow-hidden">
-              <MapComponent coordinates={coordinates} />
+              <MapComponent coordinates={cooridnates} />
             </div>}
           </div>
         </div>

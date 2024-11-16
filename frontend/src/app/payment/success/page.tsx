@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
+export const metadata = {
+  title: "Заказ успешно оплачен | Учебный центр STOMCOACH"
+}
 
 export default function Page() {
   return <div className="container py-16">

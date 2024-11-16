@@ -14,7 +14,9 @@ const legalSignUp = publicProcedure.input(z.object({
   phone: z.string(),
   email: z.string().email(),
   company: z.string().nullable().optional(),
-  companyFull: z.string()
+  companyFull: z.string(),
+  position: z.string(),
+  speciality: z.string()
 })).mutation(async ({ ctx, input }) => {
   try {
     const { data: settings } = await strapi.get('nastrojki', { populate: "admin_emails" });
@@ -27,7 +29,9 @@ const legalSignUp = publicProcedure.input(z.object({
       phone: input.phone,
       company: input.company || '',
       email: input.email,
-      companyFull: input.companyFull
+      companyFull: input.companyFull,
+      position: input.position,
+      speciality: input.speciality
     })
 
     const emailOptions = {
@@ -36,10 +40,15 @@ const legalSignUp = publicProcedure.input(z.object({
       text: `` +
         `Новая заявка на мероприятие в Учебном центре STOMCOACH от юр. лица
 Название мероприятия: ${input.event} ${input.option ? `— ${input.option}` : ''}
-контактное лицо: ${input.name}
+ФИО: ${input.name}
 телефон: ${input.phone}
 email: ${input.email}
-название компании: ${input.company}`
+должность: ${input.position}
+специальность: ${input.speciality}
+компания: ${input.company}
+
+карточка компании:
+${input.companyFull}`
     }
 
     if (env.ENABLE_EMAILS) {

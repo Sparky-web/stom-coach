@@ -25,7 +25,7 @@ export default function SelectSpecAndPosition({ form }: SelectProps) {
       {
         data?.positions && <form.Field name="position">
           {(field) => (
-            <div className="grid gap-2 content-start">
+            <div className="grid gap-3 content-start">
               <div className="grid gap-1">
                 <label className="text-sm font-semibold">Должность</label>
                 <Select value={field.state.value} onValueChange={val => {
@@ -42,7 +42,7 @@ export default function SelectSpecAndPosition({ form }: SelectProps) {
                   <SelectTrigger >
                     <SelectValue placeholder="Выберите должность" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent >
                     {data.positions.map((e) => (
                       <SelectItem key={e.id} value={e.id.toString()}>
                         {e.attributes.name}
@@ -76,7 +76,7 @@ export default function SelectSpecAndPosition({ form }: SelectProps) {
               >
                 {(_form) => {
                   return (
-                    <div className="grid gap-2 content-start">
+                    <div className="grid gap-3 content-start">
                       <div className="grid gap-1 content-start">
                         <label className="text-sm font-semibold">Специальность</label>
                         <Select value={field.state.value} onValueChange={e => {

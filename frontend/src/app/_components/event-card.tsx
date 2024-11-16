@@ -10,6 +10,7 @@ import { DataContext } from "../context"
 import Link from "next/link"
 import { env } from "~/env";
 import imageLoader from "~/functions/loader";
+import slugify from "@sindresorhus/slugify";
 
 Settings.defaultLocale = 'ru';
 
@@ -27,7 +28,7 @@ export default function EventCard(props: { event: Event, className?: string }) {
   const thumbnail = props.event.attributes.cover_image?.data?.attributes?.placeholder || props.event.attributes.image?.data?.attributes?.placeholder || props.event.attributes.speakers?.data[0]?.attributes.avatar?.data?.attributes?.placeholder
 
   return (
-    <Link href={`/events/${props.event.id}`}>
+    <Link href={`/events/${slugify(props.event.attributes.name + " " + props.event.id)}`}>
       <div className={"rounded-xl card h-full bg-white grid grid-rows-[250px,1fr] " + (props.className || '')}>
         <div className="h-[250px] overflow-hidden rounded-t-xl">
           <Image

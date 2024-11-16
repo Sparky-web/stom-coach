@@ -5,6 +5,10 @@ import { getConfig } from "~/lib/getConfig";
 import ClientEvents from "./client-events";
 import _ from "lodash";
 
+export const metadata = {
+  title: "Все мероприятия | Учебный центр STOMCOACH"
+}
+
 
 export default async function Events() {
   const { city } = await getConfig()

@@ -29,11 +29,11 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
   const isDisabled = (selectedOption ? selectedOption.ticketsLeft < 1 : event.attributes.ticketsLeft < 1)
     || new Date(event.attributes.date) < new Date()
 
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState();
-
   const { data, error } = api.strapi.getSpecsAndPositions.useQuery(undefined)
 
+
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState();
 
   const { mutateAsync } = api.payments.legalSignUp.useMutation()
 
@@ -60,6 +60,12 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
           throw new Error('необходимо заполнить карточку компании')
         }
 
+        const foundPosition = data?.positions.find(e => e.id === +value.position)?.attributes.name
+        const foundSpeciality = data?.specs.find(e => e.id === +value.speciality)?.attributes.name
+
+        const position = (foundPosition === "Другое" ? value.custom_position : foundPosition) || ''
+        const speciality = (foundSpeciality === "Другое" ? value.custom_speciality : foundSpeciality) || ''
+
         await mutateAsync({
           event: event.attributes.name,
           option: selectedOption?.name,
@@ -71,7 +77,9 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
             company: value.company,
             bankAccount: value.bankAccount,
             bankDetails: value.bankDetails
-          })
+          }),
+          position,
+          speciality
         })
 
         toast.success("Заявка отправлена, скоро мы свяжемся с вами")
@@ -181,7 +189,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
             {getFormField({ label: 'расчетный счет', placeholder: '012345678901234567890' })}
           </form.Field>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid md:grid-cols-2 gap-3">
             <SelectSpecAndPosition form={form} />
           </div>
 

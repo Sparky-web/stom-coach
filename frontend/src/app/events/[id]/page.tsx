@@ -16,14 +16,67 @@ import { formatDate } from "~/lib/utils";
 import ClientImage, { SpeakerImage } from "./_lib/components/client-image";
 import SignUpDialogLegal from "./_lib/components/sign-up-dialog-legal";
 import Description from "./_lib/components/description";
+import { Metadata, ResolvingMetadata } from "next";
+import slugify from '@sindresorhus/slugify';
+import strapi from "~/server/strapi";
 
 export const revalidate = 300
+export const dynamicParams = true // true | false,
+
+type Props = {
+  params: Promise<{ id: string }>
+}
+
+export async function generateStaticParams() {
+  // const posts = await 
+
+  const data = await strapi.get('events', {
+    pagination: {
+      limit: 1000
+    }
+  })
+
+  const events = data.data.map((e: any) => ({ id: e.id, name: e.attributes.name })) as {
+    id: number,
+    name: string
+  }[]
+
+  return events.map(e => ({
+    id: slugify(e.name + " " + e.id)
+  }))
+}
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const { id: slug } = (await params)
+
+  const id = slug.split('-')[slug.split('-').length - 1]
+
+  console.log(id)
+
+  // fetch data
+  const product = await api.strapi.getEvent.query(+id);
+
+  // optionally access and extend (rather than replace) parent metadata
+
+  return {
+    title: product.attributes.name + " | " + DateTime.fromISO(product.attributes.date.toString()).toFormat("dd MMMM yyyy г") + " | " + "г. " + product.attributes.city.data?.attributes.name,
+    description:
+      `${["г. " + product.attributes.city.data?.attributes.name, ...(product.attributes.speakers?.data || []).map(e => e.attributes.name)].join("  •  ")}
+${product.attributes.tags.map(e => e.name).join("  •  ")
+      }`
+  }
+}
 
 export default async function EventPage({ params }: { params: { id: string } }) {
-
   let event: Event | null;
   try {
-    event = await api.strapi.getEvent.query(+params.id);
+    const actualId = params.id.split('-')[params.id.split('-').length - 1]
+    
+    event = await api.strapi.getEvent.query(+actualId);
   } catch (e) {
     return <ErrorPage />
   }
@@ -39,9 +92,9 @@ export default async function EventPage({ params }: { params: { id: string } }) 
   return (
     <div>
       <div className="relative">
-        {event.attributes.image?.data && <ClientImage 
+        {event.attributes.image?.data && <ClientImage
           blurDataURL={event.attributes.image?.data?.attributes.placeholder}
-        url={event.attributes.image?.data?.attributes.url} alt={event.attributes.image?.data.attributes.name} />}
+          url={event.attributes.image?.data?.attributes.url} alt={event.attributes.image?.data.attributes.name} />}
 
         <div className="absolute h-full w-full bg-primary" style={{ background: event.attributes.image?.data ? 'linear-gradient(180deg, rgba(28.85, 36.66, 52.06, 0.70) 0%, rgba(29, 37, 52, 0.50) 38%, rgba(29, 37, 52, 0.25) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%)' : '' }} />
 
@@ -69,46 +122,46 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             <Description content={event.attributes.description} />
           </div>
           {event.attributes.enable_payment !== false && <>
-          {new Date(event.attributes.date) > new Date() ? <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold">Оплата: </h2>
-            { !event.attributes.options?.length && <div className="grid gap-4">
-              {event.attributes?.ticketsLeft < 10 && <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>осталось мест: {event.attributes.ticketsLeft}</Badge>}
+            {new Date(event.attributes.date) > new Date() ? <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-semibold">Оплата: </h2>
+              {!event.attributes.options?.length && <div className="grid gap-4">
+                {event.attributes?.ticketsLeft < 10 && <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>осталось мест: {event.attributes.ticketsLeft}</Badge>}
 
-              <div className="flex justify-between gap-4">
-                <span className="text-3xl font-bold">{priceFormattedLocalized}</span>
-                {event.attributes.ticketsLeft > 0 && <div className="flex gap-3 flex-wrap">
-                  <SignUpDialog event={event} selectedOption={null} />
-                  <SignUpDialogLegal event={event} selectedOption={null} />
-                  {/* <Button variant={'outline'} className="uppercase">Для юр. лиц</Button> */}
-                </div>}
-              </div>
-            </div>}
-            
+                <div className="flex justify-between gap-4">
+                  <span className="text-3xl font-bold">{priceFormattedLocalized}</span>
+                  {event.attributes.ticketsLeft > 0 && <div className="flex gap-3 flex-wrap">
+                    <SignUpDialog event={event} selectedOption={null} />
+                    <SignUpDialogLegal event={event} selectedOption={null} />
+                    {/* <Button variant={'outline'} className="uppercase">Для юр. лиц</Button> */}
+                  </div>}
+                </div>
+              </div>}
 
-            { !!event.attributes.options?.length && <div className="grid gap-4">
-              {event.attributes.options.map(e => {
-                return (
-                  <div className="grid gap-2 rounded-xl bg-neutral-100 p-4 text-sm font-semibold">
-                    <h4>{e.name}</h4>
-                    <div className="flex justify-between gap-4 flex-wrap">
-                      <span className="text-3xl font-bold">{localizer.format(e.price)}</span>
-                      {e.ticketsLeft > 0 ? <div className="flex gap-3">
-                        <SignUpDialog event={event} selectedOption={e} />
-                        <SignUpDialogLegal event={event} selectedOption={e} />
-                      </div> :
-                        <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>мест нет</Badge>
-                      }
+
+              {!!event.attributes.options?.length && <div className="grid gap-4">
+                {event.attributes.options.map(e => {
+                  return (
+                    <div className="grid gap-2 rounded-xl bg-neutral-100 p-4 text-sm font-semibold">
+                      <h4>{e.name}</h4>
+                      <div className="flex justify-between gap-4 flex-wrap">
+                        <span className="text-3xl font-bold">{localizer.format(e.price)}</span>
+                        {e.ticketsLeft > 0 ? <div className="flex gap-3">
+                          <SignUpDialog event={event} selectedOption={e} />
+                          <SignUpDialogLegal event={event} selectedOption={e} />
+                        </div> :
+                          <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>мест нет</Badge>
+                        }
+                      </div>
+                      {e.ticketsLeft < 10 && e.ticketsLeft > 0 && <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>осталось мест: {e.ticketsLeft}</Badge>}
                     </div>
-                    {e.ticketsLeft < 10 && e.ticketsLeft > 0 && <Badge className="py-2 px-6 text-[16px] border-amber-600 text-amber-600" variant={'outline'}>осталось мест: {e.ticketsLeft}</Badge>}
-                  </div>
-                )
-              })}
-            </div>}
-          </div>
-            : <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>мероприятие завершено</Badge>
-          }
+                  )
+                })}
+              </div>}
+            </div>
+              : <Badge className="py-2 px-6 text-[16px] border-black" variant={'outline'}>мероприятие завершено</Badge>
+            }
           </>}
-          
+
         </div>
         <div className={cn("grid gap-4", event.attributes.location ? "content-between" : "content-start")}>
           <div className="flex-col gap-4 flex">

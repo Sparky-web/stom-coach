@@ -4,6 +4,9 @@ import { Button } from "~/components/ui/button";
 import Link from "next/link";
 
 
+export const metadata = {
+  title: "Фотографии с мероприятий учебного центра для стоматологов STOMCOACH",
+}
 
 export default async function PhotoAlbums() {
 

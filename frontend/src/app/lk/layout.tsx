@@ -9,7 +9,6 @@ import Menu from "./menu";
 import { Button } from "~/components/ui/button";
 import { LogOutIcon } from "lucide-react";
 
-
 export default function LkLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth()  
 

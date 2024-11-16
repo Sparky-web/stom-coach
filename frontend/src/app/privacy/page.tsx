@@ -1,6 +1,11 @@
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { api } from "~/trpc/server";
 
+import type { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: 'Политика обработки персональных данных | STOMCOACH',
+}
 
 export default async function Privacy() {
   const data = await api.strapi.getPrivacyPolicy.query();

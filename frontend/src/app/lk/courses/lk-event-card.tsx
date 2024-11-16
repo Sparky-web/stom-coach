@@ -13,6 +13,7 @@ import { LkEvent } from "~/types/entities";
 import { Button } from "~/components/ui/button";
 import LabelGroup from "~/app/_components/label-group";
 import imageLoader from "~/functions/loader";
+import slugify from "@sindresorhus/slugify";
 
 Settings.defaultLocale = 'ru';
 
@@ -48,7 +49,7 @@ export default function LkEventCard(props: { event: LkEvent }) {
             <MapPin className="w-4 h-4" />
             <span>г. {props.event.attributes.city.data.attributes.name}</span>
           </span>
-          <Link href={`/events/${props.event.id}`}>
+          <Link href={`/events/${slugify(props.event.attributes.name + " " + props.event.id)}`}>
             <h3 className="text-[18px] font-bold line-clamp-3 my-0 py-0 mt-2" >{props.event.attributes.name}</h3>
           </Link>
 

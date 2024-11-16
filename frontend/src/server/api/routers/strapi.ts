@@ -11,7 +11,6 @@ import {
 import strapi from "~/server/strapi";
 import { Settings, Event, City, PhotoAlbum } from "~/types/entities";
 
-
 export const strapiRouter = createTRPCRouter({
   getSettings: publicProcedure.query(async ({ ctx, input }) => {
     const data = await strapi.get("nastrojki", { populate: "*" });
@@ -40,6 +39,18 @@ export const strapiRouter = createTRPCRouter({
     });
     return data.data as Event[];
   }),
+  // getShortEventsAll: async () => {
+  //   const data = await strapi.get('events', {
+  //     pagination: {
+  //       limit: 1000
+  //     }
+  //   })
+
+  //   return data.data.map((e: any) => ({ id: e.id, name: e.attributes.name })) as {
+  //     id: number,
+  //     name: string
+  //   }[]
+  // },
   getEvent: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
     try {
       const data = await strapi.get(`events/${input}`, {
@@ -80,9 +91,11 @@ export const strapiRouter = createTRPCRouter({
     return data.data as City[];
   }),
   getCityId: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    const data = await strapi.get("cities", { populate: "", filters: {
-      name: input
-    } });
+    const data = await strapi.get("cities", {
+      populate: "", filters: {
+        name: input
+      }
+    });
     return data.data[0]?.id || null as number | null;
   }),
   getSpecsAndPositions: publicProcedure.query(async ({ ctx }) => {
@@ -106,7 +119,7 @@ export const strapiRouter = createTRPCRouter({
   }),
   getPrivacyPolicy: publicProcedure.query(async ({ ctx }) => {
     const data = await strapi.get("politika-obrabotki-personalnyh-dannyh", { populate: "*" });
-    return data.data as {id: number, attributes: {text: BlocksContent}}
+    return data.data as { id: number, attributes: { text: BlocksContent } }
   }),
   updateUser: protectedProcedure.input(z.object({
     first_name: z.string().min(2).max(50),

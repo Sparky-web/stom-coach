@@ -65,7 +65,7 @@ export async function addOrderToSpreadsheet(order: SanitizedOrder) {
 export async function addLegalOrderToSpreadsheet(order: SanitizedLegalOrder) {
   const auth = await authorize();
   await appendRow(auth, [
-    order.event_name, order.option_name, order.name, order.phone,
+    order.event_name, order.option_name, order.name, order.phone, order.position, order.speciality,
     order.company, order.email, order.companyFull, DateTime.now().toLocaleString(DateTime.DATETIME_FULL)
   ], 'Юридические заказы');
 }

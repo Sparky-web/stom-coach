@@ -153,6 +153,7 @@ export type SanitizedLegalOrder = {
   phone: string;
   company: string;
   email: string;
+  companyFull: string
 }
 
 export type LkEvent = {

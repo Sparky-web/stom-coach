@@ -23,6 +23,7 @@ import 'react-dadata/dist/react-dadata.css';
 import { toast } from "sonner";
 import { getRequisitesString } from "../utils/get-requisites-string";
 import SelectSpecAndPosition from "~/app/_components/select-spec-and-position";
+import getRequisitesFullString from "../utils/get-requisites-full-string";
 
 export default function SignUpDialogLegal({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
   const isDisabled = (selectedOption ? selectedOption.ticketsLeft < 1 : event.attributes.ticketsLeft < 1)
@@ -52,11 +53,25 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
     },
     validatorAdapter: zodValidator,
     onSubmit: async (values) => {
+
+      const value = values.value
       try {
+        if(!value.bankDetails || !value.bankAccount || !value.company) {
+          throw new Error('необходимо заполнить карточку компании')
+        }
+
         await mutateAsync({
           event: event.attributes.name,
           option: selectedOption?.name,
-          ...values.value,
+          name: value.name,
+          phone: value.phone,
+          email: value.email,
+          company: value.company?.value,
+          companyFull: getRequisitesFullString({
+            company: value.company,
+            bankAccount: value.bankAccount,
+            bankDetails: value.bankDetails
+          })
         })
 
         toast.success("Заявка отправлена, скоро мы свяжемся с вами")
@@ -75,7 +90,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
         для юр. лиц
       </Button>
     </DialogTrigger>
-    <DialogContent className="w-full max-w-5xl max-h-[calc(100dvh)] overflow-y-auto rounded-2xl">
+    <DialogContent className="w-full max-w-5xl max-h-[calc(100dvh)] min-h-[85dvh] overflow-y-auto rounded-2xl content-start items-start">
       <DialogHeader>
         <DialogTitle>Запись на мероприятие для юр. лиц</DialogTitle>
       </DialogHeader>
@@ -88,7 +103,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
               onBlur: z.string().min(2).max(50),
             }}
           >
-            {getFormField({ label: 'контактное лицо' })}
+            {getFormField({ label: 'полное ФИО' })}
           </form.Field>
 
           <form.Field name="email"
@@ -163,8 +178,12 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
               onChange: z.string().min(2).max(255),
             }}
           >
-            {getFormField({ label: 'банковский счет' })}
+            {getFormField({ label: 'расчетный счет', placeholder: '012345678901234567890' })}
           </form.Field>
+
+          <div className="grid grid-cols-2 gap-3">
+            <SelectSpecAndPosition form={form} />
+          </div>
 
           {/* <form.Field name="company"
             validators={{
@@ -174,9 +193,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
             {getFormField({ label: 'компания' })}
           </form.Field> */}
 
-          <div className="grid grid-cols-2 gap-3">
-            <SelectSpecAndPosition form={form} />
-          </div>
+
         </div>
 
         <div className="grid gap-3">
@@ -225,6 +242,8 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
               )
             }}
           </form.Subscribe>
+
+          
 
           <PersonalInfoCheckbox value={isChecked} onChange={setIsChecked} />
 

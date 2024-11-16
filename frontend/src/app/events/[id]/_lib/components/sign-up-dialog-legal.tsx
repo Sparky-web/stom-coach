@@ -22,6 +22,7 @@ import 'react-dadata/dist/react-dadata.css';
 
 import { toast } from "sonner";
 import { getRequisitesString } from "../utils/get-requisites-string";
+import SelectSpecAndPosition from "~/app/_components/select-spec-and-position";
 
 export default function SignUpDialogLegal({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
   const isDisabled = (selectedOption ? selectedOption.ticketsLeft < 1 : event.attributes.ticketsLeft < 1)
@@ -29,6 +30,8 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
 
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState();
+
+  const { data, error } = api.strapi.getSpecsAndPositions.useQuery(undefined)
 
 
   const { mutateAsync } = api.payments.legalSignUp.useMutation()
@@ -42,6 +45,10 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
       company: undefined as DaDataSuggestion<DaDataParty> | undefined,
       bankDetails: undefined as DaDataSuggestion<DaDataBank> | undefined,
       bankAccount: "",
+      position: '',
+      speciality: '',
+      custom_position: '',
+      custom_speciality: '',
     },
     validatorAdapter: zodValidator,
     onSubmit: async (values) => {
@@ -167,7 +174,9 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
             {getFormField({ label: 'компания' })}
           </form.Field> */}
 
-
+          <div className="grid grid-cols-2 gap-3">
+            <SelectSpecAndPosition form={form} />
+          </div>
         </div>
 
         <div className="grid gap-3">
@@ -236,6 +245,8 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
           </form.Subscribe>
         </div>
       </div>
+
+
 
     </DialogContent>
   </Dialog >

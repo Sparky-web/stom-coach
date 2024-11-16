@@ -75,13 +75,19 @@ export default async function EventPage({ params }: { params: { id: string } }) 
   let event: Event | null;
   try {
     const actualId = params.id.split('-')[params.id.split('-').length - 1]
-    
+
     event = await api.strapi.getEvent.query(+actualId);
   } catch (e) {
     return <ErrorPage />
   }
 
-  const coordinates: [number, number] = event.attributes.location ? await api.map.getCoordinates.query(event.attributes.location) : [0, 0];
+  let cooridnates: [number, number] = [0, 0];
+
+  try {
+    cooridnates = event.attributes.location ? await api.map.getCoordinates.query(event.attributes.location) : [0, 0];
+  } catch (e) {
+    console.error(e)
+  }
 
   const formattedDate = formatDate(event.attributes.date.toString());
 

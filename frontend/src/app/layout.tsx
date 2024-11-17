@@ -65,7 +65,9 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"></link>
-        <script dangerouslySetInnerHTML={{
+      </head>
+      <body className="min-h-[100dvh] flex flex-col">
+        <div dangerouslySetInnerHTML={{
           __html: `<!-- Yandex.Metrika counter -->
 <script type="text/javascript" >
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -84,8 +86,7 @@ export default async function RootLayout({
 <noscript><div><img src="https://mc.yandex.ru/watch/98955665" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->`
         }} />
-      </head>
-      <body className="min-h-[100dvh] flex flex-col">
+
         <TRPCReactProvider>
           <AuthProvider user={user}>
             <DataProvider

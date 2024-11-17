@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { getRequisitesString } from "../utils/get-requisites-string";
 import SelectSpecAndPosition from "~/app/_components/select-spec-and-position";
 import getRequisitesFullString from "../utils/get-requisites-full-string";
+import Spinner from "~/app/_components/spinner";
 
 export default function SignUpDialogLegal({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
   const isDisabled = (selectedOption ? selectedOption.ticketsLeft < 1 : event.attributes.ticketsLeft < 1)
@@ -35,7 +36,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState();
 
-  const { mutateAsync } = api.payments.legalSignUp.useMutation()
+  const { mutateAsync, isPending } = api.payments.legalSignUp.useMutation()
 
   const [isChecked, setIsChecked] = useState(false)
   const form = useForm({
@@ -56,7 +57,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
 
       const value = values.value
       try {
-        if(!value.bankDetails || !value.bankAccount || !value.company) {
+        if (!value.bankDetails || !value.bankAccount || !value.company) {
           throw new Error('необходимо заполнить карточку компании')
         }
 
@@ -65,6 +66,10 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
 
         const position = (foundPosition === "Другое" ? value.custom_position : foundPosition) || ''
         const speciality = (foundSpeciality === "Другое" ? value.custom_speciality : foundSpeciality) || ''
+
+        if(!position || !speciality) {
+          throw new Error('необходимо выбрать должность и специальность')
+        }
 
         await mutateAsync({
           event: event.attributes.name,
@@ -86,7 +91,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
         setOpen(false)
       } catch (e) {
         console.error(e)
-        toast.error("Ошибка обработки заявки, попробуйте позже: " + e.message as string)
+        toast.error("Ошибка обработки заявки: " + e.message as string)
       }
 
     }
@@ -111,7 +116,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
               onBlur: z.string().min(2).max(50),
             }}
           >
-            {getFormField({ label: 'полное ФИО' })}
+            {getFormField({ label: 'полное ФИО участника' })}
           </form.Field>
 
           <form.Field name="email"
@@ -205,8 +210,6 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
         </div>
 
         <div className="grid gap-3">
-
-
           <span className="text-sm font-semibold">мероприятие</span>
           <h3 className="text-lg font-semibold">
             {event.attributes.name}
@@ -235,7 +238,7 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
                     <div className="bg-primary/10 p-3 rounded-lg ">
                       <div className="font-medium text-sm content-center items-center flex">
                         <InfoIcon className="mr-2 w-4 h-4" />
-                        на данные реквизиты будет выставлен счет
+                        на эти реквизиты будет выставлен счет и составлен договор
                       </div>
                       <div className="text-sm  whitespace-pre-wrap mt-3">
                         {getRequisitesString({
@@ -251,20 +254,21 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
             }}
           </form.Subscribe>
 
-          
+
 
           <PersonalInfoCheckbox value={isChecked} onChange={setIsChecked} />
 
           <form.Subscribe
-            selector={(state) => [state.canSubmit]}
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
           >
-            {([canSubmit]) => {
+            {([canSubmit, isSubmitting]) => {
               return (
                 <Button variant={'default'}
                   onClick={() => { form.handleSubmit() }}
                   disabled={!isChecked || !canSubmit}
                   size="lg" className="mt-auto hover:opacity-90 transition"
                 >
+                  {isSubmitting && <Spinner />}
                   Оставить заявку
                 </Button>
               )

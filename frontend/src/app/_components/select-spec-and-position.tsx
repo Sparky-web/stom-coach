@@ -39,7 +39,7 @@ export default function SelectSpecAndPosition({ form }: SelectProps) {
                   }
                   field.handleChange(val)
                 }}>
-                  <SelectTrigger >
+                  <SelectTrigger className="text-left text-sm">
                     <SelectValue placeholder="Выберите должность" />
                   </SelectTrigger>
                   <SelectContent >
@@ -91,7 +91,7 @@ export default function SelectSpecAndPosition({ form }: SelectProps) {
                             data.positions.find(e => e.id === +field.form.getFieldValue('position'))?.attributes.enableSpeciality === false
                           }
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="text-left text-sm">
                             <SelectValue placeholder="Выберите специальность" />
                           </SelectTrigger>
                           <SelectContent>

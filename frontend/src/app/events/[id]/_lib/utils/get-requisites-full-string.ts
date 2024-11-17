@@ -13,5 +13,6 @@ export default function getRequisitesFullString ({
 Банк: ${bankDetails.unrestricted_value || ''}
 БИК: ${bankDetails.data.bic || ''}
 Расчетный счет: ${bankAccount}
-ОКТМО: ${company.data.oktmo || ''}`
+ОКТМО: ${company.data.oktmo || ''}
+${company.data.management?.post || ''}: ${company.data.management?.name || ''}`
 }

@@ -9,5 +9,6 @@ export const getRequisitesString = ({
 ИНН: ${company.data.inn}
 КПП: ${company.data.kpp}
 Банк: ${bankDetails.value}
-Банковский счет: ${bankAccount}`
+Банковский счет: ${bankAccount}
+${company.data.management?.post || ''}: ${company.data.management?.name || ''}`
 }

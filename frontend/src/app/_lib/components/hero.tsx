@@ -46,7 +46,7 @@ const Hero = (props: {
         {!user && <SignUpBonus />}
       </div>
       {event && <div className="relative bg-neutral-800 rounded-xl overflow-hidden">
-        {props.event.image && <NextImage
+        {props.event.image?.data && <NextImage
           layout="fill"
           objectFit="cover"
           loader={imageLoader}

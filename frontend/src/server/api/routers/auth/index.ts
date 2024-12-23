@@ -146,7 +146,6 @@ export const authRouter = createTRPCRouter({
       user: client as User
     }
   }),
-
   sendResetPasswordLink: publicProcedure.input(z.object({
     email: z.string().email(),
   })).mutation(async ({ input }) => {

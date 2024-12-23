@@ -129,7 +129,8 @@ Email: ${order.attributes.email}
       position: order.attributes.position?.data?.attributes.name,
       speciality: order.attributes.speciality?.data?.attributes.name,
       phone: order.attributes.phone,
-      bonuses: order.attributes.bonuses
+      bonuses: order.attributes.bonuses,
+      promocode: order.attributes.promocode
     })
 
     // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));

@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "promocodes",
+  "info": {
+    "singularName": "promocode",
+    "pluralName": "promocodes",
+    "displayName": "Промокоды",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "promocode": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "amount": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "usage_limit": {
+      "type": "integer",
+      "required": true,
+      "default": 1
+    }
+  }
+}

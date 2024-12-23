@@ -6,7 +6,6 @@ export const metadata = {
   title: "Программа лояльности | Учебный центр STOMCOACH"
 }
 
-
 // In your main component or page
 export default async function Bonuses() {
   const data  = await api.lk.getBonucePage.query()

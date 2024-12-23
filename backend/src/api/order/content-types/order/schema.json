@@ -86,6 +86,9 @@
       "type": "integer",
       "required": true,
       "default": 0
+    },
+    "promocode": {
+      "type": "string"
     }
   }
 }

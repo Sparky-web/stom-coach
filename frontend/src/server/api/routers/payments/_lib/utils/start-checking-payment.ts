@@ -2,6 +2,7 @@ import strapi from "~/server/strapi";
 import getOrderStatus from "./get-order-status";
 import onPaymentSuccess from "./on-payment-success";
 import { checkPaymentStatus } from "./yookassa";
+import promocodeIncreaseCount from "./promocode-count-increase";
 
 export default async function startCheckingPayment(orderId: string, count: number = 0) {
   const maxCountCheck = (1000 * 60 * 20 / 30000) // 20 минут
@@ -11,6 +12,11 @@ export default async function startCheckingPayment(orderId: string, count: numbe
     await strapi.update('orders', order.id, {
       expired: true
     })
+
+    const {data: [promocode]} = await strapi.get('promocodes', { filters: { promocode: order.attributes.promocode } });
+    if(!promocode) return
+
+    await promocodeIncreaseCount(promocode.attributes.promocode)
 
     return
   }

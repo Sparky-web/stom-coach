@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 import { ClientForm, convertUserToClientFormValues, convertUserToClientFormValuesOutput } from "~/app/_components/client-form";
 import { getFormField, getErrors, ClientFormValuesOutput, ClientFormValuesInput } from "~/app/_components/field";
@@ -10,7 +10,7 @@ import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
 import { Event } from "~/types/entities";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { CircleAlert, Edit2, GraduationCap, LogIn, ScrollText, UserIcon, Wallet } from "lucide-react";
+import { Check, CircleAlert, Edit2, GraduationCap, Loader2Icon, LogIn, ScrollText, UserIcon, Wallet, X } from "lucide-react";
 import Card from "~/app/_components/card";
 import LabelGroup from "~/app/_components/label-group";
 import { formatDate } from "~/lib/utils";
@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import cn from "~/functions/cn";
 import NavbarBonusPointsIcon from "~/app/_components/navbar/bonuses";
+import Spinner from "~/app/_components/spinner";
+import { Checkbox } from "~/components/ui/checkbox";
 
 export default function SignUp({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
   const { user } = useAuth()
@@ -34,15 +36,39 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
   const [checked, setChecked] = useState(false)
 
   const [useBonuses, setUseBonuses] = useState(false)
+  const [usePromocode, setUsePromocode] = useState(false)
 
   const [defaultValues, setDefaultValues] = useState<ClientFormValuesInput | null>(user ? convertUserToClientFormValues(user) : null)
 
   const [data, setData] = useState<ClientFormValuesOutput | null>(user ? convertUserToClientFormValuesOutput(user) : null)
 
+  const [promocode, setPromocode] = useState('')
+
+  const { data: promocodeData, refetch, isFetching, error } = api.promocodes.getPromoCode.useQuery(promocode, {
+    enabled: false,
+    retry(failureCount, error) {
+      return false
+    },
+  })
+
   const router = useRouter()
 
   const sumWithoutBonuses = selectedOption ? selectedOption.price : event.attributes.price
   const sumWithBonuces = user?.attributes.bonuses ? sumWithoutBonuses - user.attributes.bonuses : null
+
+  const sumWithPromocode = promocodeData ? sumWithoutBonuses - promocodeData.amount : null
+
+  useEffect(() => {
+    if(useBonuses && usePromocode) {
+      setUseBonuses(false)
+    } 
+  }, [usePromocode])
+
+  useEffect(() => {
+    if(usePromocode && useBonuses) {
+      setUsePromocode(false)
+    } 
+  }, [useBonuses])
 
   const onSubmit = async () => {
     if (!data) return
@@ -53,7 +79,9 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
         optionId: selectedOption?.id,
         ...data,
         speciality: data.speciality ? data.speciality : null,
-        useBonuses
+        useBonuses,
+        promocode: promocodeData ? promocodeData.promocode : null,
+        usePromocode
       })
 
       toast.success("Заказ создан, перевод на страницу оплаты")
@@ -203,7 +231,76 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
               <span className="text-2xl font-semibold">{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(event.attributes.price)}</span>
             </LabelGroup>}
 
-            {user?.attributes.bonuses > 0 &&
+            {!useBonuses && <div className="grid gap-3">
+              <div className="flex items-center space-x-2">
+                <Checkbox id="promocode" checked={usePromocode} onCheckedChange={(e) => {
+                  setUsePromocode(e)
+                }} />
+                <label
+                  htmlFor="promocode"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Использовать промокод
+                </label>
+              </div>
+
+              {!promocodeData && usePromocode && <LabelGroup label="Промокод">
+                <div className="grid gap-1">
+                  <div className="flex gap-2">
+                    <Input className={cn("py-3 h-full rounded-lg", error && "border-red-500 !ring-0")}
+                      value={promocode}
+                      onChange={(e) => setPromocode(e.target.value)}
+                      type="text"
+                    />
+
+                    <Button variant={'default'}
+                      onClick={() => {
+                        refetch()
+                      }}
+                      className="h-full min-w-5 py-0 px-3"
+                      disabled={!promocode || isFetching}
+                    >
+                      {isFetching && <Loader2Icon className="h-5 w-5 animate-spin" />}
+                      {!isFetching && <Check className="h-5 w-5 text-white" />}
+                    </Button>
+                  </div>
+                  {error && <span className="text-sm text-red-700">
+                    {error.message}
+                  </span>}
+                </div>
+
+              </LabelGroup>}
+
+              {promocodeData && usePromocode && <div className="grid p-3 border border-black rounded-xl gap-3">
+                {/* <div className=" grid grid-cols-[2fr,3fr,2fr] gap-3  content-center items-center  "> */}
+                <span className="font-medium">Промокоды</span>
+                <div className="flex gap-2 items-center ">
+                  <Check className="h-5 w-5 text-green-600" />
+                  <span className="text-sm text-green-600 font-semibold">
+                    Применен промокод: {promocodeData.promocode} на скидку {promocodeData.amount} руб.
+                  </span>
+
+                  <Button variant={'ghost'} className=" min-w-5 py-0 px-3"
+                    onClick={() => {
+                      setPromocode('')
+                      setData(null)
+                    }}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                {promocodeData && <div className="flex justify-between gap-3  content-center items-center ">
+                  <span className="font-medium">Итого</span>
+                  <span className="text-xl font-semibold">
+                    <span className="text-sm line-through text-muted-foreground">{sumWithoutBonuses}&nbsp;₽ </span>
+                    &nbsp;{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(sumWithPromocode)}
+                  </span>
+                </div>}
+                {/* </div> */}
+              </div>}
+            </div>}
+
+            {user?.attributes.bonuses > 0 && !usePromocode &&
               <div className="grid p-3 border border-black rounded-xl gap-3">
                 <div className=" grid grid-cols-[2fr,3fr,2fr] gap-3  content-center items-center  ">
                   <span className="font-medium">Бонусы</span>
@@ -229,7 +326,6 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
                   </span>
                 </div>}
               </div>
-
             }
 
             <PersonalInfoCheckbox value={checked} onChange={setChecked} />

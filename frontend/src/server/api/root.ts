@@ -5,6 +5,7 @@ import { serviceRouter } from "./routers/service";
 import { authRouter } from "./routers/auth";
 import { lkRouter } from "./routers/lk";
 import { paymentRouder } from "./routers/payments";
+import promocodes from "./routers/promocodes";
 
 export const appRouter = createTRPCRouter({
   strapi: strapiRouter,
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   auth: authRouter,
   lk: lkRouter,
   payments: paymentRouder,
+  promocodes
 });
 
 // export type definition of API

@@ -58,7 +58,7 @@ export async function addOrderToSpreadsheet(order: SanitizedOrder) {
   await appendRow(auth, [
     order.event_name, order.option_name, order.last_name, order.first_name, order.second_name, order.phone, order.email,
     order.price?.toString() || '', order.is_paid ? 'Да' : 'Нет', order.sberbank_order_id || '', order.sberbank_payment_url || '',
-    order.workplace, order.position, order.speciality, DateTime.now().toLocaleString(DateTime.DATETIME_FULL), order.bonuses
+    order.workplace, order.position, order.speciality, DateTime.now().toLocaleString(DateTime.DATETIME_FULL), order.bonuses, order.promocode
   ], 'Обычные заказы');
 }
 

@@ -119,7 +119,7 @@ export const publicProcedure = t.procedure.use(async ({ ctx, next }) => {
 export const rateLimiter = createTRPCStoreLimiter<typeof t>({
   fingerprint: (ctx) => defaultFingerPrint(ctx),
   message: (hitInfo) => `Слишкм много запросов, попробуйте позже через ${hitInfo} сек.`,
-  max: 100,
+  max: 3,
   windowMs: 60000,
 })
 

@@ -171,9 +171,9 @@ export const authRouter = createTRPCRouter({
   })).mutation(async ({ input }) => {
     const { token } = input;
 
-    const {email} = await verifyResetToken(token)
+    const { email } = await verifyResetToken(token)
 
-    const {data: [client]} = await strapi.get('clients', { filters: { email } });
+    const { data: [client] } = await strapi.get('clients', { filters: { email } });
 
     await strapi.update('clients', client.id, {
       password: await bcrypt.hash(input.password, 10)
@@ -201,7 +201,7 @@ export const authRouter = createTRPCRouter({
   sendCode: publicProcedure.input(z.object({
     email: z.string().email(),
   })).mutation(async ({ input }) => {
-    const {data: [client]} = await strapi.get('clients', { filters: { email: input.email } });
+    const { data: [client] } = await strapi.get('clients', { filters: { email: input.email } });
 
     if (client) {
       throw new Error('пользователь с таким email уже зарегистрирован')

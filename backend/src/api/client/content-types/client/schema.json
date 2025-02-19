@@ -60,6 +60,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::level.level"
+    },
+    "city": {
+      "type": "string"
     }
   }
 }

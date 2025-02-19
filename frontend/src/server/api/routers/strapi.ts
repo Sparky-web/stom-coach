@@ -132,6 +132,7 @@ export const strapiRouter = createTRPCRouter({
     speciality: z.number().nullable(),
     custom_position: z.string().min(0).max(255).optional().nullable(),
     custom_speciality: z.string().min(0).max(255).optional().nullable(),
+    city: z.string().min(2).max(255),
   })).mutation(async ({ ctx, input }) => {
     const { data } = await strapi.update("clients", ctx.session.user.id, input)
 

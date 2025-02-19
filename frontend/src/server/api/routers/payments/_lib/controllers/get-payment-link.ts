@@ -25,6 +25,7 @@ const getPaymentLink = publicProcedure.input(z.object({
   position: z.number(),
   custom_position: z.string().optional().nullable(),
   workplace: z.string(),
+  city: z.string().optional(),
   useBonuses: z.boolean(),
   usePromocode: z.boolean(),
   promocode: z.string().optional().nullable(),
@@ -60,8 +61,8 @@ const getPaymentLink = publicProcedure.input(z.object({
       }
     }
 
-    if(input.usePromocode && input.promocode && !input.useBonuses) { 
-      const promocodeData = await validateCode(input.promocode)
+    if (input.usePromocode && input.promocode && !input.useBonuses) {
+      const promocodeData = await validateCode(input.promocode, event.id)
       const bonusesAmount = promocodeData.attributes.amount
       if (bonusesAmount < price) {
         price -= bonusesAmount
@@ -92,7 +93,8 @@ const getPaymentLink = publicProcedure.input(z.object({
       option_name: optionName,
       price: price,
       bonuses: bonusesWrittenOff,
-      promocode: input.promocode
+      promocode: input.promocode,
+      city: input.city || '',
     })
 
     if (!env.ENABLE_PAYMENTS) {
@@ -100,7 +102,6 @@ const getPaymentLink = publicProcedure.input(z.object({
       await strapi.update('orders', order, {
         sberbank_order_id: orderId,
         sberbank_payment_url: Math.floor(1000 + Math.random() * 9000).toString(),
-        // is_paid: true
       })
       onPaymentSuccess(orderId)
       return
@@ -109,7 +110,7 @@ const getPaymentLink = publicProcedure.input(z.object({
     const { id, paymentUrl } = await createPayment({
       amount: price,
       returnUrl: env.BASE_URL + "/payment/success",
-      description: event.attributes.name +  optionName ? ` — ${optionName}` : '',
+      description: event.attributes.name + optionName ? ` — ${optionName}` : '',
       orderId: order,
       email: input.email
     })

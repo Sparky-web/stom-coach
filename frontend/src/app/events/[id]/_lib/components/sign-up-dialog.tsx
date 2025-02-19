@@ -40,11 +40,14 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
 
   const [defaultValues, setDefaultValues] = useState<ClientFormValuesInput | null>(user ? convertUserToClientFormValues(user) : null)
 
-  const [data, setData] = useState<ClientFormValuesOutput | null>(user ? convertUserToClientFormValuesOutput(user) : null)
+  const [data, setData] = useState<ClientFormValuesOutput | null>((user && user.attributes?.city) ? convertUserToClientFormValuesOutput(user) : null)
 
   const [promocode, setPromocode] = useState('')
 
-  const { data: promocodeData, refetch, isFetching, error } = api.promocodes.getPromoCode.useQuery(promocode, {
+  const { data: promocodeData, refetch, isFetching, error } = api.promocodes.getPromoCode.useQuery({
+    promocode,
+    event_id: event.id
+  }, {
     enabled: false,
     retry(failureCount, error) {
       return false
@@ -59,15 +62,15 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
   const sumWithPromocode = promocodeData ? sumWithoutBonuses - promocodeData.amount : null
 
   useEffect(() => {
-    if(useBonuses && usePromocode) {
+    if (useBonuses && usePromocode) {
       setUseBonuses(false)
-    } 
+    }
   }, [usePromocode])
 
   useEffect(() => {
-    if(usePromocode && useBonuses) {
+    if (usePromocode && useBonuses) {
       setUsePromocode(false)
-    } 
+    }
   }, [useBonuses])
 
   const onSubmit = async () => {
@@ -96,7 +99,7 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
 
   useEffect(() => {
     if (user) {
-      setData(convertUserToClientFormValuesOutput(user))
+      if (user.attributes?.city) setData(convertUserToClientFormValuesOutput(user))
       setDefaultValues(convertUserToClientFormValues(user))
     }
   }, [user])
@@ -170,6 +173,9 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
                     <LabelGroup label="Email">
                       {data.email}
                     </LabelGroup>
+                    <LabelGroup label="Город">
+                      {data.city}
+                    </LabelGroup>
                     <LabelGroup label="Место работы">
                       {data.workplace}
                     </LabelGroup>
@@ -199,6 +205,7 @@ export default function SignUp({ event, selectedOption }: { event: Event, select
               </Alert>
 
               <ClientForm onSubmit={(values) => {
+                setDefaultValues(values)
                 setData(values)
               }} values={defaultValues} isLoading={false} type="event" />
             </>}

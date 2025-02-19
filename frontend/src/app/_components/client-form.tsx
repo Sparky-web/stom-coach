@@ -6,8 +6,6 @@ import { zodI18nMap } from 'zod-i18n-map';
 import { api } from '~/trpc/react';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { toast } from 'sonner';
-import { Input, InputProps } from '~/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Button } from '~/components/ui/button';
 import Spinner from './spinner';
 import { ClientFormValuesInput, ClientFormValuesOutput, getErrors, getFormField } from './field';
@@ -26,6 +24,7 @@ export const convertUserToClientFormValues = (user: User): ClientFormValuesInput
     speciality: user.attributes.speciality?.data?.id.toString() || '',
     custom_speciality: user.attributes.custom_speciality || null,
     custom_position: user.attributes.custom_position || null,
+    city: user.attributes.city || ''
   }
 }
 
@@ -41,6 +40,7 @@ export const convertUserToClientFormValuesOutput = (user: User): ClientFormValue
     speciality: user.attributes.speciality?.data?.id || '',
     custom_speciality: user.attributes.custom_speciality || null,
     custom_position: user.attributes.custom_position || null,
+    city: user.attributes.city || ''
   }
 }
 
@@ -65,6 +65,7 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
       speciality: '',
       custom_position: '',
       custom_speciality: '',
+      city: ''
     },
     validatorAdapter: zodValidator,
   })
@@ -87,7 +88,9 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
 
   useEffect(() => {
     form.state.isPristine = true
-
+    if (values) {
+      form.validateAllFields('blur')
+    }
   }, [values])
 
   return (
@@ -131,6 +134,14 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
           {type === "lk" && <span className="text-sm text-muted-foreground italic">для смены связжитесь с поддержкой</span>}
         </div>
 
+        <div className="grid gap-1">
+          {<form.Field name="city" validators={{
+            onBlur: z.string().min(2).max(255),
+          }}>
+            {getFormField({ label: 'Город' })}
+          </form.Field>}
+        </div>
+
         {<form.Field name="workplace"
           validators={{
             onBlur: z.string().min(2).max(50),
@@ -148,7 +159,7 @@ export const ClientForm = ({ onSubmit, values, isLoading, type = "lk" }: {
           const errors = getErrors({ values: form.values })
 
           return (
-            <Button size={type !== "lk" ? "lg" : 'default'} className={type !== "lk" ? "w-full" : "w-fit"} disabled={errors && errors.length > 0 || isLoading || type === "lk" && form.isPristine} type="submit">
+            <Button size={type !== "lk" ? "lg" : 'default'} className={type !== "lk" ? "w-full" : "w-fit"} disabled={!form.canSubmit || errors && errors.length > 0 || isLoading || type === "lk" && form.isPristine} type="submit">
               {isLoading && <Spinner />}
               {type === "lk" ? "Сохранить" : "Далее"}
             </Button>

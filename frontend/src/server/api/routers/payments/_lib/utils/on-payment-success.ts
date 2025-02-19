@@ -81,6 +81,7 @@ Order ID из Сбербанка: ${order.attributes.sberbank_order_id}
 Дата и время оплаты: ${DateTime.fromISO(order.attributes.updatedAt).toLocaleString(DateTime.DATETIME_MED)}
 
 Участник:  ${order.attributes.last_name} ${order.attributes.first_name} ${order.attributes.second_name}
+Из города:  ${order.attributes.city || 'не указан'}
 
 Email: ${order.attributes.email}
 
@@ -130,7 +131,8 @@ Email: ${order.attributes.email}
       speciality: order.attributes.speciality?.data?.attributes.name,
       phone: order.attributes.phone,
       bonuses: order.attributes.bonuses,
-      promocode: order.attributes.promocode
+      promocode: order.attributes.promocode,
+      city: order.attributes.city,
     })
 
     // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));

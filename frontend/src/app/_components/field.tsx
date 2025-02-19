@@ -16,6 +16,7 @@ export type ClientFormValuesInput = {
   speciality?: string;
   custom_speciality?: string;
   custom_position?: string;
+  city?: string;
 }
 
 export type ClientFormValuesOutput = {
@@ -29,6 +30,7 @@ export type ClientFormValuesOutput = {
   speciality?: number;
   custom_speciality?: string;
   custom_position?: string;
+  city?: string;
 }
 
 i18next.init({

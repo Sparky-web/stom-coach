@@ -20,7 +20,7 @@
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: rgba(0,0,0,0.04);
+    --muted: rgba(0, 0, 0, 0.04);
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 210 40% 96.1%;
@@ -86,17 +86,10 @@ body {
   }
 }
 
-.ymaps-2-1-79-map-copyrights-promo {
-  display: none
-}
-
-/* .ymaps-2-1-79-ground-pane canvas {
-  filter: grayscale(100)
-} */
-
 .highlight-links a {
   @apply text-primary underline underline-offset-2;
 }
+
 @media (max-width: 768px) {
   :root {
     font-size: 14px;
@@ -107,7 +100,7 @@ body {
   transition: 200ms ease-in-out;
 }
 
-.card:hover .cover{
+.card:hover .cover {
   /* filter: grayscale(1); */
   transform: scale(1.05);
 }
@@ -133,9 +126,13 @@ img {
 }
 
 /* @supports (-webkit-touch-callout: none) { */
-  input, textarea, select {
-    font-size: 16px; /* Only apply 16px font-size on Safari */
-  }
+input,
+textarea,
+select {
+  font-size: 16px;
+  /* Only apply 16px font-size on Safari */
+}
+
 /* } */
 
 .table-bordered {
@@ -145,7 +142,8 @@ img {
 
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid #ccc; /* цвет границы */
+  border: 1px solid #ccc;
+  /* цвет границы */
   padding: 8px;
   text-align: left;
 }
@@ -153,6 +151,7 @@ img {
 .table-bordered th {
   background-color: #f9f9f9;
 }
+
 .react-dadata__input {
   height: 3rem !important;
 }

@@ -1,13 +1,25 @@
 "use client";
 
-import { Table, TableBody, TableCell, TableHead, TableRow } from "~/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "~/components/ui/table";
 import { CircleAlert, InfoIcon, Wallet } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import LabelGroup from "~/app/_components/label-group";
 import PersonalInfoCheckbox from "~/app/_components/personal-info-checkbox";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { formatDate } from "~/lib/utils";
 import { Event } from "~/types/entities";
 import { Input } from "~/components/ui/input";
@@ -17,58 +29,82 @@ import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
 import { getFormField } from "~/app/_components/field";
 import CompanyData from "~/types/company-data";
-import { BankSuggestions, DaDataBank, DaDataParty, DaDataSuggestion, PartySuggestions } from 'react-dadata';
-import 'react-dadata/dist/react-dadata.css';
+import {
+  BankSuggestions,
+  DaDataBank,
+  DaDataParty,
+  DaDataSuggestion,
+  PartySuggestions,
+} from "react-dadata";
+import "react-dadata/dist/react-dadata.css";
 
 import { toast } from "sonner";
 import { getRequisitesString } from "../utils/get-requisites-string";
 import SelectSpecAndPosition from "~/app/_components/select-spec-and-position";
 import getRequisitesFullString from "../utils/get-requisites-full-string";
 import Spinner from "~/app/_components/spinner";
+import { env } from "~/env";
 
-export default function SignUpDialogLegal({ event, selectedOption }: { event: Event, selectedOption: Event['attributes']['options'][number] | null }) {
-  const isDisabled = (selectedOption ? selectedOption.ticketsLeft < 1 : event.attributes.ticketsLeft < 1)
-    || new Date(event.attributes.date) < new Date()
+export default function SignUpDialogLegal({
+  event,
+  selectedOption,
+}: {
+  event: Event;
+  selectedOption: Event["attributes"]["options"][number] | null;
+}) {
+  const isDisabled =
+    (selectedOption
+      ? selectedOption.ticketsLeft < 1
+      : event.attributes.ticketsLeft < 1) ||
+    new Date(event.attributes.date) < new Date();
 
-  const { data, error } = api.strapi.getSpecsAndPositions.useQuery(undefined)
+  const { data, error } = api.strapi.getSpecsAndPositions.useQuery(undefined);
 
-
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const [value, setValue] = useState();
 
-  const { mutateAsync, isPending } = api.payments.legalSignUp.useMutation()
+  const { mutateAsync, isPending } = api.payments.legalSignUp.useMutation();
 
-  const [isChecked, setIsChecked] = useState(false)
+  const [isChecked, setIsChecked] = useState(false);
   const form = useForm({
     defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
+      name: "",
+      email: "",
+      phone: "",
       company: undefined as DaDataSuggestion<DaDataParty> | undefined,
       bankDetails: undefined as DaDataSuggestion<DaDataBank> | undefined,
       bankAccount: "",
-      position: '',
-      speciality: '',
-      custom_position: '',
-      custom_speciality: '',
+      position: "",
+      speciality: "",
+      custom_position: "",
+      custom_speciality: "",
     },
     validatorAdapter: zodValidator,
     onSubmit: async (values) => {
-
-      const value = values.value
+      const value = values.value;
       try {
         if (!value.bankDetails || !value.bankAccount || !value.company) {
-          throw new Error('необходимо заполнить карточку компании')
+          throw new Error("необходимо заполнить карточку компании");
         }
 
-        const foundPosition = data?.positions.find(e => e.id === +value.position)?.attributes.name
-        const foundSpeciality = data?.specs.find(e => e.id === +value.speciality)?.attributes.name
+        const foundPosition = data?.positions.find(
+          (e) => e.id === +value.position
+        )?.attributes.name;
+        const foundSpeciality = data?.specs.find(
+          (e) => e.id === +value.speciality
+        )?.attributes.name;
 
-        const position = (foundPosition === "Другое" ? value.custom_position : foundPosition) || ''
-        const speciality = (foundSpeciality === "Другое" ? value.custom_speciality : foundSpeciality) || ''
+        const position =
+          (foundPosition === "Другое"
+            ? value.custom_position
+            : foundPosition) || "";
+        const speciality =
+          (foundSpeciality === "Другое"
+            ? value.custom_speciality
+            : foundSpeciality) || "";
 
-        if(!position || !speciality) {
-          throw new Error('необходимо выбрать должность и специальность')
+        if (!position || !speciality) {
+          throw new Error("необходимо выбрать должность и специальность");
         }
 
         await mutateAsync({
@@ -81,204 +117,227 @@ export default function SignUpDialogLegal({ event, selectedOption }: { event: Ev
           companyFull: getRequisitesFullString({
             company: value.company,
             bankAccount: value.bankAccount,
-            bankDetails: value.bankDetails
+            bankDetails: value.bankDetails,
           }),
           position,
-          speciality
-        })
+          speciality,
+        });
 
-        toast.success("Заявка отправлена, скоро мы свяжемся с вами")
-        setOpen(false)
+        toast.success("Заявка отправлена, скоро мы свяжемся с вами");
+        setOpen(false);
       } catch (e) {
-        console.error(e)
-        toast.error("Ошибка обработки заявки: " + e.message as string)
+        console.error(e);
+        toast.error(("Ошибка обработки заявки: " + e.message) as string);
       }
+    },
+  });
 
-    }
-  })
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="uppercase" disabled={isDisabled}>
+          для юр. лиц
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="w-full max-w-5xl max-h-[calc(100dvh)] min-h-[85dvh] overflow-y-auto rounded-2xl content-start items-start">
+        <DialogHeader>
+          <DialogTitle>Запись на мероприятие для юр. лиц</DialogTitle>
+        </DialogHeader>
 
-  return <Dialog open={open} onOpenChange={setOpen}>
-    <DialogTrigger asChild>
-      <Button variant="outline" className="uppercase" disabled={isDisabled}>
-        для юр. лиц
-      </Button>
-    </DialogTrigger>
-    <DialogContent className="w-full max-w-5xl max-h-[calc(100dvh)] min-h-[85dvh] overflow-y-auto rounded-2xl content-start items-start">
-      <DialogHeader>
-        <DialogTitle>Запись на мероприятие для юр. лиц</DialogTitle>
-      </DialogHeader>
+        <div className="grid md:grid-cols-2 gap-4 content-start items-start">
+          <div className="grid gap-2">
+            <form.Field
+              name="name"
+              validators={{
+                onBlur: z.string().min(2).max(50),
+              }}
+            >
+              {getFormField({ label: "полное ФИО участника" })}
+            </form.Field>
 
-      <div className="grid md:grid-cols-2 gap-4 content-start items-start">
+            <form.Field
+              name="email"
+              validators={{
+                onBlur: z.string().email(),
+              }}
+            >
+              {getFormField({
+                label: "email",
+                type: "email",
+                placeholder: "example@yandex.ru",
+              })}
+            </form.Field>
 
-        <div className="grid gap-2">
-          <form.Field name="name"
-            validators={{
-              onBlur: z.string().min(2).max(50),
-            }}
-          >
-            {getFormField({ label: 'полное ФИО участника' })}
-          </form.Field>
+            <form.Field
+              name="phone"
+              validators={{
+                onBlur: z.string().min(2).max(255),
+              }}
+            >
+              {getFormField({ label: "телефон", placeholder: "79121234567" })}
+            </form.Field>
 
-          <form.Field name="email"
-            validators={{
-              onBlur: z.string().email(),
-            }}
-          >
-            {getFormField({ label: 'email', type: 'email', placeholder: 'example@yandex.ru' })}
-          </form.Field>
+            <form.Field
+              name="company"
+              validators={{
+                onChange: z.record(z.any()),
+              }}
+            >
+              {(field) => {
+                const { value: company } = field.state;
+                return (
+                  <div className="grid gap-4">
+                    <div className="grid gap-1.5">
+                      <span className="text-sm font-semibold">компания</span>
+                      <PartySuggestions
+                        token={env.NEXT_PUBLIC_DADATA_API_KEY}
+                        value={field.state.value}
+                        onChange={(newValue) => field.handleChange(newValue)}
+                        // hintText={"компания"}
+                        count={5}
+                      />
+                      {field.state.meta.errors?.length > 0 && (
+                        <span className="text-sm text-red-700">
+                          {field.state.meta.errors.join(", ")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              }}
+            </form.Field>
 
-          <form.Field name="phone"
-            validators={{
-              onBlur: z.string().min(2).max(255),
-            }}
-          >
-            {getFormField({ label: 'телефон', placeholder: '79121234567' })}
-          </form.Field>
-
-
-
-          <form.Field name="company"
-            validators={{
-              onChange: z.record(z.any())
-            }}
-          >
-            {(field) => {
-              const { value: company } = field.state;
-              return (
-                <div className="grid gap-4">
+            <form.Field
+              name="bankDetails"
+              validators={{
+                onChange: z.record(z.any()),
+              }}
+            >
+              {(field) => {
+                return (
                   <div className="grid gap-1.5">
-                    <span className="text-sm font-semibold">компания</span>
-                    <PartySuggestions token="4a7011eaf1d840bcfe7435719aa23158748a866b"
+                    <span className="text-sm font-semibold">банк</span>
+                    <BankSuggestions
+                      token={env.NEXT_PUBLIC_DADATA_API_KEY}
                       value={field.state.value}
                       onChange={(newValue) => field.handleChange(newValue)}
                       // hintText={"компания"}
                       count={5}
                     />
-                    {field.state.meta.errors?.length > 0 && <span className="text-sm text-red-700">
-                      {field.state.meta.errors.join(', ')}
-                    </span>}
+                    {field.state.meta.errors?.length > 0 && (
+                      <span className="text-sm text-red-700">
+                        {field.state.meta.errors.join(", ")}
+                      </span>
+                    )}
                   </div>
-                </div>
-              )
-            }}
-          </form.Field>
+                );
+              }}
+            </form.Field>
 
-          <form.Field name="bankDetails"
-            validators={{
-              onChange: z.record(z.any())
-            }}
-          >
-            {(field) => {
-              return (
-                <div className="grid gap-1.5">
-                  <span className="text-sm font-semibold">банк</span>
-                  <BankSuggestions token="4a7011eaf1d840bcfe7435719aa23158748a866b"
-                    value={field.state.value}
-                    onChange={(newValue) => field.handleChange(newValue)}
-                    // hintText={"компания"}
-                    count={5}
-                  />
-                  {field.state.meta.errors?.length > 0 && <span className="text-sm text-red-700">
-                    {field.state.meta.errors.join(', ')}
-                  </span>}
-                </div>
-              )
-            }}
-          </form.Field>
+            <form.Field
+              name="bankAccount"
+              validators={{
+                onChange: z.string().min(2).max(255),
+              }}
+            >
+              {getFormField({
+                label: "расчетный счет",
+                placeholder: "012345678901234567890",
+              })}
+            </form.Field>
 
-          <form.Field name="bankAccount"
-            validators={{
-              onChange: z.string().min(2).max(255),
-            }}
-          >
-            {getFormField({ label: 'расчетный счет', placeholder: '012345678901234567890' })}
-          </form.Field>
+            <div className="grid md:grid-cols-2 gap-3">
+              <SelectSpecAndPosition form={form} />
+            </div>
 
-          <div className="grid md:grid-cols-2 gap-3">
-            <SelectSpecAndPosition form={form} />
-          </div>
-
-          {/* <form.Field name="company"
+            {/* <form.Field name="company"
             validators={{
               onBlur: z.string().min(2).max(255),
             }}
           >
             {getFormField({ label: 'компания' })}
           </form.Field> */}
-
-
-        </div>
-
-        <div className="grid gap-3">
-          <span className="text-sm font-semibold">мероприятие</span>
-          <h3 className="text-lg font-semibold">
-            {event.attributes.name}
-          </h3>
-          <div className="grid grid-cols-1 gap-2">
-            <LabelGroup label="Дата проведения" >
-              {formatDate(event.attributes.date)}
-            </LabelGroup>
-            <LabelGroup label="Место проведения">
-              {event.attributes.location || event.attributes.city.data?.attributes.name}
-            </LabelGroup>
           </div>
 
-          {selectedOption && <LabelGroup label="Выбранная опция">
-            <div className="flex justify-between gap-2 items-center">
-              <span className="">{selectedOption.name}</span>
+          <div className="grid gap-3">
+            <span className="text-sm font-semibold">мероприятие</span>
+            <h3 className="text-lg font-semibold">{event.attributes.name}</h3>
+            <div className="grid grid-cols-1 gap-2">
+              <LabelGroup label="Дата проведения">
+                {formatDate(event.attributes.date)}
+              </LabelGroup>
+              <LabelGroup label="Место проведения">
+                {event.attributes.location ||
+                  event.attributes.city.data?.attributes.name}
+              </LabelGroup>
             </div>
-          </LabelGroup>}
 
-          <form.Subscribe selector={(state) => [state.values.company, state.values.bankAccount, state.values.bankDetails]}>
-            {([company, bankAccount, bankDetails]) => {
-              return (
-                <>
-                  {company && bankDetails && bankAccount && <div className="grid gap-1.5">
+            {selectedOption && (
+              <LabelGroup label="Выбранная опция">
+                <div className="flex justify-between gap-2 items-center">
+                  <span className="">{selectedOption.name}</span>
+                </div>
+              </LabelGroup>
+            )}
 
-                    <div className="bg-primary/10 p-3 rounded-lg ">
-                      <div className="font-medium text-sm content-center items-center flex">
-                        <InfoIcon className="mr-2 w-4 h-4" />
-                        на эти реквизиты будет выставлен счет и составлен договор
+            <form.Subscribe
+              selector={(state) => [
+                state.values.company,
+                state.values.bankAccount,
+                state.values.bankDetails,
+              ]}
+            >
+              {([company, bankAccount, bankDetails]) => {
+                return (
+                  <>
+                    {company && bankDetails && bankAccount && (
+                      <div className="grid gap-1.5">
+                        <div className="bg-primary/10 p-3 rounded-lg ">
+                          <div className="font-medium text-sm content-center items-center flex">
+                            <InfoIcon className="mr-2 w-4 h-4 min-w-4" />
+                            на эти реквизиты будет выставлен счет и составлен
+                            договор
+                          </div>
+                          <div className="text-sm  whitespace-pre-wrap mt-3">
+                            {getRequisitesString({
+                              company,
+                              bankAccount: bankAccount,
+                              bankDetails: bankDetails,
+                            })}
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-sm  whitespace-pre-wrap mt-3">
-                        {getRequisitesString({
-                          company,
-                          bankAccount: bankAccount,
-                          bankDetails: bankDetails,
-                        })}
-                      </div>
-                    </div>
-                  </div>}
-                </>
-              )
-            }}
-          </form.Subscribe>
+                    )}
+                  </>
+                );
+              }}
+            </form.Subscribe>
 
+            <PersonalInfoCheckbox value={isChecked} onChange={setIsChecked} />
 
-
-          <PersonalInfoCheckbox value={isChecked} onChange={setIsChecked} />
-
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-          >
-            {([canSubmit, isSubmitting]) => {
-              return (
-                <Button variant={'default'}
-                  onClick={() => { form.handleSubmit() }}
-                  disabled={!isChecked || !canSubmit}
-                  size="lg" className="mt-auto hover:opacity-90 transition"
-                >
-                  {isSubmitting && <Spinner />}
-                  Оставить заявку
-                </Button>
-              )
-            }}
-          </form.Subscribe>
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit, isSubmitting]) => {
+                return (
+                  <Button
+                    variant={"default"}
+                    onClick={() => {
+                      form.handleSubmit();
+                    }}
+                    disabled={!isChecked || !canSubmit}
+                    size="lg"
+                    className="mt-auto hover:opacity-90 transition"
+                  >
+                    {isSubmitting && <Spinner />}
+                    Оставить заявку
+                  </Button>
+                );
+              }}
+            </form.Subscribe>
+          </div>
         </div>
-      </div>
-
-
-
-    </DialogContent>
-  </Dialog >
+      </DialogContent>
+    </Dialog>
+  );
 }

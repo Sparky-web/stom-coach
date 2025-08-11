@@ -52,6 +52,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_STRAPI_URL: z.string().url(),
+    NEXT_PUBLIC_DADATA_API_KEY: z.string(),
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
@@ -83,6 +84,7 @@ export const env = createEnv({
     ENABLE_PAYMENTS: process.env.ENABLE_PAYMENTS === "true" ? true : false,
     YOOKASSA_SECRET_KEY: process.env.YOOKASSA_SECRET_KEY,
     YOOKASSA_SHOP_ID: process.env.YOOKASSA_SHOP_ID,
+    NEXT_PUBLIC_DADATA_API_KEY: process.env.NEXT_PUBLIC_DADATA_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

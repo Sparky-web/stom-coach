@@ -103,7 +103,7 @@ export default function SignUpDialogLegal({
             ? value.custom_speciality
             : foundSpeciality) || "";
 
-        if (!position || !speciality) {
+        if (!position) {
           throw new Error("необходимо выбрать должность и специальность");
         }
 
@@ -120,7 +120,7 @@ export default function SignUpDialogLegal({
             bankDetails: value.bankDetails,
           }),
           position,
-          speciality,
+          speciality: speciality || "",
         });
 
         toast.success("Заявка отправлена, скоро мы свяжемся с вами");

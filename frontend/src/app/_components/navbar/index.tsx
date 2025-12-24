@@ -114,7 +114,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link href="/study-info">
-                  <NavButton>Образовательная программа</NavButton>
+                  <NavButton>Образовательные программы</NavButton>
                 </Link>
               </li>
               {!user && (

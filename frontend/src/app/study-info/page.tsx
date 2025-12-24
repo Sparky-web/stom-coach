@@ -16,7 +16,7 @@ export default async function StudyInfo() {
 
   return (
     <div className="grid gap-8 container py-16 highlight-links">
-      <h1 className="font-semibold text-3xl">Образовательная программа</h1>
+      <h1 className="font-semibold text-3xl">Образовательные программы</h1>
 
       <div className="grid gap-6 md:grid-cols-[1fr,1fr] content-start items-start">
         {data.map((document) => (

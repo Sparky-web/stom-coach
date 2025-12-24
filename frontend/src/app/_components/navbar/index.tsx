@@ -1,5 +1,5 @@
 "use client";
-import { ShoppingCart, User, Menu, X, ShoppingBasket } from "lucide-react"
+import { ShoppingCart, User, Menu, X, ShoppingBasket } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { DataContext } from "../../context";
@@ -11,69 +11,93 @@ import { useAuth } from "../../auth-context";
 import NavbarBonusPointsIcon from "./bonuses";
 
 const Navbar = () => {
-  const { settings: data } = useContext(DataContext)
-  const { user } = useAuth()
+  const { settings: data } = useContext(DataContext);
+  const { user } = useAuth();
 
-  const pathname = usePathname()
+  const pathname = usePathname();
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setOpen(false)
-  }, [pathname])
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <>
-      <nav className={cn(
-        " w-full bg-neutral-900  relative z-[2] max-md:fixed text-slate-100",
-        // isEventPage && "bg-transparent md:text-white"
-      )}>
+      <nav
+        className={cn(
+          " w-full bg-neutral-900  relative z-[2] max-md:fixed text-slate-100"
+          // isEventPage && "bg-transparent md:text-white"
+        )}
+      >
         <div className="container gap-4 flex flex-wrap md:grid md:grid-cols-[250px_1fr_250px] items-center justify-between mx-auto py-6">
-          <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-            <span className="self-center text-2xl font-semibold whitespace-nowrap uppercase ">{data.title}</span>
+          <Link
+            href="/"
+            className="flex items-center space-x-3 rtl:space-x-reverse"
+          >
+            <span className="self-center text-2xl font-semibold whitespace-nowrap uppercase ">
+              {data.title}
+            </span>
           </Link>
           <div className="flex md:order-2 justify-end ">
-            {user &&
+            {user && (
               <div className="flex items-center">
-                <Link href={"/lk/bonuses"} >
+                <Link href={"/lk/bonuses"}>
                   <NavbarBonusPointsIcon points={user.attributes.bonuses} />
                 </Link>
-                <Link href={"/lk/settings"} >
-                  <Button variant={"ghost"} className="hover:bg-transparent hover:text-gray-300">
+                <Link href={"/lk/settings"}>
+                  <Button
+                    variant={"ghost"}
+                    className="hover:bg-transparent hover:text-gray-300"
+                  >
                     <User className="w-6 h-6" />
                   </Button>
                 </Link>
               </div>
-            }
+            )}
 
+            {!user && (
+              <div className="flex flex-wrap gap-2 max-md:hidden">
+                <Link href={"/auth/signin"}>
+                  <Button variant={"tenary"} className="text-gray-200">
+                    Вход
+                  </Button>
+                </Link>
+                <Link href={"/auth/signup"}>
+                  <Button>Регистрация</Button>
+                </Link>
+              </div>
+            )}
 
-            {!user && <div className="flex flex-wrap gap-2 max-md:hidden">
-              <Link href={"/auth/signin"} >
-                <Button variant={"tenary"} className="text-gray-200">Вход</Button>
-              </Link>
-              <Link href={"/auth/signup"}>
-                <Button>Регистрация</Button>
-              </Link>
-            </div>}
-
-            <Button onClick={() => setOpen(!open)} data-collapse-toggle="navbar-sticky" variant={"ghost"} size={'icon'} className="md:hidden hover:bg-transparent hover:text-gray-300" aria-controls="navbar-sticky" aria-expanded="false">
+            <Button
+              onClick={() => setOpen(!open)}
+              data-collapse-toggle="navbar-sticky"
+              variant={"ghost"}
+              size={"icon"}
+              className="md:hidden hover:bg-transparent hover:text-gray-300"
+              aria-controls="navbar-sticky"
+              aria-expanded="false"
+            >
               <span className="sr-only">Открыть меню</span>
-              {!open ? <Menu className="w-6 h-6 " /> : <X className="w-6 h-6 " />}
+              {!open ? (
+                <Menu className="w-6 h-6 " />
+              ) : (
+                <X className="w-6 h-6 " />
+              )}
             </Button>
           </div>
-          <div className={
-            cn(
+          <div
+            className={cn(
               "justify-center transition-all max-md:left-[-100%] max-md:h-[calc(100dvh-77px)] max-md:w-[calc(100%)] md:flex md:w-auto md:order-1 max-md:fixed max-md:top-[77px] max-md:bg-neutral-800 ",
               open && "max-md:left-[0] "
-            )
-          }>
-            <ul className={cn("z-10 max-md:rounded-b max-md:container flex flex-col flex-wrap justify-center justify-items-center max-md:gap-2 p-4 md:p-0 mt-4 md:space-x-4  rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ")}>
+            )}
+          >
+            <ul
+              className={cn(
+                "z-10 max-md:rounded-b max-md:container flex flex-col flex-wrap justify-center justify-items-center max-md:gap-2 p-4 md:p-0 mt-4 md:space-x-4  rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 "
+              )}
+            >
               <li>
-                <Link href="/">
-                  <NavButton>Главная</NavButton>
-                </Link>
-              </li>
-              <li >
                 <Link href="/events">
                   <NavButton>Все мероприятия</NavButton>
                 </Link>
@@ -88,21 +112,30 @@ const Navbar = () => {
                   <NavButton>Фотоальбомы</NavButton>
                 </Link>
               </li>
-              {!user && <li className="flex flex-wrap gap-2 md:hidden justify-center mt-3">
-                <Link href={"/auth/signin"} >
-                  <Button variant={"tenary"} className="text-gray-200" >Вход</Button>
+              <li>
+                <Link href="/study-info">
+                  <NavButton>Образовательная программа</NavButton>
                 </Link>
-                <Link href={"/auth/signup"}>
-                  <Button className="font-normal">Регистрация</Button>
-                </Link>
-              </li>}
+              </li>
+              {!user && (
+                <li className="flex flex-wrap gap-2 md:hidden justify-center mt-3">
+                  <Link href={"/auth/signin"}>
+                    <Button variant={"tenary"} className="text-gray-200">
+                      Вход
+                    </Button>
+                  </Link>
+                  <Link href={"/auth/signup"}>
+                    <Button className="font-normal">Регистрация</Button>
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>
       </nav>
       <div className="hidden max-md:block h-[77px]"></div>
     </>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

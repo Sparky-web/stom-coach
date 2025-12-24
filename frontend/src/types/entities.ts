@@ -6,7 +6,6 @@ export type Settings =
     city: string | null;
   };
 
-
 export type Event = {
   id: number;
   attributes: {
@@ -20,17 +19,17 @@ export type Event = {
     name: string;
     location: string;
     tags: Tag[];
-    speakers: {data: Speaker[]};
-    image: {data: Image | null};
-    city: {data: City | null};
+    speakers: { data: Speaker[] };
+    image: { data: Image | null };
+    city: { data: City | null };
     options: Option[];
   };
-}
+};
 
 type Tag = {
   id: number;
   name: string;
-}
+};
 
 export type Speaker = {
   id: number;
@@ -40,9 +39,9 @@ export type Speaker = {
     bio: BlocksContent | null;
     createdAt: string;
     updatedAt: string;
-    avatar: {data: Image | null};
+    avatar: { data: Image | null };
   };
-}
+};
 
 export type Image = {
   id: number;
@@ -88,7 +87,7 @@ export type Image = {
     updatedAt: string;
     placeholder?: string;
   };
-}
+};
 
 export type City = {
   id: number;
@@ -98,7 +97,7 @@ export type City = {
     updatedAt: string;
     isEnabled: boolean;
   };
-}
+};
 
 export type Option = {
   id: number;
@@ -106,8 +105,7 @@ export type Option = {
   price: number;
   ticketsAmount: number;
   ticketsLeft: number;
-}
-
+};
 
 export type Order = {
   phone: string;
@@ -126,7 +124,7 @@ export type Order = {
   price: number;
   option_name: string;
   sberbank_payment_url: string | undefined;
-}
+};
 
 export type SanitizedOrder = {
   event_name: string;
@@ -144,7 +142,7 @@ export type SanitizedOrder = {
   workplace: string;
   position: string;
   speciality: string;
-}
+};
 
 export type SanitizedLegalOrder = {
   event_name: string;
@@ -156,14 +154,13 @@ export type SanitizedLegalOrder = {
   companyFull: string;
   speciality: string;
   position: string;
-}
+};
 
 export type LkEvent = {
   id: number;
-  attributes: Event['attributes'];
+  attributes: Event["attributes"];
   order: Order;
-}
-
+};
 
 export type PhotoAlbum = {
   id: number;
@@ -171,6 +168,14 @@ export type PhotoAlbum = {
     name: string;
     description: string;
     link: string;
-    cover: {data: Image | null};
+    cover: { data: Image | null };
   };
-}
+};
+
+export type StudyDocument = {
+  id: number;
+  attributes: {
+    title: string;
+    file: { data: Image };
+  };
+};

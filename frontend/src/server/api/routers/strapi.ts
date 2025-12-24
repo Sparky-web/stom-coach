@@ -9,36 +9,49 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import strapi from "~/server/strapi";
-import { Settings, Event, City, PhotoAlbum } from "~/types/entities";
+import {
+  Settings,
+  Event,
+  City,
+  PhotoAlbum,
+  StudyDocument,
+} from "~/types/entities";
 
 export const strapiRouter = createTRPCRouter({
   getSettings: publicProcedure.query(async ({ ctx, input }) => {
     const data = await strapi.get("nastrojki", { populate: "*" });
     return data.data.attributes as Settings;
   }),
-  getEvents: publicProcedure.input(z.object({
-    filters: z.record(z.string(), z.any()).optional(),
-    options: z.record(z.string(), z.any()).optional()
-  }).optional()).query(async ({ ctx, input }) => {
-    const data = await strapi.get("events", {
-      populate: {
-        tags: "*",
-        speakers: {
-          populate: "*"
+  getEvents: publicProcedure
+    .input(
+      z
+        .object({
+          filters: z.record(z.string(), z.any()).optional(),
+          options: z.record(z.string(), z.any()).optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const data = await strapi.get("events", {
+        populate: {
+          tags: "*",
+          speakers: {
+            populate: "*",
+          },
+          image: "*",
+          cover_image: "*",
+          city: "*",
+          options: "*",
         },
-        image: "*",
-        cover_image: "*",
-        city: "*",
-        options: "*"
-      }, sort: "date:asc",
-      filters: input?.filters,
-      ...input?.options,
-      pagination: {
-        limit: 100
-      }
-    });
-    return data.data as Event[];
-  }),
+        sort: "date:asc",
+        filters: input?.filters,
+        ...input?.options,
+        pagination: {
+          limit: 100,
+        },
+      });
+      return data.data as Event[];
+    }),
   // getShortEventsAll: async () => {
   //   const data = await strapi.get('events', {
   //     pagination: {
@@ -57,33 +70,31 @@ export const strapiRouter = createTRPCRouter({
         populate: {
           tags: "*",
           speakers: {
-            populate: "*"
+            populate: "*",
           },
           image: "*",
           city: "*",
-          options: "*"
-        }
+          options: "*",
+        },
       });
 
       return data.data as Event;
     } catch (e: any) {
       if (axios.isAxiosError(e) && e.response?.status === 404) {
         throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'Такое мероприятие не найдено',
+          code: "NOT_FOUND",
+          message: "Такое мероприятие не найдено",
           // optional: pass the original error to retain stack trace
           cause: e,
         });
-      }
-      else {
+      } else {
         throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Ошибка сервера',
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Ошибка сервера",
           // optional: pass the original error to retain stack trace
           cause: e,
         });
       }
-
     }
   }),
   getCities: publicProcedure.query(async ({ ctx }) => {
@@ -92,11 +103,12 @@ export const strapiRouter = createTRPCRouter({
   }),
   getCityId: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const data = await strapi.get("cities", {
-      populate: "", filters: {
-        name: input
-      }
+      populate: "",
+      filters: {
+        name: input,
+      },
     });
-    return data.data[0]?.id || null as number | null;
+    return data.data[0]?.id || (null as number | null);
   }),
   getSpecsAndPositions: publicProcedure.query(async ({ ctx }) => {
     const { data: specs } = await strapi.get("specialities", { populate: "" });
@@ -114,56 +126,71 @@ export const strapiRouter = createTRPCRouter({
           name: string;
           enableSpeciality: boolean;
         };
-      }[]
-    }
+      }[],
+    };
   }),
   getPrivacyPolicy: publicProcedure.query(async ({ ctx }) => {
-    const data = await strapi.get("politika-obrabotki-personalnyh-dannyh", { populate: "*" });
-    return data.data as { id: number, attributes: { text: BlocksContent } }
+    const data = await strapi.get("politika-obrabotki-personalnyh-dannyh", {
+      populate: "*",
+    });
+    return data.data as { id: number; attributes: { text: BlocksContent } };
   }),
-  updateUser: protectedProcedure.input(z.object({
-    first_name: z.string().min(2).max(50),
-    last_name: z.string().min(2).max(50),
-    second_name: z.string().min(2).max(50),
-    phone: z.string().min(10).max(20),
-    email: z.string().email(),
-    workplace: z.string().min(2).max(255),
-    position: z.number().nullable(),
-    speciality: z.number().nullable(),
-    custom_position: z.string().min(0).max(255).optional().nullable(),
-    custom_speciality: z.string().min(0).max(255).optional().nullable(),
-    city: z.string().min(2).max(255),
-  })).mutation(async ({ ctx, input }) => {
-    const { data } = await strapi.update("clients", ctx.session.user.id, input)
+  updateUser: protectedProcedure
+    .input(
+      z.object({
+        first_name: z.string().min(2).max(50),
+        last_name: z.string().min(2).max(50),
+        second_name: z.string().min(2).max(50),
+        phone: z.string().min(10).max(20),
+        email: z.string().email(),
+        workplace: z.string().min(2).max(255),
+        position: z.number().nullable(),
+        speciality: z.number().nullable(),
+        custom_position: z.string().min(0).max(255).optional().nullable(),
+        custom_speciality: z.string().min(0).max(255).optional().nullable(),
+        city: z.string().min(2).max(255),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data } = await strapi.update(
+        "clients",
+        ctx.session.user.id,
+        input
+      );
 
-    return true
-  }),
+      return true;
+    }),
   getMainEvent: publicProcedure.query(async ({ ctx }) => {
     const { data } = await strapi.get("glavnaya", { populate: "*" });
-    const eventId = data?.attributes.main_event?.data?.id
+    const eventId = data?.attributes.main_event?.data?.id;
 
-    if (!eventId) return null
+    if (!eventId) return null;
 
     const event = await strapi.get(`events/${eventId}`, {
       populate: {
         tags: "*",
         speakers: {
-          populate: "*"
+          populate: "*",
         },
         image: "*",
         city: "*",
-        options: "*"
-      }
-    })
+        options: "*",
+      },
+    });
 
     return {
       event: event.data as Event,
-      image: data.attributes?.main_event_image as Image
-    }
+      image: data.attributes?.main_event_image as Image,
+    };
   }),
   getPhotoAlbums: publicProcedure.query(async ({ ctx }) => {
     const { data } = await strapi.get("photoalbums", { populate: "*" });
     return data as PhotoAlbum[];
+  }),
+
+  getStudyDocuments: publicProcedure.query(async ({ ctx }) => {
+    const { data } = await strapi.get("study-documents", { populate: "*" });
+    return data as StudyDocument[];
   }),
 
   // add: publicProcedure.query(async ({ ctx }) => {

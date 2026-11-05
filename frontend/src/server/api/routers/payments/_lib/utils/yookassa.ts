@@ -42,7 +42,7 @@ export async function createPayment(paymentInfo: PaymentInfo) {
                 value: amount, // Стоимость товара/услуги
                 currency: 'RUB',
               },
-              vat_code: 4, // Ставка НДС (1 - 20%, 2 - 10%, 3 - 0%, 4 - без НДС и т.д.)
+              vat_code: 7, // НДС 5% по справочнику ЮKassa.
             },
           ],
         },
